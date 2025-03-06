@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAHEDI's LMS</title>
+    <title>MAHEDI's Website</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,7 +15,7 @@
         }
         header {
             background: #222;
-            color: red3d;
+            color: white;
             padding: 15px;
             font-size: 24px;
         }
@@ -24,7 +24,7 @@
             padding: 10px;
         }
         nav a {
-            color: orange;
+            color: white;
             text-decoration: none;
             margin: 15px;
             font-size: 18px;
@@ -47,10 +47,15 @@
             margin: 10px 0;
             color: #008cba;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
         }
         .assignments a:hover {
             text-decoration: underline;
+            background: rgba(255, 255, 255, 0.9);
         }
     </style>
 </head>
@@ -80,9 +85,9 @@
             } else if (type === "master") {
                 info.innerHTML = "<h2>Master's Information</h2><p>CGPA: 3.99 (Must be), Admission Fee: 1190 Won</p>";
             } else if (type === "result") {
-                info.innerHTML = "<h2>Result Site</h2><p>smith: 4.29, butler: 3.98, lee: 4.07</p>";
+                info.innerHTML = "<h2>Result Site</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
             } else if (type === "scholarship") {
-                info.innerHTML = "<h2>Scholarship Site</h2><p>CGPA 4.00 = 50%, CGPA 5.00 = 100%</p>";
+                info.innerHTML = "<h2>Scholarship Site</h2><p>CGPA 4.00 = 50%, CGPA 4.20 = 60%</p>";
             }
         }
     </script>
