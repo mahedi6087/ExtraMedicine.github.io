@@ -34,7 +34,6 @@
         nav a:hover {
             text-decoration: underline;
         }
-        /* Overlay for better readability */
         .overlay {
             position: absolute;
             top: 0;
@@ -113,14 +112,12 @@
         <p>Select a menu option to view details.</p>
     </div>
 
-    <!-- Normal Submit Button -->
     <button class="normal-submit-btn" onclick="showSubmitForm()">+</button>
 
     <div class="submission" id="submissionForm" style="display:none;">
         <h2>Submit Your Assignment</h2>
-        <form id="submitForm">
+        <form id="submitForm" enctype="multipart/form-data">
             <input type="file" id="fileInput" name="fileInput" accept=".doc,.docx,.xls,.xlsx,.pdf" />
-            <input type="text" id="driveLink" placeholder="Google Drive Link (Optional)" />
             <button type="submit">Submit</button>
         </form>
     </div>
@@ -131,8 +128,7 @@
     </div>
 
     <script>
-        // Mock Data for demonstration purposes
-        let submittedFiles = [];
+        const serverUrl = "http://localhost:3000";
 
         // Show submit form
         function showSubmitForm() {
@@ -143,69 +139,62 @@
         document.getElementById("submitForm").addEventListener('submit', function(e) {
             e.preventDefault();
 
-            let fileInput = document.getElementById("fileInput");
-            let driveLink = document.getElementById("driveLink").value;
-            let file = fileInput.files[0];
-            let fileName = file ? file.name : "Google Drive Link";
+            const formData = new FormData();
+            const fileInput = document.getElementById("fileInput");
+            formData.append("file", fileInput.files[0]);
 
-            // Save the file data (in a real app, you'd send this to the server)
-            submittedFiles.push({
-                file: file ? file : null,
-                driveLink: driveLink,
-                fileName: fileName
-            });
-
-            // Refresh the displayed list of submitted files
-            displaySubmittedFiles();
-
-            // Reset the form
-            document.getElementById("submitForm").reset();
-            document.getElementById("submissionForm").style.display = 'none';
+            fetch(serverUrl + "/upload", {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                displaySubmittedFiles(); // Refresh the files list
+                document.getElementById("submitForm").reset();
+                document.getElementById("submissionForm").style.display = 'none';
+            })
+            .catch(error => alert('Error uploading file.'));
         });
 
         // Display submitted files
         function displaySubmittedFiles() {
-            let submissionList = document.getElementById("submittedFiles");
-            submissionList.innerHTML = '<h3>Submitted Files</h3>'; // Clear the list first
+            fetch(serverUrl + "/files")
+            .then(response => response.json())
+            .then(files => {
+                const submittedFilesDiv = document.getElementById("submittedFiles");
+                submittedFilesDiv.innerHTML = "<h3>Submitted Files</h3>"; // Reset content
 
-            submittedFiles.forEach((submission, index) => {
-                let submissionItem = document.createElement('div');
-                submissionItem.style.marginBottom = '10px';
+                files.forEach(file => {
+                    const fileLink = document.createElement('a');
+                    fileLink.href = serverUrl + "/uploads/" + file;
+                    fileLink.textContent = "Download " + file;
+                    submittedFilesDiv.appendChild(fileLink);
 
-                if (submission.file) {
-                    let downloadLink = document.createElement('a');
-                    downloadLink.href = URL.createObjectURL(submission.file);
-                    downloadLink.textContent = "Download " + submission.fileName;
-                    submissionItem.appendChild(downloadLink);
-                }
-
-                if (submission.driveLink) {
-                    let driveLink = document.createElement('a');
-                    driveLink.href = submission.driveLink;
-                    driveLink.textContent = "Google Drive Link";
-                    submissionItem.appendChild(driveLink);
-                }
-
-                // Delete button for each submission
-                let deleteBtn = document.createElement('button');
-                deleteBtn.textContent = "Delete";
-                deleteBtn.onclick = function() {
-                    submittedFiles.splice(index, 1); // Remove the file from the list
-                    displaySubmittedFiles(); // Re-render the list
-                };
-                submissionItem.appendChild(deleteBtn);
-
-                // Append submission item to the list
-                submissionList.appendChild(submissionItem);
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.onclick = function() {
+                        deleteFile(file);
+                    };
+                    submittedFilesDiv.appendChild(deleteBtn);
+                });
             });
         }
 
-        // Function to simulate normal submit
-        function normalSubmit() {
-            alert("Normal submission is not yet implemented.");
+        // Delete file
+        function deleteFile(filename) {
+            fetch(serverUrl + "/files/" + filename, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                displaySubmittedFiles(); // Refresh the files list
+            })
+            .catch(error => alert('Error deleting file.'));
         }
 
-        // Initial display of submitted files
+        // Initial display of files
         displaySubmittedFiles();
     </script>
 </body>
