@@ -11,39 +11,39 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background-color: #f0f2f5;
             color: #333;
             line-height: 1.6;
         }
-        
+
         header {
             background: #1a1a2e;
             color: white;
             padding: 1.5rem 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        
+
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
             color: white;
             text-decoration: none;
         }
-        
+
         .card {
             background: white;
             border-radius: 8px;
@@ -51,23 +51,23 @@
             padding: 2rem;
             margin: 2rem 0;
         }
-        
+
         .section-title {
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
             color: #1a1a2e;
         }
-        
+
         .input-group {
             margin-bottom: 1.5rem;
         }
-        
+
         .input-label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: bold;
         }
-        
+
         .input-field {
             width: 100%;
             padding: 0.8rem;
@@ -75,7 +75,7 @@
             border-radius: 4px;
             font-size: 1rem;
         }
-        
+
         .btn {
             display: inline-block;
             background: #4361ee;
@@ -87,20 +87,20 @@
             font-size: 1rem;
             transition: background 0.3s ease;
         }
-        
+
         .btn:hover {
             background: #3a56d4;
         }
-        
+
         .btn-block {
             display: block;
             width: 100%;
         }
-        
+
         .link-list {
             margin-top: 1.5rem;
         }
-        
+
         .link-item {
             background: #f8f9fa;
             border-radius: 8px;
@@ -111,27 +111,27 @@
             align-items: center;
             border-left: 4px solid #4361ee;
         }
-        
+
         .link-info {
             flex: 1;
         }
-        
+
         .link-title {
             font-weight: bold;
             margin-bottom: 0.3rem;
             word-break: break-all;
         }
-        
+
         .link-date {
             font-size: 0.8rem;
             color: #666;
         }
-        
+
         .link-actions {
             display: flex;
             gap: 0.5rem;
         }
-        
+
         .action-btn {
             background: #eee;
             border: none;
@@ -140,20 +140,20 @@
             cursor: pointer;
             transition: background 0.3s ease;
         }
-        
+
         .action-btn:hover {
             background: #ddd;
         }
-        
+
         .download-btn {
             background: #4361ee;
             color: white;
         }
-        
+
         .download-btn:hover {
             background: #3a56d4;
         }
-        
+
         .toast {
             position: fixed;
             bottom: 20px;
@@ -167,18 +167,18 @@
             transition: opacity 0.3s ease;
             z-index: 1000;
         }
-        
+
         .toast.show {
             opacity: 1;
         }
-        
+
         .no-links {
             text-align: center;
             padding: 2rem;
             color: #666;
             font-style: italic;
         }
-        
+
         footer {
             background: #1a1a2e;
             color: white;
@@ -186,18 +186,18 @@
             padding: 1.5rem 0;
             margin-top: 2rem;
         }
-        
+
         @media (max-width: 768px) {
             .link-item {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            
+
             .link-actions {
                 width: 100%;
                 margin-top: 1rem;
             }
-            
+
             .action-btn {
                 flex: 1;
                 text-align: center;
@@ -213,7 +213,7 @@
             </div>
         </div>
     </header>
-    
+
     <main class="container">
         <div class="card">
             <h2 class="section-title">Submit Google Drive Link</h2>
@@ -227,7 +227,7 @@
             </div>
             <button class="btn btn-block" id="submitLink">Submit Link</button>
         </div>
-        
+
         <div class="card">
             <h2 class="section-title">Submitted Links</h2>
             <div id="linkList" class="link-list">
@@ -236,15 +236,15 @@
             </div>
         </div>
     </main>
-    
+
     <div class="toast" id="toast"></div>
-    
+
     <footer>
         <div class="container">
             <p>&copy; 2025 Mahedi6087. All rights reserved.</p>
         </div>
     </footer>
-    
+
     <script>
         // DOM Elements
         const linkTitleInput = document.getElementById('linkTitle');
@@ -253,35 +253,35 @@
         const linkList = document.getElementById('linkList');
         const noLinks = document.getElementById('noLinks');
         const toast = document.getElementById('toast');
-        
+
         // Load links from localStorage on page load
         document.addEventListener('DOMContentLoaded', loadLinks);
-        
+
         // Event listener for submit button
         submitLinkBtn.addEventListener('click', submitLink);
-        
+
         // Function to submit a link
         function submitLink() {
             const title = linkTitleInput.value.trim();
             const link = driveLinkInput.value.trim();
-            
+
             // Validate inputs
             if (!title) {
                 showToast('Please enter a title or description');
                 return;
             }
-            
+
             if (!link) {
                 showToast('Please enter a Google Drive link');
                 return;
             }
-            
+
             // Validate link format (basic check)
             if (!link.includes('drive.google.com')) {
                 showToast('Please enter a valid Google Drive link');
                 return;
             }
-            
+
             // Create link object
             const linkObj = {
                 id: Date.now().toString(),
@@ -289,130 +289,46 @@
                 link: link,
                 date: new Date().toISOString()
             };
-            
+
             // Save link to localStorage
             saveLink(linkObj);
-            
+
             // Clear inputs
             linkTitleInput.value = '';
             driveLinkInput.value = '';
-            
+
             // Show success message
             showToast('Link submitted successfully');
-            
+
             // Reload links
             loadLinks();
         }
-        
+
         // Function to save link to localStorage
         function saveLink(linkObj) {
             let links = getLinksFromStorage();
             links.push(linkObj);
             localStorage.setItem('driveLinks', JSON.stringify(links));
         }
-        
+
         // Function to get links from localStorage
         function getLinksFromStorage() {
             const links = localStorage.getItem('driveLinks');
             return links ? JSON.parse(links) : [];
         }
-        
+
         // Function to load links from localStorage
         function loadLinks() {
             const links = getLinksFromStorage();
-            
+
             if (links.length === 0) {
                 noLinks.style.display = 'block';
                 linkList.innerHTML = '';
                 linkList.appendChild(noLinks);
                 return;
             }
-            
+
             noLinks.style.display = 'none';
             linkList.innerHTML = '';
-            
-            // Sort links by date (newest first)
-            links.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            // Create link items
-            links.forEach(link => {
-                const linkItem = createLinkItem(link);
-                linkList.appendChild(linkItem);
-            });
-        }
-        
-        // Function to create a link item
-        function createLinkItem(link) {
-            const linkItem = document.createElement('div');
-            linkItem.className = 'link-item';
-            linkItem.dataset.id = link.id;
-            
-            const linkInfo = document.createElement('div');
-            linkInfo.className = 'link-info';
-            
-            const linkTitle = document.createElement('div');
-            linkTitle.className = 'link-title';
-            linkTitle.textContent = link.title;
-            
-            const linkDate = document.createElement('div');
-            linkDate.className = 'link-date';
-            linkDate.textContent = formatDate(link.date);
-            
-            linkInfo.appendChild(linkTitle);
-            linkInfo.appendChild(linkDate);
-            
-            const linkActions = document.createElement('div');
-            linkActions.className = 'link-actions';
-            
-            const downloadBtn = document.createElement('a');
-            downloadBtn.className = 'action-btn download-btn';
-            downloadBtn.href = link.link;
-            downloadBtn.target = '_blank';
-            downloadBtn.textContent = 'Open';
-            
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'action-btn';
-            deleteBtn.textContent = 'Delete';
-            deleteBtn.addEventListener('click', () => deleteLink(link.id));
-            
-            linkActions.appendChild(downloadBtn);
-            linkActions.appendChild(deleteBtn);
-            
-            linkItem.appendChild(linkInfo);
-            linkItem.appendChild(linkActions);
-            
-            return linkItem;
-        }
-        
-        // Function to delete a link
-        function deleteLink(id) {
-            let links = getLinksFromStorage();
-            links = links.filter(link => link.id !== id);
-            localStorage.setItem('driveLinks', JSON.stringify(links));
-            
-            // Show success message
-            showToast('Link deleted successfully');
-            
-            // Reload links
-            loadLinks();
-        }
-        
-        // Function to format date
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-        }
-        
-        // Function to show toast message
-        function showToast(message) {
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            // Hide toast after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-    </script>
-</body>
-</html>
+
+            // Sort links by date
