@@ -33,9 +33,19 @@
         nav a:hover {
             text-decoration: underline;
         }
+        /* Adding overlay to background for better readability */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            z-index: -1;
+        }
         .content {
             padding: 20px;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.8);
             margin: 20px auto;
             width: 80%;
             max-width: 600px;
@@ -80,6 +90,19 @@
         .submissions-list a:hover {
             text-decoration: underline;
         }
+        .week-section {
+            margin-top: 30px;
+        }
+        .week-section h2 {
+            font-size: 22px;
+            color: #333;
+        }
+        .week-section .submission-form {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -90,27 +113,43 @@
         <a onclick="showInfo('result')">Results</a>
         <a onclick="showInfo('scholarship')">Scholarships</a>
     </nav>
+    <div class="overlay"></div>
     <div class="content" id="info">
         <h2>Welcome!</h2>
         <p>Select a menu option to view details.</p>
     </div>
-    
-    <!-- Assignment Submission Section -->
-    <div class="submission">
-        <h2>Assignment Submission</h2>
-        <form id="assignmentForm">
-            <input type="file" id="fileUpload" name="fileUpload" accept=".doc,.docx,.xls,.xlsx,.pdf" />
-            <br />
-            <input type="text" id="driveLink" placeholder="Google Drive Link (Optional)" />
-            <br />
-            <button type="submit">Submit Assignment</button>
-        </form>
-    </div>
 
-    <!-- Submitted Assignments Section -->
-    <div class="submissions-list" id="submissions">
-        <h3>Submitted Assignments</h3>
-        <p>No assignments submitted yet.</p>
+    <!-- Weekly Assignment Sections -->
+    <div id="weekSections">
+        <h2>Weekly Assignments</h2>
+        <div class="week-section" id="week1">
+            <h2>Week 1</h2>
+            <form class="submission-form" id="week1Form">
+                <input type="file" id="week1File" name="week1File" accept=".doc,.docx,.xls,.xlsx,.pdf" />
+                <input type="text" id="week1DriveLink" placeholder="Google Drive Link (Optional)" />
+                <button type="submit">Submit Week 1 Assignment</button>
+            </form>
+            <div class="submissions-list" id="week1Submissions">
+                <h3>Submitted Assignments</h3>
+                <p>No assignments submitted yet.</p>
+            </div>
+        </div>
+
+        <div class="week-section" id="week2">
+            <h2>Week 2</h2>
+            <form class="submission-form" id="week2Form">
+                <input type="file" id="week2File" name="week2File" accept=".doc,.docx,.xls,.xlsx,.pdf" />
+                <input type="text" id="week2DriveLink" placeholder="Google Drive Link (Optional)" />
+                <button type="submit">Submit Week 2 Assignment</button>
+            </form>
+            <div class="submissions-list" id="week2Submissions">
+                <h3>Submitted Assignments</h3>
+                <p>No assignments submitted yet.</p>
+            </div>
+        </div>
+
+        <!-- Repeat similar blocks for weeks 3 to 16 -->
+
     </div>
 
     <script>
@@ -127,37 +166,42 @@
             }
         }
 
-        // Handle form submission
-        document.getElementById('assignmentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        function handleFormSubmission(week) {
+            document.getElementById(`${week}Form`).addEventListener('submit', function(e) {
+                e.preventDefault();
 
-            let fileInput = document.getElementById('fileUpload');
-            let driveLink = document.getElementById('driveLink').value;
-            let file = fileInput.files[0];
+                let fileInput = document.getElementById(`${week}File`);
+                let driveLink = document.getElementById(`${week}DriveLink`).value;
+                let file = fileInput.files[0];
+                let submissionsDiv = document.getElementById(`${week}Submissions`);
+                let newSubmission = document.createElement('div');
 
-            let submissionsDiv = document.getElementById('submissions');
-            let newSubmission = document.createElement('div');
+                // Create link for the file upload
+                if (file) {
+                    let fileLink = document.createElement('a');
+                    fileLink.href = URL.createObjectURL(file);
+                    fileLink.textContent = "Download " + file.name;
+                    newSubmission.appendChild(fileLink);
+                }
 
-            // Create link for the file upload
-            if (file) {
-                let fileLink = document.createElement('a');
-                fileLink.href = URL.createObjectURL(file);
-                fileLink.textContent = "Download " + file.name;
-                newSubmission.appendChild(fileLink);
-            }
+                // If Google Drive link is provided, create a link
+                if (driveLink) {
+                    let driveLinkElement = document.createElement('a');
+                    driveLinkElement.href = driveLink;
+                    driveLinkElement.textContent = "View Google Drive Link";
+                    newSubmission.appendChild(driveLinkElement);
+                }
 
-            // If Google Drive link is provided, create a link
-            if (driveLink) {
-                let driveLinkElement = document.createElement('a');
-                driveLinkElement.href = driveLink;
-                driveLinkElement.textContent = "View Google Drive Link";
-                newSubmission.appendChild(driveLinkElement);
-            }
+                // Add submission to the list
+                submissionsDiv.appendChild(newSubmission);
+                document.getElementById(`${week}Form`).reset();
+            });
+        }
 
-            // Add submission to the list
-            submissionsDiv.appendChild(newSubmission);
-            document.getElementById('assignmentForm').reset();
-        });
+        // Handle submissions for all weeks
+        for (let i = 1; i <= 16; i++) {
+            handleFormSubmission(`week${i}`);
+        }
     </script>
 </body>
 </html>
