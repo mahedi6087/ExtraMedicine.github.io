@@ -53,29 +53,6 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .week-section {
-            margin-top: 30px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 5px;
-        }
-        .week-section h2 {
-            font-size: 22px;
-            margin: 10px 0;
-        }
-        .week-links {
-            margin-top: 10px;
-        }
-        .week-links a {
-            display: block;
-            font-size: 16px;
-            color: #008cba;
-            text-decoration: none;
-            margin: 5px 0;
-        }
-        .week-links a:hover {
-            text-decoration: underline;
-        }
         .submission {
             margin-top: 10px;
         }
@@ -136,106 +113,100 @@
         <p>Select a menu option to view details.</p>
     </div>
 
-    <!-- Weekly Assignment Sections -->
-    <div id="weekSections">
-        <h2>Weekly Assignments</h2>
+    <!-- Normal Submit Button -->
+    <button class="normal-submit-btn" onclick="showSubmitForm()">+</button>
 
-        <!-- Assignment for each week -->
-        <div id="weekLinks" class="week-links">
-            <h3>Assignment Submission Links</h3>
-            <a href="#week1">Week 1</a>
-            <a href="#week2">Week 2</a>
-            <a href="#week3">Week 3</a>
-            <a href="#week4">Week 4</a>
-            <a href="#week5">Week 5</a>
-            <a href="#week6">Week 6</a>
-            <a href="#week7">Week 7</a>
-            <a href="#week8">Week 8</a>
-            <a href="#week9">Week 9</a>
-            <a href="#week10">Week 10</a>
-            <a href="#week11">Week 11</a>
-            <a href="#week12">Week 12</a>
-            <a href="#week13">Week 13</a>
-            <a href="#week14">Week 14</a>
-            <a href="#week15">Week 15</a>
-            <a href="#week16">Week 16</a>
-        </div>
-
-        <!-- Week 1 Example -->
-        <div id="week1" class="week-section">
-            <h2>Week 1</h2>
-            <form class="submission" id="week1Form">
-                <input type="file" id="week1File" name="week1File" accept=".doc,.docx,.xls,.xlsx,.pdf" />
-                <input type="text" id="week1DriveLink" placeholder="Google Drive Link (Optional)" />
-                <button type="submit">Submit Week 1 Assignment</button>
-            </form>
-            <div class="submission-list" id="week1Submissions">
-                <h3>Submitted Assignments</h3>
-                <p>No assignments submitted yet.</p>
-            </div>
-        </div>
-
-        <!-- Repeat similar blocks for weeks 2 to 16 -->
-
+    <div class="submission" id="submissionForm" style="display:none;">
+        <h2>Submit Your Assignment</h2>
+        <form id="submitForm">
+            <input type="file" id="fileInput" name="fileInput" accept=".doc,.docx,.xls,.xlsx,.pdf" />
+            <input type="text" id="driveLink" placeholder="Google Drive Link (Optional)" />
+            <button type="submit">Submit</button>
+        </form>
     </div>
 
-    <button class="normal-submit-btn" onclick="normalSubmit()">+</button>
+    <div id="submittedFiles" class="submission-list">
+        <h3>Submitted Files</h3>
+        <!-- Submitted files will appear here -->
+    </div>
 
     <script>
-        function showInfo(type) {
-            let info = document.getElementById("info");
-            if (type === "bachelor") {
-                info.innerHTML = "<h2>Bachelor's Information</h2><p>Admission Fee: 990 Won, Date: 19/05/2025</p>";
-            } else if (type === "master") {
-                info.innerHTML = "<h2>Master's Information</h2><p>CGPA: 3.99 (Must be), Admission Fee: 1190 Won</p>";
-            } else if (type === "result") {
-                info.innerHTML = "<h2>Result Site</h2><p>tye: 4.29, lee: 3.98, hae: 4.07</p>";
-            } else if (type === "scholarship") {
-                info.innerHTML = "<h2>Scholarship Site</h2><p>CGPA 4.00 = 50%, CGPA 4.50 = 100%</p>";
-            }
+        // Mock Data for demonstration purposes
+        let submittedFiles = [];
+
+        // Show submit form
+        function showSubmitForm() {
+            document.getElementById("submissionForm").style.display = 'block';
         }
 
+        // Handle file submission
+        document.getElementById("submitForm").addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            let fileInput = document.getElementById("fileInput");
+            let driveLink = document.getElementById("driveLink").value;
+            let file = fileInput.files[0];
+            let fileName = file ? file.name : "Google Drive Link";
+
+            // Save the file data (in a real app, you'd send this to the server)
+            submittedFiles.push({
+                file: file ? file : null,
+                driveLink: driveLink,
+                fileName: fileName
+            });
+
+            // Refresh the displayed list of submitted files
+            displaySubmittedFiles();
+
+            // Reset the form
+            document.getElementById("submitForm").reset();
+            document.getElementById("submissionForm").style.display = 'none';
+        });
+
+        // Display submitted files
+        function displaySubmittedFiles() {
+            let submissionList = document.getElementById("submittedFiles");
+            submissionList.innerHTML = '<h3>Submitted Files</h3>'; // Clear the list first
+
+            submittedFiles.forEach((submission, index) => {
+                let submissionItem = document.createElement('div');
+                submissionItem.style.marginBottom = '10px';
+
+                if (submission.file) {
+                    let downloadLink = document.createElement('a');
+                    downloadLink.href = URL.createObjectURL(submission.file);
+                    downloadLink.textContent = "Download " + submission.fileName;
+                    submissionItem.appendChild(downloadLink);
+                }
+
+                if (submission.driveLink) {
+                    let driveLink = document.createElement('a');
+                    driveLink.href = submission.driveLink;
+                    driveLink.textContent = "Google Drive Link";
+                    submissionItem.appendChild(driveLink);
+                }
+
+                // Delete button for each submission
+                let deleteBtn = document.createElement('button');
+                deleteBtn.textContent = "Delete";
+                deleteBtn.onclick = function() {
+                    submittedFiles.splice(index, 1); // Remove the file from the list
+                    displaySubmittedFiles(); // Re-render the list
+                };
+                submissionItem.appendChild(deleteBtn);
+
+                // Append submission item to the list
+                submissionList.appendChild(submissionItem);
+            });
+        }
+
+        // Function to simulate normal submit
         function normalSubmit() {
             alert("Normal submission is not yet implemented.");
         }
 
-        // Handle form submissions for Week 1 to Week 16
-        function handleSubmission(week) {
-            document.getElementById(`${week}Form`).addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                let fileInput = document.getElementById(`${week}File`);
-                let driveLink = document.getElementById(`${week}DriveLink`).value;
-                let file = fileInput.files[0];
-                let submissionsDiv = document.getElementById(`${week}Submissions`);
-                let newSubmission = document.createElement('div');
-
-                // File submission link
-                if (file) {
-                    let fileLink = document.createElement('a');
-                    fileLink.href = URL.createObjectURL(file);
-                    fileLink.textContent = "Download " + file.name;
-                    newSubmission.appendChild(fileLink);
-                }
-
-                // Google Drive link submission
-                if (driveLink) {
-                    let driveLinkElement = document.createElement('a');
-                    driveLinkElement.href = driveLink;
-                    driveLinkElement.textContent = "View Google Drive Link";
-                    newSubmission.appendChild(driveLinkElement);
-                }
-
-                // Display the new submission
-                submissionsDiv.appendChild(newSubmission);
-                document.getElementById(`${week}Form`).reset();
-            });
-        }
-
-        // Handle all weeks submission
-        for (let i = 1; i <= 16; i++) {
-            handleSubmission(`week${i}`);
-        }
+        // Initial display of submitted files
+        displaySubmittedFiles();
     </script>
 </body>
 </html>
