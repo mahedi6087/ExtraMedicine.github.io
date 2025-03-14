@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mahedi6087's Website</title>
+    <title>MAHEDI's Website</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             text-align: center;
-            background: url('dng.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: white;
+            background: #f0f0f0;
         }
         header {
             background: #222;
-            color: darkgreen;
+            color: #fff;
             padding: 15px;
             font-size: 24px;
         }
@@ -25,7 +23,7 @@
             padding: 10px;
         }
         nav a {
-            color: white;
+            color: #fff;
             text-decoration: none;
             margin: 15px;
             font-size: 18px;
@@ -34,168 +32,121 @@
         nav a:hover {
             text-decoration: underline;
         }
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: -1;
-        }
         .content {
             padding: 20px;
-            background: rgba(255, 255, 255, 0.8);
+            background: #fff;
             margin: 20px auto;
             width: 80%;
             max-width: 600px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .submission {
-            margin-top: 10px;
+        .file-links {
+            margin: 20px 0;
         }
-        .submission input, .submission button {
-            font-size: 16px;
-            padding: 10px;
-            margin: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .submission button {
-            background-color: #008cba;
-            color: white;
-            cursor: pointer;
-        }
-        .submission button:hover {
-            background-color: #006f8c;
-        }
-        .submission-list {
-            margin-top: 20px;
-        }
-        .submission-list a {
+        .file-links a {
             display: block;
+            margin: 10px 0;
             color: #008cba;
             text-decoration: none;
-            margin: 10px 0;
+            font-size: 18px;
         }
-        .submission-list a:hover {
+        .file-links a:hover {
             text-decoration: underline;
         }
-        .normal-submit-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 20px;
-            background-color: #008cba;
-            color: white;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        .normal-submit-btn:hover {
-            background-color: #006f8c;
+        input[type="file"] {
+            margin: 10px 0;
         }
     </style>
-</head>
-<body>
-    <header>mahedi6087's Website</header>
-    <nav>
-        <a onclick="showInfo('bachelor')">Bachelor's Info</a>
-        <a onclick="showInfo('master')">Master's Info</a>
-        <a onclick="showInfo('result')">Results</a>
-        <a onclick="showInfo('scholarship')">Scholarships</a>
-    </nav>
-    <div class="overlay"></div>
-    <div class="content" id="info">
-        <h2>Welcome!</h2>
-        <p>Select a menu option to view details.</p>
-    </div>
 
-    <button class="normal-submit-btn" onclick="showSubmitForm()">+</button>
-
-    <div class="submission" id="submissionForm" style="display:none;">
-        <h2>Submit Your Assignment</h2>
-        <form id="submitForm" enctype="multipart/form-data">
-            <input type="file" id="fileInput" name="fileInput" accept=".doc,.docx,.xls,.xlsx,.pdf" />
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-
-    <div id="submittedFiles" class="submission-list">
-        <h3>Submitted Files</h3>
-        <!-- Submitted files will appear here -->
-    </div>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
 
     <script>
-        const serverUrl = "http://localhost:3000";
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
-        // Show submit form
-        function showSubmitForm() {
-            document.getElementById("submissionForm").style.display = 'block';
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+
+        // Upload File Function
+        function uploadFile() {
+            const file = document.getElementById("fileInput").files[0];
+            if (!file) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            // Create a reference to the Firebase Storage location
+            const storageRef = storage.ref('uploads/' + file.name);
+
+            // Upload the file to Firebase Storage
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on('state_changed', function(snapshot) {
+                // Optional: Track the progress of the upload
+            }, function(error) {
+                console.error("Error uploading file:", error);
+            }, function() {
+                // File uploaded successfully
+                alert("File uploaded successfully!");
+                displayFiles();
+            });
         }
 
-        // Handle file submission
-        document.getElementById("submitForm").addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Display uploaded files
+        function displayFiles() {
+            const storageRef = storage.ref('uploads/');
+            storageRef.listAll().then(function(result) {
+                const fileLinksContainer = document.getElementById('fileLinks');
+                fileLinksContainer.innerHTML = ""; // Clear previous links
 
-            const formData = new FormData();
-            const fileInput = document.getElementById("fileInput");
-            formData.append("file", fileInput.files[0]);
-
-            fetch(serverUrl + "/upload", {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                displaySubmittedFiles(); // Refresh the files list
-                document.getElementById("submitForm").reset();
-                document.getElementById("submissionForm").style.display = 'none';
-            })
-            .catch(error => alert('Error uploading file.'));
-        });
-
-        // Display submitted files
-        function displaySubmittedFiles() {
-            fetch(serverUrl + "/files")
-            .then(response => response.json())
-            .then(files => {
-                const submittedFilesDiv = document.getElementById("submittedFiles");
-                submittedFilesDiv.innerHTML = "<h3>Submitted Files</h3>"; // Reset content
-
-                files.forEach(file => {
-                    const fileLink = document.createElement('a');
-                    fileLink.href = serverUrl + "/uploads/" + file;
-                    fileLink.textContent = "Download " + file;
-                    submittedFilesDiv.appendChild(fileLink);
-
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.textContent = "Delete";
-                    deleteBtn.onclick = function() {
-                        deleteFile(file);
-                    };
-                    submittedFilesDiv.appendChild(deleteBtn);
+                result.items.forEach(function(fileRef) {
+                    fileRef.getDownloadURL().then(function(url) {
+                        const fileLink = document.createElement('a');
+                        fileLink.href = url;
+                        fileLink.textContent = "Download " + fileRef.name;
+                        fileLink.target = "_blank"; // Open in a new tab
+                        fileLinksContainer.appendChild(fileLink);
+                    });
                 });
             });
         }
 
-        // Delete file
-        function deleteFile(filename) {
-            fetch(serverUrl + "/files/" + filename, {
-                method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                displaySubmittedFiles(); // Refresh the files list
-            })
-            .catch(error => alert('Error deleting file.'));
-        }
-
-        // Initial display of files
-        displaySubmittedFiles();
+        // Call displayFiles on page load to show existing files
+        window.onload = displayFiles;
     </script>
+</head>
+<body>
+    <header>MAHEDI's Website</header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="assignments.html">Assignments</a>
+    </nav>
+    
+    <div class="content">
+        <h2>Welcome to the Assignment Submission Portal!</h2>
+        <p>Submit your assignments below. You can also download assignments submitted by other students.</p>
+
+        <!-- File Submission Section -->
+        <h3>Submit Your Assignment</h3>
+        <input type="file" id="fileInput" required>
+        <button onclick="uploadFile()">Submit Assignment</button>
+
+        <!-- Display Submitted Files -->
+        <div id="fileLinks" class="file-links">
+            <h3>Available Assignments</h3>
+            <!-- File links will be displayed here -->
+        </div>
+    </div>
 </body>
 </html>
