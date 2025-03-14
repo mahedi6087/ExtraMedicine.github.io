@@ -64,12 +64,13 @@
         <a onclick="showInfo('master')">Master's Info</a>
         <a onclick="showInfo('result')">Results</a>
         <a onclick="showInfo('scholarship')">Scholarships</a>
+        <a onclick="showAssignments()">Assignments</a>
     </nav>
     <div class="content" id="info">
         <h2>Welcome!</h2>
         <p>Select a menu option to view details.</p>
     </div>
-    <div class="assignment-section">
+    <div class="assignment-section" id="assignmentSection" style="display: none;">
         <h2>Submit Your Assignment</h2>
         <input type="file" id="fileUpload" accept=".doc,.docx,.xls,.xlsx,.pdf">
         <input type="text" id="driveLink" placeholder="Or paste Google Drive link">
@@ -91,20 +92,47 @@
                 info.innerHTML = "<h2>Scholarship Site</h2><p>CGPA 4.00 = 50%, CGPA 4.50 = 100%</p>";
             }
         }
+        
+        function showAssignments() {
+            let assignmentSection = document.getElementById("assignmentSection");
+            let assignmentList = document.getElementById("assignmentList");
+            assignmentSection.style.display = "block";
+            
+            // Load submitted assignments from localStorage
+            let storedAssignments = JSON.parse(localStorage.getItem("assignments")) || [];
+            assignmentList.innerHTML = "<h3>Submitted Assignments</h3>";
+            storedAssignments.forEach(function (assignment) {
+                let newItem = document.createElement("p");
+                if (assignment.type === "file") {
+                    newItem.textContent = "📄 " + assignment.name;
+                } else {
+                    newItem.innerHTML = "🔗 <a href='" + assignment.link + "' target='_blank'>Google Drive Link</a>";
+                }
+                assignmentList.appendChild(newItem);
+            });
+        }
+
         function submitAssignment() {
             let fileInput = document.getElementById("fileUpload");
             let driveInput = document.getElementById("driveLink");
-            let assignmentList = document.getElementById("assignmentList");
+            let assignments = JSON.parse(localStorage.getItem("assignments")) || [];
+
             if (fileInput.files.length > 0) {
                 let fileName = fileInput.files[0].name;
-                let newItem = document.createElement("p");
-                newItem.textContent = "📄 " + fileName;
-                assignmentList.appendChild(newItem);
+                assignments.push({type: "file", name: fileName});
+                localStorage.setItem("assignments", JSON.stringify(assignments));
             } else if (driveInput.value.trim() !== "") {
-                let newItem = document.createElement("p");
-                newItem.innerHTML = "🔗 <a href='" + driveInput.value + "' target='_blank'>Google Drive Link</a>";
-                assignmentList.appendChild(newItem);
+                let link = driveInput.value;
+                assignments.push({type: "link", link: link});
+                localStorage.setItem("assignments", JSON.stringify(assignments));
             }
+
+            // Clear inputs after submission
+            fileInput.value = "";
+            driveInput.value = "";
+
+            // Update the displayed assignments
+            showAssignments();
         }
     </script>
 </body>
