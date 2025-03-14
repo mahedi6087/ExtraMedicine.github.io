@@ -332,3 +332,49 @@
             linkList.innerHTML = '';
 
             // Sort links by date
+            links.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            links.forEach(link => {
+                const linkItem = document.createElement('div');
+                linkItem.classList.add('link-item');
+
+                linkItem.innerHTML = `
+                    <div class="link-info">
+                        <div class="link-title">${link.title}</div>
+                        <div class="link-date">${new Date(link.date).toLocaleString()}</div>
+                    </div>
+                    <div class="link-actions">
+                        <button class="action-btn download-btn" onclick="downloadLink('${link.link}')">Download</button>
+                        <button class="action-btn" onclick="deleteLink('${link.id}')">Delete</button>
+                    </div>
+                `;
+
+                linkList.appendChild(linkItem);
+            });
+        }
+
+        // Function to show toast messages
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Function to download a link
+        function downloadLink(link) {
+            window.open(link, '_blank');
+        }
+
+        // Function to delete a link
+        function deleteLink(id) {
+            let links = getLinksFromStorage();
+            links = links.filter(link => link.id !== id);
+            localStorage.setItem('driveLinks', JSON.stringify(links));
+            loadLinks();
+            showToast('Link deleted successfully');
+        }
+    </script>
+</body>
+</html>
