@@ -36,35 +36,171 @@
             padding: 20px;
             background: #fff;
             margin: 20px auto;
-            width: 80%;
-            max-width: 600px;
+            width: 90%;
+            max-width: 800px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .file-links {
             margin: 20px 0;
         }
-        .file-links a {
-            display: block;
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
             margin: 10px 0;
-            color: #008cba;
-            text-decoration: none;
-            font-size: 18px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border: 1px solid #ddd;
         }
-        .file-links a:hover {
-            text-decoration: underline;
+        .file-info {
+            text-align: left;
+            flex-grow: 1;
         }
-        input[type="file"] {
-            margin: 10px 0;
+        .file-name {
+            font-weight: bold;
+            color: #333;
+        }
+        .file-date {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .download-btn {
+            background: #008cba;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .download-btn:hover {
+            background: #006d9e;
+        }
+        .upload-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        .file-input-container {
+            margin: 15px 0;
+            text-align: center;
+        }
+        .custom-file-input {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #444;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .file-name-display {
+            display: inline-block;
+            margin-left: 10px;
+            font-style: italic;
+        }
+        #uploadBtn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        #uploadBtn:hover {
+            background: #45a049;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #ddd;
+            margin-top: 10px;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-size: 12px;
+        }
+        /* Make responsive for all devices */
+        @media (max-width: 768px) {
+            .content {
+                width: 95%;
+                padding: 15px;
+            }
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .download-btn {
+                margin-top: 10px;
+                width: 100%;
+            }
+        }
+        .no-files-message {
+            font-style: italic;
+            color: #666;
+            padding: 20px;
         }
     </style>
+</head>
+<body>
+    <header>MAHEDI's Website</header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="assignments.html">Assignments</a>
+    </nav>
+    
+    <div class="content">
+        <h2>Assignment Submission Portal</h2>
+        <p>Submit your assignments and access submissions from other students. All files are permanently stored and accessible from any device.</p>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+        <!-- File Submission Section -->
+        <div class="upload-section">
+            <h3>Submit Your Assignment</h3>
+            <div class="file-input-container">
+                <label for="fileInput" class="custom-file-input">Choose File</label>
+                <input type="file" id="fileInput" style="display: none;" onchange="updateFileName()">
+                <span id="fileName" class="file-name-display">No file selected</span>
+            </div>
+            <button id="uploadBtn" onclick="uploadFile()">Upload Assignment</button>
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+        </div>
 
-    <script>
-        // Firebase configuration
+        <!-- Display Submitted Files -->
+        <div class="file-links">
+            <h3>Available Assignments</h3>
+            <div id="fileLinks">
+                <!-- File links will be displayed here -->
+                <p class="no-files-message" id="noFilesMessage">Loading assignments...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Updated to latest version) -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_AUTH_DOMAIN",
@@ -75,78 +211,172 @@
         };
 
         // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage();
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
 
-        // Upload File Function
-        function uploadFile() {
-            const file = document.getElementById("fileInput").files[0];
+        // Make Firebase functionality available globally
+        window.uploadFile = function() {
+            const fileInput = document.getElementById("fileInput");
+            const file = fileInput.files[0];
+            
             if (!file) {
                 alert("Please select a file to upload.");
                 return;
             }
 
-            // Create a reference to the Firebase Storage location
-            const storageRef = storage.ref('uploads/' + file.name);
+            // Show progress container
+            const progressContainer = document.getElementById("progressContainer");
+            const progressBar = document.getElementById("progressBar");
+            progressContainer.style.display = "block";
+            
+            // Create file metadata including the content type
+            const metadata = {
+                contentType: file.type,
+                customMetadata: {
+                    'uploadDate': new Date().toISOString()
+                }
+            };
 
-            // Upload the file to Firebase Storage
-            const uploadTask = storageRef.put(file);
+            // Upload file and metadata
+            const storageRef = ref(storage, 'assignments/' + file.name);
+            const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
-            uploadTask.on('state_changed', function(snapshot) {
-                // Optional: Track the progress of the upload
-            }, function(error) {
-                console.error("Error uploading file:", error);
-            }, function() {
-                // File uploaded successfully
-                alert("File uploaded successfully!");
-                displayFiles();
-            });
-        }
+            // Listen for state changes, errors, and completion of the upload.
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // Get upload progress
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    progressBar.style.width = progress + '%';
+                    progressBar.textContent = progress.toFixed(1) + '%';
+                },
+                (error) => {
+                    // Handle unsuccessful uploads
+                    console.error("Error uploading file:", error);
+                    alert("Error uploading file. Please try again.");
+                    progressContainer.style.display = "none";
+                },
+                () => {
+                    // Handle successful uploads
+                    progressBar.style.width = '100%';
+                    progressBar.textContent = 'Complete';
+                    
+                    setTimeout(() => {
+                        progressContainer.style.display = "none";
+                        alert("Assignment uploaded successfully!");
+                        fileInput.value = "";
+                        document.getElementById("fileName").textContent = "No file selected";
+                        displayFiles();
+                    }, 1000);
+                }
+            );
+        };
 
-        // Display uploaded files
-        function displayFiles() {
-            const storageRef = storage.ref('uploads/');
-            storageRef.listAll().then(function(result) {
-                const fileLinksContainer = document.getElementById('fileLinks');
-                fileLinksContainer.innerHTML = ""; // Clear previous links
+        window.updateFileName = function() {
+            const fileInput = document.getElementById("fileInput");
+            const fileNameDisplay = document.getElementById("fileName");
+            
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = "No file selected";
+            }
+        };
 
-                result.items.forEach(function(fileRef) {
-                    fileRef.getDownloadURL().then(function(url) {
-                        const fileLink = document.createElement('a');
-                        fileLink.href = url;
-                        fileLink.textContent = "Download " + fileRef.name;
-                        fileLink.target = "_blank"; // Open in a new tab
-                        fileLinksContainer.appendChild(fileLink);
-                    });
+        window.displayFiles = async function() {
+            const fileLinksContainer = document.getElementById('fileLinks');
+            const noFilesMessage = document.getElementById('noFilesMessage');
+            
+            try {
+                const listRef = ref(storage, 'assignments/');
+                const res = await listAll(listRef);
+                
+                if (res.items.length === 0) {
+                    noFilesMessage.textContent = "No assignments have been submitted yet.";
+                    noFilesMessage.style.display = "block";
+                    return;
+                }
+                
+                // Clear the container
+                fileLinksContainer.innerHTML = '';
+                noFilesMessage.style.display = "none";
+                
+                // Process each file
+                const filePromises = res.items.map(async (itemRef) => {
+                    try {
+                        const url = await getDownloadURL(itemRef);
+                        const metadata = await itemRef.getMetadata().catch(() => ({ customMetadata: { uploadDate: 'Unknown date' } }));
+                        
+                        // Format date if available
+                        let formattedDate = 'Unknown date';
+                        if (metadata.customMetadata && metadata.customMetadata.uploadDate) {
+                            try {
+                                const uploadDate = new Date(metadata.customMetadata.uploadDate);
+                                formattedDate = uploadDate.toLocaleString();
+                            } catch (e) {
+                                formattedDate = metadata.customMetadata.uploadDate;
+                            }
+                        }
+                        
+                        // Create file item element
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        
+                        // File information
+                        const fileInfo = document.createElement('div');
+                        fileInfo.className = 'file-info';
+                        
+                        const fileName = document.createElement('div');
+                        fileName.className = 'file-name';
+                        fileName.textContent = itemRef.name;
+                        
+                        const fileDate = document.createElement('div');
+                        fileDate.className = 'file-date';
+                        fileDate.textContent = `Uploaded: ${formattedDate}`;
+                        
+                        fileInfo.appendChild(fileName);
+                        fileInfo.appendChild(fileDate);
+                        
+                        // Download button
+                        const downloadBtn = document.createElement('button');
+                        downloadBtn.className = 'download-btn';
+                        downloadBtn.textContent = 'Download';
+                        downloadBtn.onclick = function() {
+                            // Create temporary link to download the file
+                            const tempLink = document.createElement('a');
+                            tempLink.href = url;
+                            tempLink.setAttribute('download', itemRef.name);
+                            tempLink.style.display = 'none';
+                            document.body.appendChild(tempLink);
+                            tempLink.click();
+                            document.body.removeChild(tempLink);
+                        };
+                        
+                        // Assemble file item
+                        fileItem.appendChild(fileInfo);
+                        fileItem.appendChild(downloadBtn);
+                        
+                        return fileItem;
+                    } catch (error) {
+                        console.error("Error processing file:", error);
+                        return null;
+                    }
                 });
-            });
-        }
+                
+                // Wait for all file processing to complete and add to container
+                const fileElements = await Promise.all(filePromises);
+                fileElements.filter(item => item !== null).forEach(item => {
+                    fileLinksContainer.appendChild(item);
+                });
+                
+            } catch (error) {
+                console.error("Error listing files:", error);
+                noFilesMessage.textContent = "Error loading assignments. Please refresh the page.";
+                noFilesMessage.style.display = "block";
+            }
+        };
 
-        // Call displayFiles on page load to show existing files
-        window.onload = displayFiles;
+        // Load files when page loads
+        document.addEventListener('DOMContentLoaded', displayFiles);
     </script>
-</head>
-<body>
-    <header>MAHEDI's Website</header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="assignments.html">Assignments</a>
-    </nav>
-    
-    <div class="content">
-        <h2>Welcome to the Assignment Submission Portal!</h2>
-        <p>Submit your assignments below. You can also download assignments submitted by other students.</p>
-
-        <!-- File Submission Section -->
-        <h3>Submit Your Assignment</h3>
-        <input type="file" id="fileInput" required>
-        <button onclick="uploadFile()">Submit Assignment</button>
-
-        <!-- Display Submitted Files -->
-        <div id="fileLinks" class="file-links">
-            <h3>Available Assignments</h3>
-            <!-- File links will be displayed here -->
-        </div>
-    </div>
 </body>
 </html>
