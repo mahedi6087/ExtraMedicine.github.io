@@ -67,6 +67,22 @@
             color: #666;
             margin-top: 4px;
         }
+        .file-type {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            color: white;
+            margin-left: 5px;
+        }
+        .type-pdf { background-color: #e74c3c; }
+        .type-doc, .type-docx { background-color: #3498db; }
+        .type-xls, .type-xlsx { background-color: #2ecc71; }
+        .type-ppt, .type-pptx { background-color: #f39c12; }
+        .type-img { background-color: #9b59b6; }
+        .type-zip { background-color: #34495e; }
+        .type-other { background-color: #95a5a6; }
+        
         .download-btn {
             background: #008cba;
             color: white;
@@ -76,9 +92,27 @@
             cursor: pointer;
             font-weight: bold;
             transition: background 0.3s;
+            margin-left: 5px;
         }
         .download-btn:hover {
             background: #006d9e;
+        }
+        .view-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .view-btn:hover {
+            background: #27ae60;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
         }
         .upload-section {
             background: #f9f9f9;
@@ -86,6 +120,37 @@
             border-radius: 5px;
             margin-bottom: 20px;
             border: 1px solid #ddd;
+        }
+        .upload-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .upload-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 150px;
+        }
+        .upload-option:hover {
+            border-color: #3498db;
+            background-color: #f0f8ff;
+        }
+        .upload-option i {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 10px;
         }
         .file-input-container {
             margin: 15px 0;
@@ -137,6 +202,29 @@
             color: white;
             font-size: 12px;
         }
+        .drag-drop-area {
+            border: 3px dashed #ccc;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 5px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .drag-drop-area.active {
+            border-color: #3498db;
+            background-color: #f0f8ff;
+        }
+        .drag-drop-area p {
+            font-size: 18px;
+            color: #777;
+            margin: 10px 0;
+        }
+        .drag-drop-icon {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
         /* Make responsive for all devices */
         @media (max-width: 768px) {
             .content {
@@ -147,9 +235,20 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .download-btn {
+            .action-buttons {
                 margin-top: 10px;
                 width: 100%;
+                justify-content: space-between;
+            }
+            .download-btn, .view-btn {
+                flex: 1;
+            }
+            .upload-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            .upload-option {
+                width: 80%;
             }
         }
         .no-files-message {
@@ -157,7 +256,102 @@
             color: #666;
             padding: 20px;
         }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .file-type-icon {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+        }
+        /* Toast notification */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(0,0,0,0.25);
+        }
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+        .upload-tabs {
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .upload-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin: 0 5px;
+        }
+        .upload-tab.active {
+            background-color: #fff;
+            border-color: #ddd;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .gdrive-btn {
+            background-color: #0F9D58;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .gdrive-btn:hover {
+            background-color: #0b8043;
+        }
+        .gdrive-icon {
+            width: 20px;
+            height: 20px;
+        }
     </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header>MAHEDI's Website</header>
@@ -173,12 +367,42 @@
         <!-- File Submission Section -->
         <div class="upload-section">
             <h3>Submit Your Assignment</h3>
-            <div class="file-input-container">
-                <label for="fileInput" class="custom-file-input">Choose File</label>
-                <input type="file" id="fileInput" style="display: none;" onchange="updateFileName()">
-                <span id="fileName" class="file-name-display">No file selected</span>
+            
+            <div class="upload-tabs">
+                <div class="upload-tab active" onclick="switchTab('upload-local')">Local Upload</div>
+                <div class="upload-tab" onclick="switchTab('upload-gdrive')">Google Drive</div>
+                <div class="upload-tab" onclick="switchTab('upload-drag')">Drag & Drop</div>
             </div>
-            <button id="uploadBtn" onclick="uploadFile()">Upload Assignment</button>
+            
+            <div id="upload-local" class="tab-content active">
+                <div class="file-input-container">
+                    <label for="fileInput" class="custom-file-input">Choose File</label>
+                    <input type="file" id="fileInput" style="display: none;" onchange="updateFileName()">
+                    <span id="fileName" class="file-name-display">No file selected</span>
+                </div>
+                <p class="supported-types">Supports PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, ZIP, Images, and more</p>
+                <button id="uploadBtn" onclick="uploadFile()">Upload Assignment</button>
+            </div>
+            
+            <div id="upload-gdrive" class="tab-content">
+                <p>Connect to your Google Drive to upload files directly</p>
+                <button class="gdrive-btn" onclick="loadDrivePicker()">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/512px-Google_Drive_icon_%282020%29.svg.png" alt="Google Drive" class="gdrive-icon">
+                    Choose from Google Drive
+                </button>
+                <div id="gdrive-file-info"></div>
+            </div>
+            
+            <div id="upload-drag" class="tab-content">
+                <div id="dropArea" class="drag-drop-area">
+                    <i class="fas fa-cloud-upload-alt drag-drop-icon"></i>
+                    <p>Drag and drop files here</p>
+                    <p>or</p>
+                    <label for="dragFileInput" class="custom-file-input">Browse Files</label>
+                    <input type="file" id="dragFileInput" style="display: none;" onchange="handleDropAreaFiles(this.files)">
+                </div>
+            </div>
+            
             <div class="progress-container" id="progressContainer">
                 <div class="progress-bar" id="progressBar">0%</div>
             </div>
@@ -191,8 +415,11 @@
                 <!-- File links will be displayed here -->
                 <p class="no-files-message" id="noFilesMessage">Loading assignments...</p>
             </div>
+            <div class="loader" id="loader"></div>
         </div>
     </div>
+    
+    <div id="toast" class="toast">File uploaded successfully!</div>
 
     <!-- Firebase SDK (Updated to latest version) -->
     <script type="module">
@@ -207,176 +434,3 @@
             projectId: "YOUR_PROJECT_ID",
             storageBucket: "YOUR_STORAGE_BUCKET",
             messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
-
-        // Make Firebase functionality available globally
-        window.uploadFile = function() {
-            const fileInput = document.getElementById("fileInput");
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                alert("Please select a file to upload.");
-                return;
-            }
-
-            // Show progress container
-            const progressContainer = document.getElementById("progressContainer");
-            const progressBar = document.getElementById("progressBar");
-            progressContainer.style.display = "block";
-            
-            // Create file metadata including the content type
-            const metadata = {
-                contentType: file.type,
-                customMetadata: {
-                    'uploadDate': new Date().toISOString()
-                }
-            };
-
-            // Upload file and metadata
-            const storageRef = ref(storage, 'assignments/' + file.name);
-            const uploadTask = uploadBytesResumable(storageRef, file, metadata);
-
-            // Listen for state changes, errors, and completion of the upload.
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    // Get upload progress
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressBar.style.width = progress + '%';
-                    progressBar.textContent = progress.toFixed(1) + '%';
-                },
-                (error) => {
-                    // Handle unsuccessful uploads
-                    console.error("Error uploading file:", error);
-                    alert("Error uploading file. Please try again.");
-                    progressContainer.style.display = "none";
-                },
-                () => {
-                    // Handle successful uploads
-                    progressBar.style.width = '100%';
-                    progressBar.textContent = 'Complete';
-                    
-                    setTimeout(() => {
-                        progressContainer.style.display = "none";
-                        alert("Assignment uploaded successfully!");
-                        fileInput.value = "";
-                        document.getElementById("fileName").textContent = "No file selected";
-                        displayFiles();
-                    }, 1000);
-                }
-            );
-        };
-
-        window.updateFileName = function() {
-            const fileInput = document.getElementById("fileInput");
-            const fileNameDisplay = document.getElementById("fileName");
-            
-            if (fileInput.files.length > 0) {
-                fileNameDisplay.textContent = fileInput.files[0].name;
-            } else {
-                fileNameDisplay.textContent = "No file selected";
-            }
-        };
-
-        window.displayFiles = async function() {
-            const fileLinksContainer = document.getElementById('fileLinks');
-            const noFilesMessage = document.getElementById('noFilesMessage');
-            
-            try {
-                const listRef = ref(storage, 'assignments/');
-                const res = await listAll(listRef);
-                
-                if (res.items.length === 0) {
-                    noFilesMessage.textContent = "No assignments have been submitted yet.";
-                    noFilesMessage.style.display = "block";
-                    return;
-                }
-                
-                // Clear the container
-                fileLinksContainer.innerHTML = '';
-                noFilesMessage.style.display = "none";
-                
-                // Process each file
-                const filePromises = res.items.map(async (itemRef) => {
-                    try {
-                        const url = await getDownloadURL(itemRef);
-                        const metadata = await itemRef.getMetadata().catch(() => ({ customMetadata: { uploadDate: 'Unknown date' } }));
-                        
-                        // Format date if available
-                        let formattedDate = 'Unknown date';
-                        if (metadata.customMetadata && metadata.customMetadata.uploadDate) {
-                            try {
-                                const uploadDate = new Date(metadata.customMetadata.uploadDate);
-                                formattedDate = uploadDate.toLocaleString();
-                            } catch (e) {
-                                formattedDate = metadata.customMetadata.uploadDate;
-                            }
-                        }
-                        
-                        // Create file item element
-                        const fileItem = document.createElement('div');
-                        fileItem.className = 'file-item';
-                        
-                        // File information
-                        const fileInfo = document.createElement('div');
-                        fileInfo.className = 'file-info';
-                        
-                        const fileName = document.createElement('div');
-                        fileName.className = 'file-name';
-                        fileName.textContent = itemRef.name;
-                        
-                        const fileDate = document.createElement('div');
-                        fileDate.className = 'file-date';
-                        fileDate.textContent = `Uploaded: ${formattedDate}`;
-                        
-                        fileInfo.appendChild(fileName);
-                        fileInfo.appendChild(fileDate);
-                        
-                        // Download button
-                        const downloadBtn = document.createElement('button');
-                        downloadBtn.className = 'download-btn';
-                        downloadBtn.textContent = 'Download';
-                        downloadBtn.onclick = function() {
-                            // Create temporary link to download the file
-                            const tempLink = document.createElement('a');
-                            tempLink.href = url;
-                            tempLink.setAttribute('download', itemRef.name);
-                            tempLink.style.display = 'none';
-                            document.body.appendChild(tempLink);
-                            tempLink.click();
-                            document.body.removeChild(tempLink);
-                        };
-                        
-                        // Assemble file item
-                        fileItem.appendChild(fileInfo);
-                        fileItem.appendChild(downloadBtn);
-                        
-                        return fileItem;
-                    } catch (error) {
-                        console.error("Error processing file:", error);
-                        return null;
-                    }
-                });
-                
-                // Wait for all file processing to complete and add to container
-                const fileElements = await Promise.all(filePromises);
-                fileElements.filter(item => item !== null).forEach(item => {
-                    fileLinksContainer.appendChild(item);
-                });
-                
-            } catch (error) {
-                console.error("Error listing files:", error);
-                noFilesMessage.textContent = "Error loading assignments. Please refresh the page.";
-                noFilesMessage.style.display = "block";
-            }
-        };
-
-        // Load files when page loads
-        document.addEventListener('DOMContentLoaded', displayFiles);
-    </script>
-</body>
-</html>
