@@ -3,19 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment Upload</title>
+    <title>MAHEDI's Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: url('dng.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        header {
+            background: #222;
+            color: white;
+            padding: 15px;
+            font-size: 24px;
+        }
+        nav {
+            background: #444;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 15px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            padding: 20px;
+            background: #fff;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .assignment-section {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .assignment-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload Your Assignment</h1>
-    
-    <form action="/submit_assignment" method="POST" enctype="multipart/form-data">
-        <label for="assignmentFile">Upload Your File:</label><br>
-        <input type="file" id="assignmentFile" name="assignmentFile" accept=".doc, .docx, .pdf, .txt, .odt, .rtf, .zip, .jpeg, .jpg, .png" required><br><br>
-        
-        <label for="googleDriveLink">Or provide Google Drive link (optional):</label><br>
-        <input type="url" id="googleDriveLink" name="googleDriveLink" placeholder="Paste your Google Drive link here"><br><br>
-        
-        <button type="submit">Submit Assignment</button>
-    </form>
+    <header>MAHEDI's Website</header>
+    <nav>
+        <a onclick="showInfo('bachelor')">Bachelor's Info</a>
+        <a onclick="showInfo('master')">Master's Info</a>
+        <a onclick="showInfo('result')">Results</a>
+        <a onclick="showInfo('scholarship')">Scholarships</a>
+    </nav>
+    <div class="content" id="info">
+        <h2>Welcome!</h2>
+        <p>Select a menu option to view details.</p>
+    </div>
+    <div class="assignment-section">
+        <h2>Submit Your Assignment</h2>
+        <input type="file" id="fileUpload" accept=".doc,.docx,.xls,.xlsx,.pdf">
+        <input type="text" id="driveLink" placeholder="Or paste Google Drive link">
+        <button onclick="submitAssignment()">Submit</button>
+        <div class="assignment-list" id="assignmentList">
+            <h3>Submitted Assignments</h3>
+        </div>
+    </div>
+    <script>
+        function showInfo(type) {
+            let info = document.getElementById("info");
+            if (type === "bachelor") {
+                info.innerHTML = "<h2>Bachelor's Information</h2><p>Admission Fee: 990 Won, Date: 19/05/2025</p>";
+            } else if (type === "master") {
+                info.innerHTML = "<h2>Master's Information</h2><p>CGPA: 3.99 (Must be), Admission Fee: 1190 Won</p>";
+            } else if (type === "result") {
+                info.innerHTML = "<h2>Result Site</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
+            } else if (type === "scholarship") {
+                info.innerHTML = "<h2>Scholarship Site</h2><p>CGPA 4.00 = 50%, CGPA 4.50 = 100%</p>";
+            }
+        }
+        function submitAssignment() {
+            let fileInput = document.getElementById("fileUpload");
+            let driveInput = document.getElementById("driveLink");
+            let assignmentList = document.getElementById("assignmentList");
+            if (fileInput.files.length > 0) {
+                let fileName = fileInput.files[0].name;
+                let newItem = document.createElement("p");
+                newItem.textContent = "📄 " + fileName;
+                assignmentList.appendChild(newItem);
+            } else if (driveInput.value.trim() !== "") {
+                let newItem = document.createElement("p");
+                newItem.innerHTML = "🔗 <a href='" + driveInput.value + "' target='_blank'>Google Drive Link</a>";
+                assignmentList.appendChild(newItem);
+            }
+        }
+    </script>
 </body>
 </html>
