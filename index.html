@@ -24,7 +24,7 @@
             padding: 10px;
         }
         nav a {
-            color: read-write-plaintext-only;
+            color: white;
             text-decoration: none;
             margin: 15px;
             font-size: 18px;
@@ -42,20 +42,43 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .assignments a {
+        .submission {
+            margin: 20px;
+        }
+        .submission input, .submission button {
+            font-size: 16px;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .submission button {
+            background-color: #008cba;
+            color: white;
+            cursor: pointer;
+        }
+        .submission button:hover {
+            background-color: #006f8c;
+        }
+        .submissions-list {
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+        }
+        .submissions-list h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .submissions-list a {
             display: block;
             margin: 10px 0;
             color: #008cba;
             text-decoration: none;
-            font-size: 20px;
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 10px;
-            border-radius: 5px;
+            font-size: 16px;
         }
-        .assignments a:hover {
+        .submissions-list a:hover {
             text-decoration: underline;
-            background: rgba(255, 255, 255, 0.9);
         }
     </style>
 </head>
@@ -71,12 +94,25 @@
         <h2>Welcome!</h2>
         <p>Select a menu option to view details.</p>
     </div>
-    <div class="assignments">
-        <h2>Assignments</h2>
-        <a href="https://youtu.be/fRv5rfHpkO4?si=ovCUg0IpihFHWnA0" target="_blank">Assignment 1</a>
-        <a href="https://youtu.be/e33s_4dcYJ8?si=Bu_h-vbRgQ0SuFCI" target="_blank">Assignment 2</a>
-        <a href="https://youtu.be/5P_pSHWuS10?si=4LHxrQGho0koalat" target="_blank">Assignment 3</a>
+    
+    <!-- Assignment Submission Section -->
+    <div class="submission">
+        <h2>Assignment Submission</h2>
+        <form id="assignmentForm">
+            <input type="file" id="fileUpload" name="fileUpload" accept=".doc,.docx,.xls,.xlsx,.pdf" />
+            <br />
+            <input type="text" id="driveLink" placeholder="Google Drive Link (Optional)" />
+            <br />
+            <button type="submit">Submit Assignment</button>
+        </form>
     </div>
+
+    <!-- Submitted Assignments Section -->
+    <div class="submissions-list" id="submissions">
+        <h3>Submitted Assignments</h3>
+        <p>No assignments submitted yet.</p>
+    </div>
+
     <script>
         function showInfo(type) {
             let info = document.getElementById("info");
@@ -90,6 +126,38 @@
                 info.innerHTML = "<h2>Scholarship Site</h2><p>CGPA 4.00 = 50%, CGPA 4.50 = 100%</p>";
             }
         }
+
+        // Handle form submission
+        document.getElementById('assignmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            let fileInput = document.getElementById('fileUpload');
+            let driveLink = document.getElementById('driveLink').value;
+            let file = fileInput.files[0];
+
+            let submissionsDiv = document.getElementById('submissions');
+            let newSubmission = document.createElement('div');
+
+            // Create link for the file upload
+            if (file) {
+                let fileLink = document.createElement('a');
+                fileLink.href = URL.createObjectURL(file);
+                fileLink.textContent = "Download " + file.name;
+                newSubmission.appendChild(fileLink);
+            }
+
+            // If Google Drive link is provided, create a link
+            if (driveLink) {
+                let driveLinkElement = document.createElement('a');
+                driveLinkElement.href = driveLink;
+                driveLinkElement.textContent = "View Google Drive Link";
+                newSubmission.appendChild(driveLinkElement);
+            }
+
+            // Add submission to the list
+            submissionsDiv.appendChild(newSubmission);
+            document.getElementById('assignmentForm').reset();
+        });
     </script>
 </body>
 </html>
