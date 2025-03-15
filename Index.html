@@ -1,0 +1,19 @@
+<script>
+    function showAssignments() {
+        let assignmentSection = document.getElementById("assignmentSection");
+        let assignmentList = document.getElementById("assignmentList");
+
+        // Show assignment section
+        assignmentSection.style.display = "block";
+
+        // Clear previous content
+        assignmentList.innerHTML = "<h3>Submitted Assignments</h3>";
+
+        // Your Google Drive folder link
+        let driveFolderLink = "https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj"; // Use your real folder link
+
+        let newItem = document.createElement("p");
+        newItem.innerHTML = "📂 <a href='" + driveFolderLink + "' target='_blank'>View All Assignments</a>";
+        assignmentList.appendChild(newItem);
+    }
+</script>
