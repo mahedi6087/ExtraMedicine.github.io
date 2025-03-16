@@ -43,7 +43,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .assignment-section {
-            display: none;
             margin: 20px auto;
             width: 80%;
             max-width: 600px;
@@ -67,13 +66,15 @@
         <h2>Welcome!</h2>
         <p>Select a menu option to view details.</p>
     </div>
-    
-    <!-- Assignment Section -->
-    <div class="assignment-section" id="assignmentSection">
-        <h2>Assignments</h2>
-        <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Submitted Assignments</a></p>
+    <div class="assignment-section" id="assignmentSection" style="display: none;">
+        <h2>Submit Your Assignment</h2>
+        <input type="text" id="driveLink" placeholder="Paste your Google Drive link here">
+        <button onclick="submitAssignment()">Submit</button>
+        <div class="assignment-list" id="assignmentList">
+            <h3>Submitted Assignments</h3>
+            <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Submitted Assignments</a></p>
+        </div>
     </div>
-
     <script>
         function showInfo(type) {
             let info = document.getElementById("info");
@@ -89,7 +90,16 @@
         }
 
         function showAssignments() {
-            document.getElementById("assignmentSection").style.display = "block";
+            let assignmentSection = document.getElementById("assignmentSection");
+            assignmentSection.style.display = "block";
+        }
+
+        function submitAssignment() {
+            let driveInput = document.getElementById("driveLink");
+            if (driveInput.value.trim() !== "") {
+                alert("Assignment submitted successfully!");
+                driveInput.value = "";
+            }
         }
     </script>
 </body>
