@@ -43,6 +43,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .assignment-section {
+            display: none;
             margin: 20px auto;
             width: 80%;
             max-width: 600px;
@@ -50,10 +51,6 @@
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .assignment-list {
-            margin-top: 20px;
-            text-align: left;
         }
     </style>
 </head>
@@ -70,14 +67,13 @@
         <h2>Welcome!</h2>
         <p>Select a menu option to view details.</p>
     </div>
-    <div class="assignment-section" id="assignmentSection" style="display: none;">
-        <h2>Submit Your Assignment</h2>
-        <input type="text" id="driveLink" placeholder="Paste your Google Drive link here">
-        <button onclick="submitAssignment()">Submit</button>
-        <div class="assignment-list" id="assignmentList">
-            <h3>Submitted Assignments</h3>
-        </div>
+    
+    <!-- Assignment Section -->
+    <div class="assignment-section" id="assignmentSection">
+        <h2>Assignments</h2>
+        <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Submitted Assignments</a></p>
     </div>
+
     <script>
         function showInfo(type) {
             let info = document.getElementById("info");
@@ -93,35 +89,7 @@
         }
 
         function showAssignments() {
-            let assignmentSection = document.getElementById("assignmentSection");
-            let assignmentList = document.getElementById("assignmentList");
-            assignmentSection.style.display = "block";
-            
-            // Load submitted assignments from localStorage
-            let storedAssignments = JSON.parse(localStorage.getItem("assignments")) || [];
-            assignmentList.innerHTML = "<h3>Submitted Assignments</h3>";
-            storedAssignments.forEach(function (assignment) {
-                let newItem = document.createElement("p");
-                newItem.innerHTML = "🔗 <a href='" + assignment.link + "' target='_blank'>Google Drive Link</a>";
-                assignmentList.appendChild(newItem);
-            });
-        }
-
-        function submitAssignment() {
-            let driveInput = document.getElementById("driveLink");
-            let assignments = JSON.parse(localStorage.getItem("assignments")) || [];
-
-            if (driveInput.value.trim() !== "") {
-                let link = driveInput.value;
-                assignments.push({type: "link", link: link});
-                localStorage.setItem("assignments", JSON.stringify(assignments));
-            }
-
-            // Clear the input after submission
-            driveInput.value = "";
-
-            // Update the displayed assignments
-            showAssignments();
+            document.getElementById("assignmentSection").style.display = "block";
         }
     </script>
 </body>
