@@ -73,6 +73,7 @@
         <div class="assignment-list" id="assignmentList">
             <h3>Submitted Assignments</h3>
             <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Submitted Assignments</a></p>
+            <p>📂 <a href="YOUR_DRIVE_LINK_HERE" target="_blank">View Week 2 Assignment</a></p>
         </div>
     </div>
     <script>
@@ -97,6 +98,10 @@
         function submitAssignment() {
             let driveInput = document.getElementById("driveLink");
             if (driveInput.value.trim() !== "") {
+                let assignmentList = document.getElementById("assignmentList");
+                let newAssignment = document.createElement("p");
+                newAssignment.innerHTML = `📂 <a href="${driveInput.value}" target="_blank">View New Assignment</a>`;
+                assignmentList.appendChild(newAssignment);
                 alert("Assignment submitted successfully!");
                 driveInput.value = "";
             }
