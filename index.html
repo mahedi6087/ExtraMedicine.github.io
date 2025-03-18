@@ -68,7 +68,118 @@
     </div>
     <div class="assignment-section" id="assignmentSection" style="display: none;">
         <h2>Submit Your Assignment</h2>
+        <input type="text" id="driveLink" placeholder="<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAHEDI's Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: url('dng.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        header {
+            background: #222;
+            color: white;
+            padding: 15px;
+            font-size: 24px;
+        }
+        nav {
+            background: #444;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 15px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            padding: 20px;
+            background: #fff;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .assignment-section {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>MAHEDI's Website</header>
+    <nav>
+        <a onclick="showInfo('bachelor')">Bachelor's Info</a>
+        <a onclick="showInfo('master')">Master's Info</a>
+        <a onclick="showInfo('result')">Results</a>
+        <a onclick="showInfo('scholarship')">Scholarships</a>
+        <a onclick="showAssignments()">Assignments</a>
+    </nav>
+    <div class="content" id="info">
+        <h2>Welcome!</h2>
+        <p>Select a menu option to view details.</p>
+    </div>
+    <div class="assignment-section" id="assignmentSection" style="display: none;">
+        <h2>Submit Your Assignment</h2>
         <input type="text" id="driveLink" placeholder="Paste your Google Drive link here">
+        <button onclick="submitAssignment()">Submit</button>
+        <div class="assignment-list" id="assignmentList">
+            <h3>Submitted Assignments</h3>
+            <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Submitted Assignments</a></p>
+            <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Week 2 Assignment</a></p>
+        </div>
+    </div>
+    <script>
+        function showInfo(type) {
+            let info = document.getElementById("info");
+            if (type === "bachelor") {
+                info.innerHTML = "<h2>Bachelor's Information</h2><p>Admission Fee: 990 Won, Date: 19/05/2025</p>";
+            } else if (type === "master") {
+                info.innerHTML = "<h2>Master's Information</h2><p>CGPA: 3.99 (Must be), Admission Fee: 1190 Won</p>";
+            } else if (type === "result") {
+                info.innerHTML = "<h2>Result Site</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
+            } else if (type === "scholarship") {
+                info.innerHTML = "<h2>Scholarship Site</h2><p>CGPA 4.00 = 50%, CGPA 4.50 = 100%</p>";
+            }
+        }
+
+        function showAssignments() {
+            let assignmentSection = document.getElementById("assignmentSection");
+            assignmentSection.style.display = "block";
+        }
+
+        function submitAssignment() {
+            let driveInput = document.getElementById("driveLink");
+            if (driveInput.value.trim() !== "") {
+                let assignmentList = document.getElementById("assignmentList");
+                let newAssignment = document.createElement("p");
+                newAssignment.innerHTML = `📂 <a href="${driveInput.value}" target="_blank">View New Assignment</a>`;
+                assignmentList.appendChild(newAssignment);
+                alert("Assignment submitted successfully!");
+                driveInput.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
+">
         <button onclick="submitAssignment()">Submit</button>
         <div class="assignment-list" id="assignmentList">
             <h3>Submitted Assignments</h3>
