@@ -2,204 +2,149 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MAHEDI's Website</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MAHEDI's Advanced Website</title>
   <style>
-    :root {
-      --light-bg: #f4f4f4;
-      --dark-bg: #1e1e1e;
-      --light-text: #000;
-      --dark-text: #fff;
-      --accent: #0077ff;
-    }
-
     body {
-      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: url('aksa.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: var(--light-text);
-      transition: all 0.4s ease;
-    }
-
-    body.dark {
-      background: #121212;
-      color: var(--dark-text);
-    }
-
-    header {
-      background: #333;
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
       color: white;
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: #1e1e1e;
       padding: 20px;
-      font-size: 26px;
+      font-size: 28px;
       text-align: center;
       font-weight: bold;
+      box-shadow: 0 0 10px #000;
     }
-
     nav {
-      background: #444;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
+      background: #333;
+      padding: 10px;
     }
-
-    nav a, .dark-toggle {
-      padding: 15px;
+    nav a {
+      margin: 10px;
       color: white;
       text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-      cursor: pointer;
+      font-size: 18px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.3s;
     }
-
-    nav a:hover, .dark-toggle:hover {
-      background: #666;
+    nav a:hover {
+      background: #555;
     }
-
-    .dark-toggle {
-      background: var(--accent);
-      border: none;
-      border-radius: 5px;
-    }
-
     .content, .assignment-section {
-      background: rgba(255, 255, 255, 0.9);
-      color: #000;
       padding: 20px;
       margin: 20px auto;
-      max-width: 700px;
+      width: 80%;
+      max-width: 800px;
+      background: #1f1f1f;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
     }
-
-    body.dark .content,
-    body.dark .assignment-section {
-      background: #1c1c1c;
+    #darkModeToggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #555;
       color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
     }
-
     .cube {
-      margin: 30px auto;
-      width: 150px;
-      height: 150px;
+      width: 100px;
+      height: 100px;
+      margin: 20px auto;
       transform-style: preserve-3d;
-      animation: rotate 8s infinite linear;
-      position: relative;
+      animation: rotate 5s infinite linear;
     }
-
     .cube div {
       position: absolute;
-      width: 150px;
-      height: 150px;
-      background: rgba(0, 123, 255, 0.8);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 20px;
-      border: 2px solid white;
+      width: 100px;
+      height: 100px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid #fff;
     }
-
-    .cube .front  { transform: translateZ(75px); }
-    .cube .back   { transform: rotateY(180deg) translateZ(75px); }
-    .cube .right  { transform: rotateY(90deg) translateZ(75px); }
-    .cube .left   { transform: rotateY(-90deg) translateZ(75px); }
-    .cube .top    { transform: rotateX(90deg) translateZ(75px); }
-    .cube .bottom { transform: rotateX(-90deg) translateZ(75px); }
-
     @keyframes rotate {
-      0%   { transform: rotateX(0deg) rotateY(0deg); }
-      100% { transform: rotateX(360deg) rotateY(360deg); }
-    }
-
-    .chatbox {
-      display: none;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #333;
-      margin: 20px auto;
-      max-width: 500px;
-      padding: 20px;
-    }
-    body.dark .chatbox {
-      background: #222;
-      color: white;
+      from { transform: rotateX(0deg) rotateY(0deg); }
+      to { transform: rotateX(360deg) rotateY(360deg); }
     }
     footer {
       text-align: center;
       padding: 20px;
-      background: #333;
-      color: white;
-    }
-    @media (max-width: 600px) {
-      nav a {
-        flex: 1 1 100%;
-        text-align: center;
-      }
-      .cube {
-        transform: scale(0.8);
-      }
+      background: #222;
+      font-size: 14px;
+      color: #ccc;
     }
   </style>
 </head>
 <body>
-  <header>MAHEDI's Website</header>
+  <button id="darkModeToggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+  <header>MAHEDI's Advanced Website</header>
   <nav>
-    <a onclick="showInfo('bachelor')">Bachelor's Info</a>
-    <a onclick="showInfo('master')">Master's Info</a>
+    <a onclick="showInfo('bachelor')">Bachelor Info</a>
+    <a onclick="showInfo('master')">Master Info</a>
     <a onclick="showInfo('result')">Results</a>
     <a onclick="showInfo('scholarship')">Scholarships</a>
     <a onclick="showAssignments()">Assignments</a>
-    <a onclick="showChatLogin()">Live Chat</a>
-    <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+    <a onclick="openLiveChat()">Live Chat</a>
   </nav>
 
-  <div class="content" id="info">
-    <h2>Welcome!</h2>
-    <p>Select a menu option to view details.</p>
-    <div class="cube">
-      <div class="front">MAHEDI</div>
-      <div class="back">WEB</div>
-      <div class="right">3D</div>
-      <div class="left">CUBE</div>
-      <div class="top">INFO</div>
-      <div class="bottom">FUN</div>
-    </div>
+  <div class="cube">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
   </div>
 
-  <div class="assignment-section" id="assignmentSection" style="display: none;">
+  <div class="content" id="info">
+    <h2>Welcome to MAHEDI's Site!</h2>
+    <p>Select any menu option above to view the content.</p>
+  </div>
+
+  <div class="assignment-section" id="assignmentSection" style="display:none;">
     <h2>Submit Your Assignment</h2>
     <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%; padding: 10px;">
-    <button onclick="submitAssignment()" style="padding: 10px 20px; margin-top: 10px;">Submit</button>
+    <button onclick="submitAssignment()" style="padding: 10px 15px;">Submit</button>
     <div class="assignment-list" id="assignmentList">
       <h3>Submitted Assignments</h3>
-      <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">Week 2</a></p>
-      <p>📂 <a href="https://drive.google.com/drive/folders/1Uqd4Oh2t5G1sOMFaXTDb1JveJHw7F8Em" target="_blank">Week 4</a></p>
+      <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Week 2 Assignment</a></p>
+      <p>📂 <a href="https://drive.google.com/drive/folders/1Uqd4Oh2t5G1sOMFaXTDb1JveJHw7F8Em?usp=sharing" target="_blank">View Week 4 Assignment</a></p>
     </div>
-  </div>
-
-  <div class="chatbox" id="chatBox">
-    <h2>Live Chat</h2>
-    <textarea style="width:100%; height: 100px;" placeholder="Type your message..."></textarea>
-    <br><br>
-    <button onclick="alert('Message Sent!')">Send</button>
   </div>
 
   <footer>
-    <p>📧 Contact: mahedi@email.com | 🌐 Built with 💙 by MAHEDI</p>
+    📧 Email: <a href="mailto:mahedi77990@gmail.com" style="color: #ccc;">mahedi77990@gmail.com</a><br>
+    ⓒ 2025 MAHEDI. All rights reserved.
   </footer>
 
   <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("light-mode");
+    }
+
     function showInfo(type) {
-      const info = document.getElementById("info");
+      let info = document.getElementById("info");
       if (type === "bachelor") {
-        info.innerHTML = "<h2>Bachelor's Info</h2><p>Admission Fee: 990 Won<br>Date: 19/05/2025</p>";
+        info.innerHTML = "<h2>Bachelor's Info</h2><p>Admission Fee: 990 Won, Date: 19/05/2025</p>";
       } else if (type === "master") {
-        info.innerHTML = "<h2>Master's Info</h2><p>CGPA: 3.99 required<br>Admission Fee: 1190 Won</p>";
+        info.innerHTML = "<h2>Master's Info</h2><p>CGPA: 3.99 required. Admission Fee: 1190 Won</p>";
       } else if (type === "result") {
-        info.innerHTML = "<h2>Results</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
+        info.innerHTML = "<h2>Result Info</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
       } else if (type === "scholarship") {
-        info.innerHTML = "<h2>Scholarships</h2><p>CGPA 4.00 = 50%<br>CGPA 4.50 = 100%</p>";
+        info.innerHTML = "<h2>Scholarships</h2><p>CGPA 4.00 = 50%, CGPA 4.50 = 100%</p>";
       }
     }
 
@@ -208,24 +153,21 @@
     }
 
     function submitAssignment() {
-      let link = document.getElementById("driveLink").value.trim();
-      if (link) {
-        let entry = document.createElement("p");
-        entry.innerHTML = `📂 <a href="${link}" target="_blank">New Assignment</a>`;
-        document.getElementById("assignmentList").appendChild(entry);
+      let input = document.getElementById("driveLink");
+      if (input.value.trim() !== "") {
+        let list = document.getElementById("assignmentList");
+        let newItem = document.createElement("p");
+        newItem.innerHTML = `📂 <a href="${input.value}" target="_blank">View New Assignment</a>`;
+        list.appendChild(newItem);
         alert("Assignment submitted successfully!");
-        document.getElementById("driveLink").value = "";
+        input.value = "";
       }
     }
 
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark");
-    }
-
-    function showChatLogin() {
-      let pass = prompt("Enter chat password:");
+    function openLiveChat() {
+      let pass = prompt("Enter password to access live chat:");
       if (pass === "1234") {
-        document.getElementById("chatBox").style.display = "block";
+        window.open("https://instagram.com/direct/inbox", "_blank");
       } else {
         alert("Incorrect password!");
       }
