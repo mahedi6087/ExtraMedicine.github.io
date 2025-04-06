@@ -118,6 +118,7 @@
     <a onclick="showInfo('scholarship')">Scholarships</a>
     <a onclick="showAssignments()">Assignments</a>
     <a onclick="openLiveChat()">Live Chat</a>
+    <a onclick="scrollToSection('contact')">Contact</a>
   </nav>
 
   <div class="cube">
@@ -145,9 +146,14 @@
     </div>
   </div>
 
-  <footer>
-    📧 Email: <a href="mailto:mahedi77990@gmail.com" style="color: #ccc;">mahedi77990@gmail.com</a><br>
-    ⓒ 2025 MAHEDI. All rights reserved.
+  <footer id="contact">
+    <h3>Contact Me</h3>
+    <p>Email: <a href="mailto:mahedi77990@gmail.com" style="color: #ccc;">mahedi77990@gmail.com</a></p>
+    <p>Phone: +82 010-9856-2811</p>
+    <p>Telegram: <a href="https://t.me/+821098562811" target="_blank">@821098562811</a></p>
+    <p>WhatsApp: <a href="https://wa.me/821098562811" target="_blank">Chat on WhatsApp</a></p>
+    <p>KakaoTalk: Add <strong>01098562811</strong> in your app</p>
+    <p>ⓒ 2025 MAHEDI. All rights reserved.</p>
   </footer>
 
   <script>
@@ -206,6 +212,10 @@
       } else {
         alert("Incorrect password!");
       }
+    }
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
     }
   </script>
 </body>
