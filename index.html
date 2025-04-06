@@ -13,10 +13,6 @@
       color: white;
       transition: background 0.3s, color 0.3s;
     }
-    body.light-mode {
-      background-color: #f5f5f5;
-      color: #222;
-    }
     header {
       background: #1e1e1e;
       padding: 20px;
@@ -52,10 +48,6 @@
       background: #1f1f1f;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    }
-    .light-mode .content, .light-mode .assignment-section {
-      background: #ffffff;
-      color: #000;
     }
     #darkModeToggle {
       position: fixed;
@@ -102,7 +94,7 @@
       font-size: 14px;
       color: #ccc;
     }
-    input[type='text'], input[type='file'], button {
+    input[type='text'], button {
       padding: 10px;
       margin-top: 10px;
     }
@@ -126,6 +118,7 @@
     <a onclick="showInfo('scholarship')">Scholarships</a>
     <a onclick="showAssignments()">Assignments</a>
     <a onclick="openLiveChat()">Live Chat</a>
+    <a onclick="scrollToSection('contact')">Contact</a>
   </nav>
 
   <div class="cube">
@@ -140,8 +133,6 @@
   <div class="content" id="info">
     <h2>Welcome to MAHEDI's Site!</h2>
     <p>Select any menu option above to view the content.</p>
-    <h4>Upload Your Own Image for 3D Cube:</h4>
-    <input type="file" accept="image/*" onchange="changeCubeImage(event)">
   </div>
 
   <div class="assignment-section" id="assignmentSection" style="display:none;">
@@ -155,9 +146,14 @@
     </div>
   </div>
 
-  <footer>
-    📧 Email: <a href="mailto:mahedi77990@gmail.com" style="color: #ccc;">mahedi77990@gmail.com</a><br>
-    ⓒ 2025 MAHEDI. All rights reserved.
+  <footer id="contact">
+    <h3>Contact Me</h3>
+    <p>Email: <a href="mailto:mahedi77990@gmail.com" style="color: #ccc;">mahedi77990@gmail.com</a></p>
+    <p>Phone: +82 010-9856-2811</p>
+    <p>Telegram: <a href="https://t.me/+821098562811" target="_blank">@821098562811</a></p>
+    <p>WhatsApp: <a href="https://wa.me/821098562811" target="_blank">Chat on WhatsApp</a></p>
+    <p>KakaoTalk: Add <strong>01098562811</strong> in your app</p>
+    <p>ⓒ 2025 MAHEDI. All rights reserved.</p>
   </footer>
 
   <script>
@@ -199,16 +195,14 @@
       if (password === "1234") {
         const number = prompt("Enter your phone number to verify via WhatsApp, Telegram, or KakaoTalk:");
         if (number && number.length >= 8) {
-          const verifiedApps = ['whatsapp', 'telegram', 'kakaotalk'];
-          const app = prompt("Which app do you want to use for chat? Type 'whatsapp', 'telegram', or 'kakaotalk':");
-          if (verifiedApps.includes(app.toLowerCase())) {
-            if (app.toLowerCase() === "whatsapp") {
-              window.open("https://wa.me/821098562811", "_blank");
-            } else if (app.toLowerCase() === "telegram") {
-              window.open("https://t.me/+821098562811", "_blank");
-            } else {
-              alert("Add number 01098562811 manually in KakaoTalk app.");
-            }
+          alert("Verified. Choose an app to continue:");
+          const app = prompt("Type 'whatsapp', 'telegram', or 'kakaotalk':");
+          if (app.toLowerCase() === "whatsapp") {
+            window.open("https://wa.me/821098562811", "_blank");
+          } else if (app.toLowerCase() === "telegram") {
+            window.open("https://t.me/+821098562811", "_blank");
+          } else if (app.toLowerCase() === "kakaotalk") {
+            alert("Add number 01098562811 manually in KakaoTalk app.");
           } else {
             alert("App not recognized.");
           }
@@ -220,14 +214,8 @@
       }
     }
 
-    function changeCubeImage(event) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        document.querySelectorAll('.cube div').forEach(face => {
-          face.style.backgroundImage = `url('${e.target.result}')`;
-        });
-      };
-      reader.readAsDataURL(event.target.files[0]);
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
     }
   </script>
 </body>
