@@ -2,143 +2,166 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MAHEDI's Advanced Website</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MAHEDI's Website</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #121212;
-      color: white;
-      transition: background 0.3s, color 0.3s;
+    :root {
+      --light-bg: #f4f4f4;
+      --dark-bg: #1e1e1e;
+      --light-text: #000;
+      --dark-text: #fff;
+      --accent: #0077ff;
     }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('aksa.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--light-text);
+      transition: all 0.4s ease;
+    }
+
+    body.dark {
+      background: #121212;
+      color: var(--dark-text);
+    }
+
     header {
-      background: #1e1e1e;
+      background: #333;
+      color: white;
       padding: 20px;
-      font-size: 28px;
+      font-size: 26px;
       text-align: center;
       font-weight: bold;
-      box-shadow: 0 0 10px #000;
     }
+
     nav {
+      background: #444;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      background: #333;
-      padding: 10px;
     }
+
     nav a {
-      margin: 10px;
+      padding: 15px;
       color: white;
       text-decoration: none;
-      font-size: 18px;
-      padding: 8px 16px;
-      border-radius: 8px;
-      transition: background 0.3s;
+      font-weight: bold;
+      transition: 0.3s;
     }
+
     nav a:hover {
-      background: #555;
+      background: #666;
     }
+
+    .dark-toggle {
+      margin: 10px;
+      padding: 10px 20px;
+      background: var(--accent);
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+
     .content, .assignment-section {
+      background: rgba(255, 255, 255, 0.9);
+      color: #000;
       padding: 20px;
       margin: 20px auto;
-      width: 80%;
-      max-width: 800px;
-      background: #1f1f1f;
+      max-width: 700px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
     }
-    #darkModeToggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #555;
+
+    body.dark .content,
+    body.dark .assignment-section {
+      background: #1c1c1c;
       color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 1000;
     }
+
     .cube {
-      position: relative;
+      margin: 30px auto;
       width: 150px;
       height: 150px;
-      margin: 40px auto;
       transform-style: preserve-3d;
-      animation: rotate 10s infinite linear;
+      animation: rotate 8s infinite linear;
+      position: relative;
     }
+
     .cube div {
       position: absolute;
       width: 150px;
       height: 150px;
-      background-size: cover;
-      opacity: 0.9;
+      background: rgba(0, 123, 255, 0.8);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      border: 2px solid white;
     }
-    .cube .front  { transform: translateZ(75px); background-image: url('aksa.jpg'); }
-    .cube .back   { transform: rotateY(180deg) translateZ(75px); background-image: url('aksa.jpg'); }
-    .cube .right  { transform: rotateY(90deg) translateZ(75px); background-image: url('aksa.jpg'); }
-    .cube .left   { transform: rotateY(-90deg) translateZ(75px); background-image: url('aksa.jpg'); }
-    .cube .top    { transform: rotateX(90deg) translateZ(75px); background-image: url('aksa.jpg'); }
-    .cube .bottom { transform: rotateX(-90deg) translateZ(75px); background-image: url('aksa.jpg'); }
+
+    .cube .front  { transform: translateZ(75px); }
+    .cube .back   { transform: rotateY(180deg) translateZ(75px); }
+    .cube .right  { transform: rotateY(90deg) translateZ(75px); }
+    .cube .left   { transform: rotateY(-90deg) translateZ(75px); }
+    .cube .top    { transform: rotateX(90deg) translateZ(75px); }
+    .cube .bottom { transform: rotateX(-90deg) translateZ(75px); }
 
     @keyframes rotate {
-      from { transform: rotateX(0deg) rotateY(0deg); }
-      to { transform: rotateX(360deg) rotateY(360deg); }
+      0%   { transform: rotateX(0deg) rotateY(0deg); }
+      100% { transform: rotateX(360deg) rotateY(360deg); }
     }
+
     footer {
       text-align: center;
       padding: 20px;
-      background: #222;
-      font-size: 14px;
-      color: #ccc;
+      background: #333;
+      color: white;
     }
-    input[type='text'], button {
-      padding: 10px;
-      margin-top: 10px;
-    }
-    @media screen and (max-width: 600px) {
-      nav {
-        flex-direction: column;
+
+    @media (max-width: 600px) {
+      nav a {
+        flex: 1 1 100%;
+        text-align: center;
       }
-      .content, .assignment-section {
-        width: 95%;
+
+      .cube {
+        transform: scale(0.8);
       }
     }
   </style>
 </head>
 <body>
-  <button id="darkModeToggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-  <header>MAHEDI's Advanced Website</header>
+  <header>MAHEDI's Website</header>
   <nav>
-    <a onclick="showInfo('bachelor')">Bachelor Info</a>
-    <a onclick="showInfo('master')">Master Info</a>
+    <a onclick="showInfo('bachelor')">Bachelor's Info</a>
+    <a onclick="showInfo('master')">Master's Info</a>
     <a onclick="showInfo('result')">Results</a>
     <a onclick="showInfo('scholarship')">Scholarships</a>
     <a onclick="showAssignments()">Assignments</a>
-    <a onclick="openLiveChat()">Live Chat</a>
-    <a onclick="scrollToSection('contact')">Contact</a>
+    <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
   </nav>
 
-  <div class="cube">
-    <div class="front"></div>
-    <div class="back"></div>
-    <div class="right"></div>
-    <div class="left"></div>
-    <div class="top"></div>
-    <div class="bottom"></div>
-  </div>
-
   <div class="content" id="info">
-    <h2>Welcome to MAHEDI's Site!</h2>
-    <p>Select any menu option above to view the content.</p>
+    <h2>Welcome!</h2>
+    <p>Select a menu option to view details.</p>
+    <div class="cube">
+      <div class="front">MAHEDI</div>
+      <div class="back">WEB</div>
+      <div class="right">3D</div>
+      <div class="left">CUBE</div>
+      <div class="top">INFO</div>
+      <div class="bottom">FUN</div>
+    </div>
   </div>
 
-  <div class="assignment-section" id="assignmentSection" style="display:none;">
+  <div class="assignment-section" id="assignmentSection" style="display: none;">
     <h2>Submit Your Assignment</h2>
-    <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%;">
-    <button onclick="submitAssignment()">Submit</button>
+    <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%; padding: 10px;">
+    <button onclick="submitAssignment()" style="padding: 10px 20px; margin-top: 10px;">Submit</button>
     <div class="assignment-list" id="assignmentList">
       <h3>Submitted Assignments</h3>
       <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Week 2 Assignment</a></p>
@@ -146,31 +169,21 @@
     </div>
   </div>
 
-  <footer id="contact">
-    <h3>Contact Me</h3>
-    <p>Email: <a href="mailto:mahedi77990@gmail.com" style="color: #ccc;">mahedi77990@gmail.com</a></p>
-    <p>Phone: +82 010-9856-2811</p>
-    <p>Telegram: <a href="https://t.me/+821098562811" target="_blank">@821098562811</a></p>
-    <p>WhatsApp: <a href="https://wa.me/821098562811" target="_blank">Chat on WhatsApp</a></p>
-    <p>KakaoTalk: Add <strong>01098562811</strong> in your app</p>
-    <p>ⓒ 2025 MAHEDI. All rights reserved.</p>
+  <footer>
+    <p>📧 Contact: mahedi@email.com | 🌐 Built with 💙 by MAHEDI</p>
   </footer>
 
   <script>
-    function toggleDarkMode() {
-      document.body.classList.toggle("light-mode");
-    }
-
     function showInfo(type) {
-      const info = document.getElementById("info");
+      let info = document.getElementById("info");
       if (type === "bachelor") {
-        info.innerHTML = "<h2>Bachelor's Info</h2><p>Admission Fee: 990 Won, Date: 19/05/2025</p>";
+        info.innerHTML = "<h2>Bachelor's Info</h2><p>Admission Fee: 990 Won<br>Date: 19/05/2025</p>";
       } else if (type === "master") {
-        info.innerHTML = "<h2>Master's Info</h2><p>CGPA: 3.99 required. Admission Fee: 1190 Won</p>";
+        info.innerHTML = "<h2>Master's Info</h2><p>CGPA: 3.99 required<br>Admission Fee: 1190 Won</p>";
       } else if (type === "result") {
-        info.innerHTML = "<h2>Result Info</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
+        info.innerHTML = "<h2>Results</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
       } else if (type === "scholarship") {
-        info.innerHTML = "<h2>Scholarships</h2><p>CGPA 4.00 = 50%, CGPA 4.50 = 100%</p>";
+        info.innerHTML = "<h2>Scholarships</h2><p>CGPA 4.00 = 50%<br>CGPA 4.50 = 100%</p>";
       }
     }
 
@@ -179,43 +192,18 @@
     }
 
     function submitAssignment() {
-      const input = document.getElementById("driveLink");
-      if (input.value.trim() !== "") {
-        const list = document.getElementById("assignmentList");
-        const newItem = document.createElement("p");
-        newItem.innerHTML = `📂 <a href="${input.value}" target="_blank">View New Assignment</a>`;
-        list.appendChild(newItem);
+      let link = document.getElementById("driveLink").value.trim();
+      if (link) {
+        let entry = document.createElement("p");
+        entry.innerHTML = `📂 <a href="${link}" target="_blank">View New Assignment</a>`;
+        document.getElementById("assignmentList").appendChild(entry);
         alert("Assignment submitted successfully!");
-        input.value = "";
+        document.getElementById("driveLink").value = "";
       }
     }
 
-    function openLiveChat() {
-      const password = prompt("Enter password to access live chat:");
-      if (password === "1234") {
-        const number = prompt("Enter your phone number to verify via WhatsApp, Telegram, or KakaoTalk:");
-        if (number && number.length >= 8) {
-          alert("Verified. Choose an app to continue:");
-          const app = prompt("Type 'whatsapp', 'telegram', or 'kakaotalk':");
-          if (app.toLowerCase() === "whatsapp") {
-            window.open("https://wa.me/821098562811", "_blank");
-          } else if (app.toLowerCase() === "telegram") {
-            window.open("https://t.me/+821098562811", "_blank");
-          } else if (app.toLowerCase() === "kakaotalk") {
-            alert("Add number 01098562811 manually in KakaoTalk app.");
-          } else {
-            alert("App not recognized.");
-          }
-        } else {
-          alert("Invalid number. Please try again.");
-        }
-      } else {
-        alert("Incorrect password!");
-      }
-    }
-
-    function scrollToSection(id) {
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
     }
   </script>
 </body>
