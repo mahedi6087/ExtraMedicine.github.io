@@ -62,19 +62,27 @@
       z-index: 1000;
     }
     .cube {
-      width: 100px;
-      height: 100px;
-      margin: 20px auto;
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 40px auto;
       transform-style: preserve-3d;
-      animation: rotate 5s infinite linear;
+      animation: rotate 10s infinite linear;
     }
     .cube div {
       position: absolute;
-      width: 100px;
-      height: 100px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid #fff;
+      width: 150px;
+      height: 150px;
+      background-size: cover;
+      opacity: 0.9;
     }
+    .cube .front  { transform: translateZ(75px); background-image: url('aksa.jpg'); }
+    .cube .back   { transform: rotateY(180deg) translateZ(75px); background-image: url('aksa.jpg'); }
+    .cube .right  { transform: rotateY(90deg) translateZ(75px); background-image: url('aksa.jpg'); }
+    .cube .left   { transform: rotateY(-90deg) translateZ(75px); background-image: url('aksa.jpg'); }
+    .cube .top    { transform: rotateX(90deg) translateZ(75px); background-image: url('aksa.jpg'); }
+    .cube .bottom { transform: rotateX(-90deg) translateZ(75px); background-image: url('aksa.jpg'); }
+
     @keyframes rotate {
       from { transform: rotateX(0deg) rotateY(0deg); }
       to { transform: rotateX(360deg) rotateY(360deg); }
@@ -89,6 +97,14 @@
     input[type='text'], button {
       padding: 10px;
       margin-top: 10px;
+    }
+    @media screen and (max-width: 600px) {
+      nav {
+        flex-direction: column;
+      }
+      .content, .assignment-section {
+        width: 95%;
+      }
     }
   </style>
 </head>
@@ -105,12 +121,12 @@
   </nav>
 
   <div class="cube">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
+    <div class="front"></div>
+    <div class="back"></div>
+    <div class="right"></div>
+    <div class="left"></div>
+    <div class="top"></div>
+    <div class="bottom"></div>
   </div>
 
   <div class="content" id="info">
@@ -171,10 +187,19 @@
     function openLiveChat() {
       const password = prompt("Enter password to access live chat:");
       if (password === "1234") {
-        const number = prompt("Enter your phone number to verify via WhatsApp, Telegram or KakaoTalk:");
+        const number = prompt("Enter your phone number to verify via WhatsApp, Telegram, or KakaoTalk:");
         if (number && number.length >= 8) {
-          alert("Verified via WhatsApp, Telegram, or KakaoTalk. Redirecting to chat...");
-          window.open("https://wa.me/821098562811", "_blank");
+          alert("Verified. Choose an app to continue:");
+          const app = prompt("Type 'whatsapp', 'telegram', or 'kakaotalk':");
+          if (app.toLowerCase() === "whatsapp") {
+            window.open("https://wa.me/821098562811", "_blank");
+          } else if (app.toLowerCase() === "telegram") {
+            window.open("https://t.me/+821098562811", "_blank");
+          } else if (app.toLowerCase() === "kakaotalk") {
+            alert("Add number 01098562811 manually in KakaoTalk app.");
+          } else {
+            alert("App not recognized.");
+          }
         } else {
           alert("Invalid number. Please try again.");
         }
