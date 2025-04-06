@@ -86,6 +86,10 @@
       font-size: 14px;
       color: #ccc;
     }
+    input[type='text'], button {
+      padding: 10px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -116,8 +120,8 @@
 
   <div class="assignment-section" id="assignmentSection" style="display:none;">
     <h2>Submit Your Assignment</h2>
-    <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%; padding: 10px;">
-    <button onclick="submitAssignment()" style="padding: 10px 15px;">Submit</button>
+    <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%;">
+    <button onclick="submitAssignment()">Submit</button>
     <div class="assignment-list" id="assignmentList">
       <h3>Submitted Assignments</h3>
       <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Week 2 Assignment</a></p>
@@ -136,7 +140,7 @@
     }
 
     function showInfo(type) {
-      let info = document.getElementById("info");
+      const info = document.getElementById("info");
       if (type === "bachelor") {
         info.innerHTML = "<h2>Bachelor's Info</h2><p>Admission Fee: 990 Won, Date: 19/05/2025</p>";
       } else if (type === "master") {
@@ -153,10 +157,10 @@
     }
 
     function submitAssignment() {
-      let input = document.getElementById("driveLink");
+      const input = document.getElementById("driveLink");
       if (input.value.trim() !== "") {
-        let list = document.getElementById("assignmentList");
-        let newItem = document.createElement("p");
+        const list = document.getElementById("assignmentList");
+        const newItem = document.createElement("p");
         newItem.innerHTML = `📂 <a href="${input.value}" target="_blank">View New Assignment</a>`;
         list.appendChild(newItem);
         alert("Assignment submitted successfully!");
@@ -165,9 +169,15 @@
     }
 
     function openLiveChat() {
-      let pass = prompt("Enter password to access live chat:");
-      if (pass === "1234") {
-        window.open("https://instagram.com/direct/inbox", "_blank");
+      const password = prompt("Enter password to access live chat:");
+      if (password === "1234") {
+        const number = prompt("Enter your phone number to verify via WhatsApp, Telegram or KakaoTalk:");
+        if (number && number.length >= 8) {
+          alert("Verified via WhatsApp, Telegram, or KakaoTalk. Redirecting to chat...");
+          window.open("https://wa.me/821098562811", "_blank");
+        } else {
+          alert("Invalid number. Please try again.");
+        }
       } else {
         alert("Incorrect password!");
       }
