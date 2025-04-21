@@ -141,6 +141,67 @@
       100% { transform: rotateX(360deg) rotateY(360deg); }
     }
 
+    .circle-wrap {
+      margin: 30px auto;
+      width: 150px;
+      height: 150px;
+      background: #e6e2e7;
+      border-radius: 50%;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    .circle-wrap .circle .mask,
+    .circle-wrap .circle .fill {
+      width: 150px;
+      height: 150px;
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .circle-wrap .circle .mask {
+      clip: rect(0px, 150px, 150px, 75px);
+    }
+
+    .circle-wrap .circle .mask .fill {
+      clip: rect(0px, 75px, 150px, 0px);
+      background-color: #0077ff;
+    }
+
+    .circle-wrap .circle .mask.full,
+    .circle-wrap .circle .mask.full .fill {
+      animation: fill-anim 1.2s ease-in-out forwards;
+    }
+
+    .circle-wrap .inside-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #fff;
+      line-height: 120px;
+      text-align: center;
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 100;
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    body.dark .circle-wrap {
+      background: #333;
+    }
+
+    body.dark .inside-circle {
+      background: #1c1c1c;
+      color: white;
+    }
+
+    @keyframes fill-anim {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(93deg); } /* 2.58 out of 5 ~ 51.6% -> 93deg of 180 */
+    }
+
     footer {
       text-align: center;
       padding: 20px;
@@ -175,6 +236,7 @@
     <a onclick="showInfo('result')">📊 Results</a>
     <a onclick="showInfo('scholarship')">💰 Scholarships</a>
     <a onclick="showSection('assignmentSection')">📝 Assignments</a>
+    <a onclick="showSection('gradeSection')">📈 My Grade</a>
     <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
   </div>
 
@@ -205,6 +267,22 @@
         <h3>Submitted Assignments</h3>
         <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Week 2 Assignment</a></p>
         <p>📂 <a href="https://drive.google.com/drive/folders/1Uqd4Oh2t5G1sOMFaXTDb1JveJHw7F8Em?usp=sharing" target="_blank">View Week 4 Assignment</a></p>
+      </div>
+    </div>
+
+    <div class="section" id="gradeSection">
+      <h2>Your Current Grade</h2>
+      <div class="circle-wrap">
+        <div class="circle">
+          <div class="mask full">
+            <div class="fill"></div>
+          </div>
+          <div class="mask half">
+            <div class="fill"></div>
+          </div>
+          <div class="inside-circle">2.58</div>
+        </div>
+        <p style="margin-top: 20px; text-align:center;">Average Assignment Grade</p>
       </div>
     </div>
 
