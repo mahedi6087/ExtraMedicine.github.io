@@ -207,9 +207,7 @@
       <h2>Submit Your Assignment</h2>
       <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%; padding: 10px;">
       <button onclick="submitAssignment()" style="padding: 10px 20px; margin-top: 10px;">Submit</button>
-      <div class="assignment-list" id="assignmentList">
-        <!-- Pre-filled assignment links -->
-      </div>
+      <div class="assignment-list" id="assignmentList"></div>
     </div>
 
     <div class="section" id="gradeSection">
@@ -218,10 +216,8 @@
         📈 Grade Overview (Percentage)
       </p>
       <div id="gradeContainer" style="text-align: center;"></div>
-
       <button class="breakdown-button" onclick="toggleBreakdown()">📋 Show Grade Breakdown</button>
       <div id="gradeBreakdown" class="grade-breakdown"></div>
-
       <p style="text-align: center; font-size: 14px; color: #888; margin-top: 10px;">
         (Powered by your Google Apps Script)
       </p>
@@ -240,7 +236,7 @@
     });
 
     function loadGrades() {
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbwncPoHJAx8iIM7-F8m7jtLK8cRz4kFYGYPAogWqyHjUpmL6lpR5dsKmp2eZtBSfq7s5w/exec";
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbzJKc24gjX_hZAn2iriZmegPIRoyW8uyuEQmr4XWMFkionkg-EBvkQ9xqcTd_nTXuo9/exec";
       const gradeContainer = document.getElementById("gradeContainer");
 
       fetch(scriptUrl)
