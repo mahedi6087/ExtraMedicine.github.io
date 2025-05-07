@@ -169,7 +169,6 @@
         📈 Grade Overview (Percentage)
       </p>
 
-      <!-- This is where the grade data will be displayed dynamically -->
       <div id="gradeContainer" style="text-align: center;"></div>
 
       <p style="text-align: center; font-size: 14px; color: #888; margin-top: 10px;">
@@ -187,36 +186,292 @@
       loadGrades();
     });
 
-    const gradesData = [
-      { Grade_ID: 1, Grade_Name: "week 2 - Find me!", Grade_type: "assignments", grade_received: 2, max_grade: 3, course_code: "DL" },
-      { Grade_ID: 2, Grade_Name: "week 3 - CLI", Grade_type: "assignments", grade_received: 0, max_grade: 3, course_code: "DL" },
-      { Grade_ID: 3, Grade_Name: "week 4 - quiz 1", Grade_type: "quiz", grade_received: 0, max_grade: 5, course_code: "DL" },
-      { Grade_ID: 4, Grade_Name: "week 4 - Virtual Library", Grade_type: "assignments", grade_received: 2.75, max_grade: 3, course_code: "DL" },
-      { Grade_ID: 5, Grade_Name: "week 5 - Idea Sourcing", Grade_type: "assignments", grade_received: 3, max_grade: 3, course_code: "DL" },
-      { Grade_ID: 6, Grade_Name: "week 6 - cryptography proj", Grade_type: "project", grade_received: 10, max_grade: 10, course_code: "DL" },
-      { Grade_ID: 7, Grade_Name: "week 7 - appscript", Grade_type: "assignments", grade_received: 3, max_grade: 3, course_code: "DL" }
-    ];
+    function loadGrades() {
+      const gradeContainer = document.getElementById("gradeContainer");
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbwncPoHJAx8iIM7-F8m7jtLK8cRz4kFYGYPAogWqyHjUpmL6lpR5dsKmp2eZtBSfq7s5w/exec";
+
+      fetch(scriptUrl)
+        .then(response => response.json())
+        .then(data => {
+          const grades = data.grades || [];
+          let totalReceived = 0;
+          let totalMax = 0;
+
+          grades.forEach(item => {
+            const percentage = ((item.grade_received / item.max_grade) * 100).toFixed(2);
+            totalReceived += item.grade_received;
+            totalMax += item.max_grade;
+
+            const p = document.createElement("p");
+            p.textContent = `${item.grade_name}: ${percentage}%`;
+            gradeContainer.appendChild(p);
+          });
+
+          const totalPercent = ((totalReceived / totalMax) * 100).toFixed(2);
+          const totalP = document.createElement("p");
+          totalP.innerHTML = `<strong>Total Grade: ${totalPercent}%</strong>`;
+          gradeContainer.appendChild(totalP);
+        })
+        .catch(error => {
+          gradeContainer.innerHTML = "<p style='color:red;'>Error loading grades.</p>";
+          console.error("Error fetching grades:", error);
+        });
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    function showInfo(type) {
+      const info = document.getElementById("info");
+      showSection("info");
+      if (type === "bachelor") {
+        info.innerHTML = "<h2>Bachelor's Info</h2><p>Admission Fee: 990 Won<br>Date: 19/05/2025</p>";
+      } else if (type === "master") {
+        info.innerHTML = "<h2>Master's Info</h2><p>CGPA: 3.99 required<br>Admission Fee: 1190 Won</p>";
+      } else if (type === "result") {
+        info.innerHTML = "<h2>Results</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
+      } else if (type === "scholarship") {
+        info.innerHTML = "<h2>Scholarships</h2><p>CGPA 4.00 = 50%<br>CGPA 4.50 = 100%</p>";
+      }
+    }
+
+    function submitAssignment() {
+      const link = document.getElementById("driveLink").value.trim();
+      if (link) {
+        const entry = document.createElement("p");
+        entry.innerHTML = `📂 <a href="${link}" target="_blank">View New Assignment</a>`;
+        document.getElementById("assignmentList").appendChild(entry);
+        alert("Assignment submitted successfully!");
+        document.getElementById("driveLink").value = "";
+      }
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MAHEDI's Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --light-bg: #f4f4f4;
+      --dark-bg: #1e1e1e;
+      --light-text: #000;
+      --dark-text: #fff;
+      --accent: #0077ff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url('aksa.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--light-text);
+      transition: background 0.5s, color 0.5s;
+      display: flex;
+    }
+
+    body.dark {
+      background: #121212;
+      color: var(--dark-text);
+    }
+
+    .sidebar {
+      width: 230px;
+      background: #2c2c2c;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+      position: fixed;
+      transition: background 0.3s;
+    }
+
+    .sidebar h1 {
+      color: #fff;
+      font-size: 22px;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a, .dark-toggle {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 12px 16px;
+      margin: 5px 0;
+      color: #fff;
+      background: #444;
+      border: none;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+
+    .sidebar a:hover, .dark-toggle:hover {
+      background: var(--accent);
+    }
+
+    .dark-toggle {
+      margin-top: auto;
+    }
+
+    .main {
+      margin-left: 230px;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .section {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.9);
+      color: #000;
+      padding: 30px;
+      margin: 20px auto;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    .section.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    body.dark .section {
+      background: #1c1c1c;
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 50px;
+      color: #888;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        position: static;
+      }
+
+      .sidebar h1, .main {
+        margin-left: 0;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h1>👨‍💻 MAHEDI</h1>
+    <a onclick="showInfo('bachelor')">🎓 Bachelor's Info</a>
+    <a onclick="showInfo('master')">🎓 Master's Info</a>
+    <a onclick="showInfo('result')">📊 Results</a>
+    <a onclick="showInfo('scholarship')">💰 Scholarships</a>
+    <a onclick="showSection('assignmentSection')">📝 Assignments</a>
+    <a onclick="showSection('gradeSection')">📈 My Grade</a>
+    <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <div class="main">
+    <audio controls autoplay loop style="width: 100%; max-width: 400px; margin: 20px auto; display: block;">
+      <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio>
+
+    <div class="section active" id="info">
+      <h2>Welcome!</h2>
+      <p>Select a menu option from the left to view information.</p>
+    </div>
+
+    <div class="section" id="assignmentSection">
+      <h2>Submit Your Assignment</h2>
+      <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%; padding: 10px;">
+      <button onclick="submitAssignment()" style="padding: 10px 20px; margin-top: 10px;">Submit</button>
+      <div class="assignment-list" id="assignmentList">
+        <h3>Submitted Assignments</h3>
+        <p>📂 <a href="https://drive.google.com/drive/folders/1jIixecf98-kEgSwUZ0DCu8ADLJmJHDmj" target="_blank">View Week 2 Assignment</a></p>
+        <p>📂 <a href="https://drive.google.com/drive/folders/1Uqd4Oh2t5G1sOMFaXTDb1JveJHw7F8Em?usp=sharing" target="_blank">View Week 4 Assignment</a></p>
+        <p>📂 <a href="https://drive.google.com/drive/folders/11Exj3Uipm-dC2w8u7x1NFsXwFakJ8RBB?usp=drive_link" target="_blank">View Week 7 Assignment</a></p>
+      </div>
+    </div>
+
+    <div class="section" id="gradeSection">
+      <h2>Your Current Grade</h2>
+      <p style="text-align: center; font-size: 22px; font-weight: bold; margin: 20px 0;">
+        📈 Grade Overview (Percentage)
+      </p>
+
+      <div id="gradeContainer" style="text-align: center;"></div>
+
+      <p style="text-align: center; font-size: 14px; color: #888; margin-top: 10px;">
+        (Powered by your Google Apps Script)
+      </p>
+    </div>
+
+    <footer>
+      📧 Contact: mahedi77990@gmail.com | 🌐 Built with 💙 by MAHEDI
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      loadGrades();
+    });
 
     function loadGrades() {
-      let totalReceived = 0;
-      let totalMax = 0;
-
       const gradeContainer = document.getElementById("gradeContainer");
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbwncPoHJAx8iIM7-F8m7jtLK8cRz4kFYGYPAogWqyHjUpmL6lpR5dsKmp2eZtBSfq7s5w/exec";
 
-      gradesData.forEach(grade => {
-        const percentage = ((grade.grade_received / grade.max_grade) * 100).toFixed(2);
-        totalReceived += grade.grade_received;
-        totalMax += grade.max_grade;
+      fetch(scriptUrl)
+        .then(response => response.json())
+        .then(data => {
+          const grades = data.grades || [];
+          let totalReceived = 0;
+          let totalMax = 0;
 
-        const gradeElement = document.createElement("p");
-        gradeElement.innerHTML = `${grade.Grade_Name}: ${percentage}%`;
-        gradeContainer.appendChild(gradeElement);
-      });
+          grades.forEach(item => {
+            const percentage = ((item.grade_received / item.max_grade) * 100).toFixed(2);
+            totalReceived += item.grade_received;
+            totalMax += item.max_grade;
 
-      const totalPercentage = ((totalReceived / totalMax) * 100).toFixed(2);
-      const totalGradeElement = document.createElement("p");
-      totalGradeElement.innerHTML = `<strong>Total Grade: ${totalPercentage}%</strong>`;
-      gradeContainer.appendChild(totalGradeElement);
+            const p = document.createElement("p");
+            p.textContent = `${item.grade_name}: ${percentage}%`;
+            gradeContainer.appendChild(p);
+          });
+
+          const totalPercent = ((totalReceived / totalMax) * 100).toFixed(2);
+          const totalP = document.createElement("p");
+          totalP.innerHTML = `<strong>Total Grade: ${totalPercent}%</strong>`;
+          gradeContainer.appendChild(totalP);
+        })
+        .catch(error => {
+          gradeContainer.innerHTML = "<p style='color:red;'>Error loading grades.</p>";
+          console.error("Error fetching grades:", error);
+        });
     }
 
     function showSection(sectionId) {
