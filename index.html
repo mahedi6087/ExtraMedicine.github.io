@@ -101,6 +101,28 @@
       color: white;
     }
 
+    .progress-bar-wrapper {
+      background: #ddd;
+      border-radius: 30px;
+      overflow: hidden;
+      height: 25px;
+      max-width: 400px;
+      margin: 20px auto;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #00c9ff, #92fe9d);
+      height: 100%;
+      width: 0;
+      color: white;
+      text-align: center;
+      line-height: 25px;
+      font-weight: bold;
+      border-radius: 30px 0 0 30px;
+      transition: width 1s ease-in-out;
+    }
+
     footer {
       text-align: center;
       padding: 20px;
@@ -195,7 +217,16 @@
             <p><strong>✅ Total Grade Received:</strong> ${totalReceived}</p>
             <p><strong>📊 Total Possible Grade:</strong> ${totalPossible}</p>
             <p><strong>📈 Final Grade Percentage:</strong> ${percentage}%</p>
+            <div class="progress-bar-wrapper">
+              <div class="progress-bar-fill" id="gradeBar">${percentage}%</div>
+            </div>
           `;
+
+          // Animate the progress bar
+          setTimeout(() => {
+            const bar = document.getElementById("gradeBar");
+            bar.style.width = percentage + "%";
+          }, 100); // slight delay to allow transition
         })
         .catch(error => {
           console.error("Error loading grade data:", error);
