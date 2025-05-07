@@ -186,7 +186,55 @@
       loadGrades();
     });
 
-    function loadGrades() {
+    function loadGrades(<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    loadGrades();
+  });
+
+  function loadGrades() {
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwncPoHJAx8iIM7-F8m7jtLK8cRz4kFYGYPAogWqyHjUpmL6lpR5dsKmp2eZtBSfq7s5w/exec";
+    const gradeContainer = document.getElementById("gradeContainer");
+
+    fetch(scriptUrl)
+      .then(response => response.json())
+      .then(data => {
+        console.log("Fetched summary:", data);
+
+        const { totalReceived, totalPossible, percentage } = data;
+
+        gradeContainer.innerHTML = `
+          <p><strong>Total Grade Received:</strong> ${totalReceived}</p>
+          <p><strong>Total Possible Grade:</strong> ${totalPossible}</p>
+          <p><strong>Final Grade Percentage:</strong> ${percentage}%</p>
+        `;
+      })
+      .catch(error => {
+        console.error("Error fetching grade data:", error);
+        gradeContainer.innerHTML = "<p style='color:red;'>Error loading grades.</p>";
+      });
+  }
+
+  function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+  }
+
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark");
+  }
+
+  function submitAssignment() {
+    const link = document.getElementById("driveLink").value.trim();
+    if (link) {
+      const entry = document.createElement("p");
+      entry.innerHTML = `📂 <a href="${link}" target="_blank">View New Assignment</a>`;
+      document.getElementById("assignmentList").appendChild(entry);
+      alert("Assignment submitted successfully!");
+      document.getElementById("driveLink").value = "";
+    }
+  }
+</script>
+) {
       const gradeContainer = document.getElementById("gradeContainer");
       const scriptUrl = "https://script.google.com/macros/s/AKfycbwncPoHJAx8iIM7-F8m7jtLK8cRz4kFYGYPAogWqyHjUpmL6lpR5dsKmp2eZtBSfq7s5w/exec";
 
