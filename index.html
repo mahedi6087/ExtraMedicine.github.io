@@ -14,6 +14,10 @@
       --accent: #0077ff;
     }
 
+    * {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -43,7 +47,21 @@
     .sidebar h1 {
       color: #fff;
       font-size: 22px;
-      margin-bottom: 30px;
+      margin-bottom: 10px;
+    }
+
+    .clock {
+      color: cyan;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      padding: 6px 12px;
+      margin-bottom: 15px;
+      width: 90%;
+      border-radius: 5px;
+      border: none;
     }
 
     .sidebar a, .dark-toggle {
@@ -79,7 +97,7 @@
     .section {
       opacity: 0;
       transform: translateY(30px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transition: all 0.6s ease;
       pointer-events: none;
       background: rgba(255, 255, 255, 0.9);
       color: #000;
@@ -166,6 +184,25 @@
       color: #888;
     }
 
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0077ff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         width: 100%;
@@ -188,6 +225,8 @@
 <body>
   <div class="sidebar">
     <h1>👨‍💻 MAHEDI</h1>
+    <div class="clock" id="clock">🕒 --:--:--</div>
+    <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search menu..." onkeyup="filterMenu()" />
     <a onclick="showInfo('bachelor')">🎓 Bachelor's Info</a>
     <a onclick="showInfo('master')">🎓 Master's Info</a>
     <a onclick="showInfo('result')">📊 Results</a>
@@ -228,12 +267,25 @@
     </footer>
   </div>
 
+  <div class="toast" id="toast">✅ Assignment submitted!</div>
+
   <script>
     let gradeData = null;
 
     document.addEventListener("DOMContentLoaded", () => {
       loadGrades();
+      loadAssignments();
+      loadTheme();
+      startClock();
     });
+
+    function startClock() {
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById("clock").textContent =
+          "🕒 " + now.toLocaleTimeString();
+      }, 1000);
+    }
 
     function loadGrades() {
       const scriptUrl = "https://script.google.com/macros/s/AKfycbxeylQS151LvoxV05C1q8NZoS5yQvq0syh_tvp0_DZybUCAZfdJkoWkEu_5RVLdIC7KgQ/exec";
@@ -322,16 +374,47 @@
     function submitAssignment() {
       const link = document.getElementById("driveLink").value.trim();
       if (link) {
-        const entry = document.createElement("p");
-        entry.innerHTML = `📂 <a href="${link}" target="_blank">View New Assignment</a>`;
-        document.getElementById("assignmentList").appendChild(entry);
-        alert("Assignment submitted successfully!");
+        const entry = `📂 <a href="${link}" target="_blank">View New Assignment</a>`;
+        document.getElementById("assignmentList").innerHTML += `<p>${entry}</p>`;
+        saveAssignment(entry);
+        showToast("✅ Assignment submitted!");
         document.getElementById("driveLink").value = "";
       }
     }
 
+    function saveAssignment(entry) {
+      let list = JSON.parse(sessionStorage.getItem("assignments") || "[]");
+      list.push(entry);
+      sessionStorage.setItem("assignments", JSON.stringify(list));
+    }
+
+    function loadAssignments() {
+      const list = JSON.parse(sessionStorage.getItem("assignments") || "[]");
+      document.getElementById("assignmentList").innerHTML = list.map(e => `<p>${e}</p>`).join("");
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2500);
+    }
+
     function toggleDarkMode() {
       document.body.classList.toggle("dark");
+      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+    }
+
+    function loadTheme() {
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark") document.body.classList.add("dark");
+    }
+
+    function filterMenu() {
+      const val = document.getElementById("searchBox").value.toLowerCase();
+      document.querySelectorAll(".sidebar a").forEach(link => {
+        link.style.display = link.textContent.toLowerCase().includes(val) ? "block" : "none";
+      });
     }
   </script>
 </body>
