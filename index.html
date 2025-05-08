@@ -485,3 +485,77 @@
   </script>
 </body>
 </html>
+<div id="clue-game" style="padding: 30px; font-family: Arial, sans-serif; max-width: 700px; margin: auto;">
+  <h2>The Disappearing Letter</h2>
+  <p><strong>Story:</strong> A mysterious letter containing an ancient truth has vanished from the virtual library. It was last seen by a whispering bot who left behind 3 digital clues scattered in strange ways. Your mission is to follow the clues, unlock the secrets, and claim your reward.</p>
+  
+  <button onclick="startClue()" class="glass-button">Find Your Clue</button>
+  
+  <div id="instructions" style="margin-top: 20px; display: none;">
+    <h3>Instructions:</h3>
+    <ul>
+      <li>Think logically. Each clue leads to the next.</li>
+      <li>You must complete the clues **in order**.</li>
+      <li>Read between the lines. Some answers are hidden in the text.</li>
+    </ul>
+  </div>
+  
+  <div id="clues" style="margin-top: 30px;"></div>
+  
+  <div id="reward" style="display: none; margin-top: 30px; padding: 20px; background: rgba(0,255,0,0.1); border: 1px solid #0f0;">
+    <h3>Congratulations!</h3>
+    <p>You solved the mystery and earned:</p>
+    <ul>
+      <li><strong>20 Points</strong></li>
+      <li><strong>₩50,000 Korean Won</strong></li>
+    </ul>
+    <p>Well done, detective!</p>
+  </div>
+</div>
+
+<script>
+  let step = 0;
+  const clues = [
+    {
+      question: "Clue 1: The bot mentioned the letter was hidden in plain sight — reverse this word: **eno**",
+      answer: "one"
+    },
+    {
+      question: "Clue 2: Count the vowels in 'DisappearingLetter' (no spaces)",
+      answer: "7"
+    },
+    {
+      question: "Clue 3: Solve the riddle — 'I speak without a mouth and hear without ears. What am I?'",
+      answer: "echo"
+    }
+  ];
+
+  function startClue() {
+    document.getElementById("instructions").style.display = "block";
+    showNextClue();
+  }
+
+  function showNextClue() {
+    if (step < clues.length) {
+      const current = clues[step];
+      document.getElementById("clues").innerHTML = `
+        <p><strong>${current.question}</strong></p>
+        <input id="clueInput" type="text" placeholder="Your answer..." />
+        <button onclick="checkClue()">Submit</button>
+      `;
+    } else {
+      document.getElementById("clues").style.display = "none";
+      document.getElementById("reward").style.display = "block";
+    }
+  }
+
+  function checkClue() {
+    const userInput = document.getElementById("clueInput").value.trim().toLowerCase();
+    if (userInput === clues[step].answer) {
+      step++;
+      showNextClue();
+    } else {
+      alert("Wrong answer. Try again carefully.");
+    }
+  }
+</script>
