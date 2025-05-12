@@ -68,6 +68,14 @@
 
     .dark-toggle {
       margin-top: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dark-toggle span {
+      font-size: 18px;
     }
 
     .main {
@@ -190,7 +198,9 @@
     <a onclick="showInfo('scholarship')">💰 Scholarships</a>
     <a onclick="showSection('assignmentSection')">📝 Assignments</a>
     <a onclick="showSection('gradeSection')">📈 My Grade</a>
-    <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+    <div class="dark-toggle" onclick="toggleDarkMode()">
+      <span>🌙</span> <span>☀️</span>
+    </div>
   </div>
 
   <div class="main">
@@ -249,6 +259,12 @@
 
     function toggleDarkMode() {
       document.body.classList.toggle("dark");
+      const icon = document.querySelector(".dark-toggle span:first-child");
+      if (document.body.classList.contains("dark")) {
+        icon.textContent = "☀️"; // Switch to light mode icon
+      } else {
+        icon.textContent = "🌙"; // Switch to dark mode icon
+      }
     }
 
     function loadGrades() {
@@ -296,74 +312,57 @@
 
       if (section.style.display === "block") {
         section.style.display = "none";
-        return;
+      } else {
+        section.style.display = "block";
+        const breakdown = gradeData.breakdown.map(entry => `
+          <div class="grade-card">
+            <strong>${entry.name}</strong>
+            <p>Score: ${entry.score}</p>
+            <p>Max: ${entry.max}</p>
+            <p>Weight: ${entry.weight}</p>
+          </div>
+        `).join('');
+        section.innerHTML = breakdown;
       }
+    }
 
-      section.innerHTML = "<h3 style='color:deeppink; text-align:center;'>Grade Breakdown</h3>";
-      gradeData.breakdown.forEach(item => {
-        const percent = ((item.grade_received / item.max_grade) * 100).toFixed(1);
-        const card = document.createElement("div");
-        card.className = "grade-card";
-        card.innerHTML = `
-          <strong>${item.grade_name} (${item.grade_type})</strong><br>
-          Received: ${item.grade_received} / ${item.max_grade}<br>
-          Percentage: ${percent}%<br>
-          Course: ${item.course_code}
-        `;
-        section.appendChild(card);
-      });
-
-      section.style.display = "block";
+    function showInfo(section) {
+      const sectionMap = {
+        bachelor: "Bachelor's degree details...",
+        master: "Master's degree details...",
+        result: "Results for the semester...",
+        scholarship: "List of available scholarships..."
+      };
+      document.getElementById("info").innerHTML = sectionMap[section] || "Info not found";
     }
 
     function showSection(sectionId) {
-      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.classList.remove('active'));
+
       document.getElementById(sectionId).classList.add('active');
     }
 
-    function showInfo(type) {
-      const info = document.getElementById("info");
-      showSection("info");
-      if (type === "bachelor") {
-        info.innerHTML = "<h2>Bachelor's Info</h2><p>Admission Fee: 990 Won<br>Date: 19/05/2025</p>";
-      } else if (type === "master") {
-        info.innerHTML = "<h2>Master's Info</h2><p>CGPA: 3.99 required<br>Admission Fee: 1190 Won</p>";
-      } else if (type === "result") {
-        info.innerHTML = "<h2>Results</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
-      } else if (type === "scholarship") {
-        info.innerHTML = "<h2>Scholarships</h2><p>CGPA 4.00 = 50%<br>CGPA 4.50 = 100%</p>";
-      }
+    function renderAssignmentList() {
+      const assignmentList = document.getElementById("assignmentList");
+      assignmentList.innerHTML = Object.keys(assignmentData).map(week => `
+        <div>
+          <strong>${week}</strong>
+          <a href="${assignmentData[week][0]}" target="_blank">Go to Assignment</a>
+        </div>
+      `).join('');
     }
 
     function submitAssignment() {
-      const link = document.getElementById("driveLink").value.trim();
       const week = document.getElementById("weekSelect").value;
-      if (!link) return alert("Please enter a valid link!");
-
-      if (!assignmentData[week]) assignmentData[week] = [];
-      assignmentData[week].push(link);
-      document.getElementById("driveLink").value = "";
-      alert("✅ Assignment submitted for " + week);
-      renderAssignmentList();
-    }
-
-    function renderAssignmentList() {
-      const listDiv = document.getElementById("assignmentList");
-      listDiv.innerHTML = "";
-
-      for (const week in assignmentData) {
-        if (assignmentData[week].length === 0) continue;
-
-        const weekHeader = document.createElement("h4");
-        weekHeader.textContent = week;
-        weekHeader.style.color = "#0077ff";
-        listDiv.appendChild(weekHeader);
-
-        assignmentData[week].forEach((link, index) => {
-          const entry = document.createElement("p");
-          entry.innerHTML = `🔗 <a href="${link}" target="_blank">Assignment ${index + 1}</a>`;
-          listDiv.appendChild(entry);
-        });
+      const link = document.getElementById("driveLink").value;
+      if (link) {
+        assignmentData[week] = [...(assignmentData[week] || []), link];
+        renderAssignmentList();
+        document.getElementById("driveLink").value = "";
+        alert("Assignment submitted successfully!");
+      } else {
+        alert("Please enter a valid link.");
       }
     }
   </script>
