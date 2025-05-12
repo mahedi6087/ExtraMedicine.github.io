@@ -261,14 +261,14 @@
           gradeData = data;
           const { totalReceived, totalPossible, percentage } = data;
 
-          gradeContainer.innerHTML = 
+          gradeContainer.innerHTML = `
             <p><strong>✅ Total Grade Received:</strong> ${totalReceived}</p>
             <p><strong>📊 Total Possible Grade:</strong> ${totalPossible}</p>
             <p><strong>📈 Final Grade Percentage:</strong> ${percentage}%</p>
             <div class="progress-bar-wrapper">
               <div class="progress-bar-fill" id="gradeBar">${percentage}%</div>
             </div>
-          ;
+          `;
 
           setTimeout(() => {
             const bar = document.getElementById("gradeBar");
@@ -304,12 +304,12 @@
         const percent = ((item.grade_received / item.max_grade) * 100).toFixed(1);
         const card = document.createElement("div");
         card.className = "grade-card";
-        card.innerHTML = 
+        card.innerHTML = `
           <strong>${item.grade_name} (${item.grade_type})</strong><br>
           Received: ${item.grade_received} / ${item.max_grade}<br>
           Percentage: ${percent}%<br>
           Course: ${item.course_code}
-        ;
+        `;
         section.appendChild(card);
       });
 
@@ -361,7 +361,7 @@
 
         assignmentData[week].forEach((link, index) => {
           const entry = document.createElement("p");
-          entry.innerHTML = 🔗 <a href="${link}" target="_blank">Assignment ${index + 1}</a>;
+          entry.innerHTML = `🔗 <a href="${link}" target="_blank">Assignment ${index + 1}</a>`;
           listDiv.appendChild(entry);
         });
       }
@@ -479,7 +479,7 @@
     let index = 0;
     setInterval(() => {
       index = (index + 1) % images.length;
-      document.body.style.background = url('${images[index]}') no-repeat center center fixed;
+      document.body.style.background = `url('${images[index]}') no-repeat center center fixed`;
       document.body.style.backgroundSize = "cover";
     }, 2000);
   </script>
