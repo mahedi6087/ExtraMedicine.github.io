@@ -175,10 +175,6 @@
         position: static;
       }
 
-      .sidebar h1, .main {
-        margin-left: 0;
-      }
-
       .main {
         margin-left: 0;
       }
@@ -250,6 +246,10 @@
       loadGrades();
       renderAssignmentList();
     });
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
 
     function loadGrades() {
       const scriptUrl = "https://script.google.com/macros/s/AKfycbxeylQS151LvoxV05C1q8NZoS5yQvq0syh_tvp0_DZybUCAZfdJkoWkEu_5RVLdIC7KgQ/exec";
@@ -366,122 +366,6 @@
         });
       }
     }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark");
-    }
-  </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced Website</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      transition: background 0.5s, color 0.5s;
-      color: #222;
-      background: url('bg1.jpg') no-repeat center center fixed;
-      background-size: cover;
-    }
-    body.dark {
-      background-color: #111;
-      color: #eee;
-    }
-    .glass-button {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 10px;
-      padding: 10px 20px;
-      color: white;
-      backdrop-filter: blur(10px);
-      cursor: pointer;
-    }
-    #clock {
-      font-size: 2em;
-      margin: 20px;
-    }
-    .progress {
-      background: #ccc;
-      border-radius: 20px;
-      height: 20px;
-      margin: 20px;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #007bff;
-      border-radius: 20px;
-      transition: width 1s;
-    }
-    #toggleDarkMode {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 24px;
-      background: transparent;
-      border: none;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <button id="toggleDarkMode"><i class="fas fa-moon"></i></button>
-
-  <div id="clock">00:00:00</div>
-
-  <div class="progress">
-    <div class="progress-bar" style="width: 0%"></div>
-  </div>
-
-  <audio controls autoplay loop>
-    <source src="surah-al-fatiha.mp3" type="audio/mpeg">
-  </audio>
-
-  <div data-aos="fade-up" style="margin: 50px;">
-    <button class="glass-button">Glass Button</button>
-  </div>
-
-  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-  <script>
-    AOS.init();
-
-    // Dark Mode Toggle
-    const toggleBtn = document.getElementById("toggleDarkMode");
-    toggleBtn.onclick = () => {
-      document.body.classList.toggle("dark");
-      const icon = toggleBtn.querySelector("i");
-      icon.classList.toggle("fa-sun");
-      icon.classList.toggle("fa-moon");
-    };
-
-    // Live Clock
-    setInterval(() => {
-      const now = new Date();
-      document.getElementById("clock").textContent =
-        now.toLocaleTimeString();
-    }, 1000);
-
-    // Animate progress bar
-    window.onload = () => {
-      document.querySelector(".progress-bar").style.width = "80%";
-    };
-
-    // Background slideshow
-    const images = ["bg1.jpg", "bg2.jpg", "bg3.jpg"]; // Replace with your actual image paths
-    let index = 0;
-    setInterval(() => {
-      index = (index + 1) % images.length;
-      document.body.style.background = `url('${images[index]}') no-repeat center center fixed`;
-      document.body.style.backgroundSize = "cover";
-    }, 2000);
   </script>
 </body>
 </html>
