@@ -205,18 +205,9 @@
 
     <div class="section" id="assignmentSection">
       <h2>Submit Your Assignment</h2>
-      <label for="weekSelect"><strong>📅 Select Week:</strong></label>
-      <select id="weekSelect" style="padding: 8px; width: 200px; margin: 10px 0;">
-        <option value="Week 2">Week 2</option>
-        <option value="Week 4">Week 4</option>
-        <option value="Week 7">Week 7</option>
-      </select><br>
-
       <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%; padding: 10px;">
       <button onclick="submitAssignment()" style="padding: 10px 20px; margin-top: 10px;">Submit</button>
-
-      <h3 style="margin-top: 30px;">📂 Submitted Assignments</h3>
-      <div id="assignmentList"></div>
+      <div class="assignment-list" id="assignmentList"></div>
     </div>
 
     <div class="section" id="gradeSection">
@@ -240,19 +231,12 @@
   <script>
     let gradeData = null;
 
-    const assignmentData = {
-      "Week 2": ["https://docs.google.com/document/d/1wmlghH1QDpuMMgtebZTU9TfC3wZvVvzFFARGAgt7Srs/edit?usp=drive_link"],
-      "Week 4": ["https://drive.google.com/drive/folders/1Uqd4Oh2t5G1sOMFaXTDb1JveJHw7F8Em?usp=drive_link"],
-      "Week 7": ["https://drive.google.com/drive/folders/11Exj3Uipm-dC2w8u7x1NFsXwFakJ8RBB?usp=drive_link"]
-    };
-
     document.addEventListener("DOMContentLoaded", () => {
       loadGrades();
-      renderAssignmentList();
     });
 
     function loadGrades() {
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbxeylQS151LvoxV05C1q8NZoS5yQvq0syh_tvp0_DZybUCAZfdJkoWkEu_5RVLdIC7KgQ/exec";
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbzJKc24gjX_hZAn2iriZmegPIRoyW8uyuEQmr4XWMFkionkg-EBvkQ9xqcTd_nTXuo9/exec";
       const gradeContainer = document.getElementById("gradeContainer");
 
       fetch(scriptUrl)
@@ -282,7 +266,7 @@
         })
         .catch(error => {
           console.error("Error loading grade data:", error);
-          gradeContainer.innerHTML = "<p style='color:red;'>⚠ Failed to load grade data.</p>";
+          gradeContainer.innerHTML = "<p style='color:red;'>⚠️ Failed to load grade data.</p>";
         });
     }
 
@@ -337,151 +321,18 @@
 
     function submitAssignment() {
       const link = document.getElementById("driveLink").value.trim();
-      const week = document.getElementById("weekSelect").value;
-      if (!link) return alert("Please enter a valid link!");
-
-      if (!assignmentData[week]) assignmentData[week] = [];
-      assignmentData[week].push(link);
-      document.getElementById("driveLink").value = "";
-      alert("✅ Assignment submitted for " + week);
-      renderAssignmentList();
-    }
-
-    function renderAssignmentList() {
-      const listDiv = document.getElementById("assignmentList");
-      listDiv.innerHTML = "";
-
-      for (const week in assignmentData) {
-        if (assignmentData[week].length === 0) continue;
-
-        const weekHeader = document.createElement("h4");
-        weekHeader.textContent = week;
-        weekHeader.style.color = "#0077ff";
-        listDiv.appendChild(weekHeader);
-
-        assignmentData[week].forEach((link, index) => {
-          const entry = document.createElement("p");
-          entry.innerHTML = 🔗 <a href="${link}" target="_blank">Assignment ${index + 1}</a>;
-          listDiv.appendChild(entry);
-        });
+      if (link) {
+        const entry = document.createElement("p");
+        entry.innerHTML = `📂 <a href="${link}" target="_blank">View New Assignment</a>`;
+        document.getElementById("assignmentList").appendChild(entry);
+        alert("Assignment submitted successfully!");
+        document.getElementById("driveLink").value = "";
       }
     }
 
     function toggleDarkMode() {
       document.body.classList.toggle("dark");
     }
-  </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced Website</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      transition: background 0.5s, color 0.5s;
-      color: #222;
-      background: url('bg1.jpg') no-repeat center center fixed;
-      background-size: cover;
-    }
-    body.dark {
-      background-color: #111;
-      color: #eee;
-    }
-    .glass-button {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 10px;
-      padding: 10px 20px;
-      color: white;
-      backdrop-filter: blur(10px);
-      cursor: pointer;
-    }
-    #clock {
-      font-size: 2em;
-      margin: 20px;
-    }
-    .progress {
-      background: #ccc;
-      border-radius: 20px;
-      height: 20px;
-      margin: 20px;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #007bff;
-      border-radius: 20px;
-      transition: width 1s;
-    }
-    #toggleDarkMode {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 24px;
-      background: transparent;
-      border: none;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <button id="toggleDarkMode"><i class="fas fa-moon"></i></button>
-
-  <div id="clock">00:00:00</div>
-
-  <div class="progress">
-    <div class="progress-bar" style="width: 0%"></div>
-  </div>
-
-  <audio controls autoplay loop>
-    <source src="surah-al-fatiha.mp3" type="audio/mpeg">
-  </audio>
-
-  <div data-aos="fade-up" style="margin: 50px;">
-    <button class="glass-button">Glass Button</button>
-  </div>
-
-  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-  <script>
-    AOS.init();
-
-    // Dark Mode Toggle
-    const toggleBtn = document.getElementById("toggleDarkMode");
-    toggleBtn.onclick = () => {
-      document.body.classList.toggle("dark");
-      const icon = toggleBtn.querySelector("i");
-      icon.classList.toggle("fa-sun");
-      icon.classList.toggle("fa-moon");
-    };
-
-    // Live Clock
-    setInterval(() => {
-      const now = new Date();
-      document.getElementById("clock").textContent =
-        now.toLocaleTimeString();
-    }, 1000);
-
-    // Animate progress bar
-    window.onload = () => {
-      document.querySelector(".progress-bar").style.width = "80%";
-    };
-
-    // Background slideshow
-    const images = ["bg1.jpg", "bg2.jpg", "bg3.jpg"]; // Replace with your actual image paths
-    let index = 0;
-    setInterval(() => {
-      index = (index + 1) % images.length;
-      document.body.style.background = url('${images[index]}') no-repeat center center fixed;
-      document.body.style.backgroundSize = "cover";
-    }, 2000);
   </script>
 </body>
 </html>
