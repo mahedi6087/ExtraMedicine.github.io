@@ -187,7 +187,12 @@
     <a onclick="showSection('myInfoSection')">🙋 My Information</a>
     <a onclick="showSection('assignmentSection')">📝 Assignments</a>
     <a onclick="showSection('gradeSection')">📈 My Grade</a>
-    <a href="https://open.kakao.com/me/joshteacher" target="_blank">📞 Communicate with Professor</a>
+    <a href="https://open.kakao.com/me/joshteacher" target="_blank">
+      📩 Kakao Message<br>
+      Start an Open Chat on KakaoTalk!<br>
+      Tap the link to get started.<br>
+      Josh Teacher
+    </a>
     <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
   </div>
 
@@ -219,9 +224,6 @@
 
     <div class="section" id="gradeSection">
       <h2>Your Current Grade</h2>
-      <p style="text-align: center; font-size: 22px; font-weight: bold; margin: 20px 0;">
-        📈 Grade Overview (Percentage)
-      </p>
       <div id="gradeContainer" style="text-align: center;"></div>
       <button class="breakdown-button" onclick="toggleBreakdown()">📋 Show Grade Breakdown</button>
       <div id="gradeBreakdown" class="grade-breakdown"></div>
