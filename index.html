@@ -194,6 +194,7 @@
     <h1>👨‍💻 MAHEDI</h1>
     <a onclick="showSection('myInfoSection')">🙋 My Information</a>
     <a onclick="showSection('assignmentSection')">📝 Assignments</a>
+    <a onclick="showSection('projectSection')">📁 Project 1</a>
     <a onclick="showSection('gradeSection')">📈 My Grade</a>
     <a href="https://open.kakao.com/me/joshteacher" target="_blank">🟡 Communicate with Professor</a>
     <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
@@ -217,19 +218,24 @@
       <select id="weekSelect" onchange="showWeek6Site()" style="padding: 8px; width: 200px; margin: 10px 0;">
         <option value="Week 2">Week 2</option>
         <option value="Week 4">Week 4</option>
-        <option value="Week 6">Week 6</option>
         <option value="Week 7">Week 7</option>
       </select><br>
       <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%; padding: 10px;">
       <button onclick="submitAssignment()" style="padding: 10px 20px; margin-top: 10px;">Submit</button>
 
-      <div id="week6Preview" style="display: none;">
-        <h3 style="margin-top: 30px; color: deeppink;">💻 Week 6: Cryptography Demo</h3>
-        <iframe src="week6.html"></iframe>
-      </div>
-
       <h3 style="margin-top: 30px;">📂 Submitted Assignments</h3>
       <div id="assignmentList"></div>
+    </div>
+
+    <div class="section" id="projectSection">
+      <h2>📁 Project 1 – Cryptography</h2>
+      <h3 style="color: deeppink;">💻 Week 6: Cryptography Demo</h3>
+      <iframe src="week6.html"></iframe>
+      <p style="margin-top: 10px;">
+        🔗 <a href="https://drive.google.com/drive/folders/1bm_xtK7aRL7uXjhhUX-nQ86gyrZyOiby?usp=drive_link" target="_blank">
+          View Week 6 Project Google Drive Folder
+        </a>
+      </p>
     </div>
 
     <div class="section" id="gradeSection">
@@ -253,7 +259,6 @@
     const assignmentData = {
       "Week 2": ["https://docs.google.com/document/d/1wmlghH1QDpuMMgtebZTU9TfC3wZvVvzFFARGAgt7Srs/edit?usp=drive_link"],
       "Week 4": ["https://drive.google.com/drive/folders/1Uqd4Oh2t5G1sOMFaXTDb1JveJHw7F8Em?usp=drive_link"],
-      "Week 6": [],
       "Week 7": ["https://drive.google.com/drive/folders/11Exj3Uipm-dC2w8u7x1NFsXwFakJ8RBB?usp=drive_link"]
     };
 
@@ -267,9 +272,7 @@
     }
 
     function showWeek6Site() {
-      const selectedWeek = document.getElementById("weekSelect").value;
-      const preview = document.getElementById("week6Preview");
-      preview.style.display = selectedWeek === "Week 6" ? "block" : "none";
+      // Week 6 moved to Project section – no preview here
     }
 
     function loadGrades() {
