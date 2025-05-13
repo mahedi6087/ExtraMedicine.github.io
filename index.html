@@ -166,6 +166,14 @@
       color: #888;
     }
 
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: 2px solid #0077ff;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         width: 100%;
@@ -184,12 +192,10 @@
 <body>
   <div class="sidebar">
     <h1>👨‍💻 MAHEDI</h1>
-    <a onclick="showInfo('bachelor')">🎓 Bachelor's Info</a>
-    <a onclick="showInfo('master')">🎓 Master's Info</a>
-    <a onclick="showInfo('result')">📊 Results</a>
-    <a onclick="showInfo('scholarship')">💰 Scholarships</a>
+    <a onclick="showSection('myInfoSection')">🙋 My Information</a>
     <a onclick="showSection('assignmentSection')">📝 Assignments</a>
     <a onclick="showSection('gradeSection')">📈 My Grade</a>
+    <a href="https://open.kakao.com/me/joshteacher" target="_blank">🟡 Communicate with Professor</a>
     <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
   </div>
 
@@ -199,18 +205,28 @@
       <p>Select a menu option from the left to view information.</p>
     </div>
 
+    <div class="section" id="myInfoSection">
+      <h2>🙋 My Information</h2>
+      <p><strong>Name:</strong> Kazi Mahedi Hasan</p>
+      <p><strong>Student ID:</strong> 2417551</p>
+    </div>
+
     <div class="section" id="assignmentSection">
       <h2>Submit Your Assignment</h2>
       <label for="weekSelect"><strong>📅 Select Week:</strong></label>
-      <select id="weekSelect" style="padding: 8px; width: 200px; margin: 10px 0;">
+      <select id="weekSelect" onchange="showWeek6Site()" style="padding: 8px; width: 200px; margin: 10px 0;">
         <option value="Week 2">Week 2</option>
         <option value="Week 4">Week 4</option>
         <option value="Week 6">Week 6</option>
         <option value="Week 7">Week 7</option>
       </select><br>
-
       <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%; padding: 10px;">
       <button onclick="submitAssignment()" style="padding: 10px 20px; margin-top: 10px;">Submit</button>
+
+      <div id="week6Preview" style="display: none;">
+        <h3 style="margin-top: 30px; color: deeppink;">💻 Week 6: Cryptography Demo</h3>
+        <iframe src="week6.html"></iframe>
+      </div>
 
       <h3 style="margin-top: 30px;">📂 Submitted Assignments</h3>
       <div id="assignmentList"></div>
@@ -218,9 +234,6 @@
 
     <div class="section" id="gradeSection">
       <h2>Your Current Grade</h2>
-      <p style="text-align: center; font-size: 22px; font-weight: bold; margin: 20px 0;">
-        📈 Grade Overview (Percentage)
-      </p>
       <div id="gradeContainer" style="text-align: center;"></div>
       <button class="breakdown-button" onclick="toggleBreakdown()">📋 Show Grade Breakdown</button>
       <div id="gradeBreakdown" class="grade-breakdown"></div>
@@ -240,7 +253,7 @@
     const assignmentData = {
       "Week 2": ["https://docs.google.com/document/d/1wmlghH1QDpuMMgtebZTU9TfC3wZvVvzFFARGAgt7Srs/edit?usp=drive_link"],
       "Week 4": ["https://drive.google.com/drive/folders/1Uqd4Oh2t5G1sOMFaXTDb1JveJHw7F8Em?usp=drive_link"],
-      "Week 6": ["https://drive.google.com/drive/folders/1bm_xtK7aRL7uXjhhUX-nQ86gyrZyOiby?usp=drive_link"],
+      "Week 6": [],
       "Week 7": ["https://drive.google.com/drive/folders/11Exj3Uipm-dC2w8u7x1NFsXwFakJ8RBB?usp=drive_link"]
     };
 
@@ -251,6 +264,12 @@
 
     function toggleDarkMode() {
       document.body.classList.toggle("dark");
+    }
+
+    function showWeek6Site() {
+      const selectedWeek = document.getElementById("weekSelect").value;
+      const preview = document.getElementById("week6Preview");
+      preview.style.display = selectedWeek === "Week 6" ? "block" : "none";
     }
 
     function loadGrades() {
@@ -321,20 +340,6 @@
     function showSection(sectionId) {
       document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
       document.getElementById(sectionId).classList.add('active');
-    }
-
-    function showInfo(type) {
-      const info = document.getElementById("info");
-      showSection("info");
-      if (type === "bachelor") {
-        info.innerHTML = "<h2>Bachelor's Info</h2><p>Admission Fee: 990 Won<br>Date: 19/05/2025</p>";
-      } else if (type === "master") {
-        info.innerHTML = "<h2>Master's Info</h2><p>CGPA: 3.99 required<br>Admission Fee: 1190 Won</p>";
-      } else if (type === "result") {
-        info.innerHTML = "<h2>Results</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
-      } else if (type === "scholarship") {
-        info.innerHTML = "<h2>Scholarships</h2><p>CGPA 4.00 = 50%<br>CGPA 4.50 = 100%</p>";
-      }
     }
 
     function submitAssignment() {
