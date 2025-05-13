@@ -184,12 +184,10 @@
 <body>
   <div class="sidebar">
     <h1>👨‍💻 MAHEDI</h1>
-    <a onclick="showInfo('bachelor')">🎓 Bachelor's Info</a>
-    <a onclick="showInfo('master')">🎓 Master's Info</a>
-    <a onclick="showInfo('result')">📊 Results</a>
-    <a onclick="showInfo('scholarship')">💰 Scholarships</a>
+    <a onclick="showSection('myInfoSection')">🙋 My Information</a>
     <a onclick="showSection('assignmentSection')">📝 Assignments</a>
     <a onclick="showSection('gradeSection')">📈 My Grade</a>
+    <a href="https://open.kakao.com/me/joshteacher" target="_blank">📞 Communicate with Professor</a>
     <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
   </div>
 
@@ -197,6 +195,12 @@
     <div class="section active" id="info">
       <h2>Welcome!</h2>
       <p>Select a menu option from the left to view information.</p>
+    </div>
+
+    <div class="section" id="myInfoSection">
+      <h2>🙋 My Information</h2>
+      <p><strong>Name:</strong> Kazi Mahedi Hasan</p>
+      <p><strong>Student ID:</strong> 2417551</p>
     </div>
 
     <div class="section" id="assignmentSection">
@@ -207,10 +211,8 @@
         <option value="Week 4">Week 4</option>
         <option value="Week 7">Week 7</option>
       </select><br>
-
       <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%; padding: 10px;">
       <button onclick="submitAssignment()" style="padding: 10px 20px; margin-top: 10px;">Submit</button>
-
       <h3 style="margin-top: 30px;">📂 Submitted Assignments</h3>
       <div id="assignmentList"></div>
     </div>
@@ -319,20 +321,6 @@
     function showSection(sectionId) {
       document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
       document.getElementById(sectionId).classList.add('active');
-    }
-
-    function showInfo(type) {
-      const info = document.getElementById("info");
-      showSection("info");
-      if (type === "bachelor") {
-        info.innerHTML = "<h2>Bachelor's Info</h2><p>Admission Fee: 990 Won<br>Date: 19/05/2025</p>";
-      } else if (type === "master") {
-        info.innerHTML = "<h2>Master's Info</h2><p>CGPA: 3.99 required<br>Admission Fee: 1190 Won</p>";
-      } else if (type === "result") {
-        info.innerHTML = "<h2>Results</h2><p>MAHEDI: 4.29, JOY: 3.98, ROHAN: 4.07</p>";
-      } else if (type === "scholarship") {
-        info.innerHTML = "<h2>Scholarships</h2><p>CGPA 4.00 = 50%<br>CGPA 4.50 = 100%</p>";
-      }
     }
 
     function submitAssignment() {
