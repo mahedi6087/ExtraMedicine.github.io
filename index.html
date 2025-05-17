@@ -219,6 +219,7 @@
         <option value="Week 2">Week 2</option>
         <option value="Week 4">Week 4</option>
         <option value="Week 7">Week 7</option>
+        <option value="Week 10">Week 10</option>
       </select><br>
       <input type="text" id="driveLink" placeholder="Paste your Google Drive link here" style="width: 80%; padding: 10px;">
       <button onclick="submitAssignment()" style="padding: 10px 20px; margin-top: 10px;">Submit</button>
@@ -259,7 +260,8 @@
     const assignmentData = {
       "Week 2": ["https://docs.google.com/document/d/1wmlghH1QDpuMMgtebZTU9TfC3wZvVvzFFARGAgt7Srs/edit?usp=drive_link"],
       "Week 4": ["https://drive.google.com/drive/folders/1Uqd4Oh2t5G1sOMFaXTDb1JveJHw7F8Em?usp=drive_link"],
-      "Week 7": ["https://drive.google.com/drive/folders/11Exj3Uipm-dC2w8u7x1NFsXwFakJ8RBB?usp=drive_link"]
+      "Week 7": ["https://drive.google.com/drive/folders/11Exj3Uipm-dC2w8u7x1NFsXwFakJ8RBB?usp=drive_link"],
+      "Week 10": ["https://drive.google.com/drive/folders/1BqrCuFFHmYK9lsmTcMYATkdDrY8EEG-3?usp=drive_link"]
     };
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -271,9 +273,7 @@
       document.body.classList.toggle("dark");
     }
 
-    function showWeek6Site() {
-      // Week 6 moved to Project section – no preview here
-    }
+    function showWeek6Site() {}
 
     function loadGrades() {
       const scriptUrl = "https://script.google.com/macros/s/AKfycbxeylQS151LvoxV05C1q8NZoS5yQvq0syh_tvp0_DZybUCAZfdJkoWkEu_5RVLdIC7KgQ/exec";
