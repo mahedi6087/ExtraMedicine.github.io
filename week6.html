@@ -5,14 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cryptography Demo Site (Live + AutoCap)</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
-    h1, h2 { text-align: center; }
-    .section { margin-bottom: 30px; }
-    textarea { width: 100%; height: 100px; }
-    .results { white-space: pre-wrap; background: #f4f4f4; padding: 10px; margin-top: 10px; border-radius: 5px; }
-    .algorithm { margin-top: 20px; }
-    button, label { padding: 10px 20px; margin-right: 10px; display: inline-block; }
-    input, textarea, select { font-size: 16px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f4f8;
+      color: #222;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+    }
+    .results {
+      white-space: pre-wrap;
+      background: #fff;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .algorithm {
+      margin-top: 20px;
+    }
+    button, label {
+      padding: 10px 20px;
+      margin-right: 10px;
+      display: inline-block;
+      font-size: 16px;
+    }
+    input, textarea, select {
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -85,6 +113,18 @@
       return `${mode.toUpperCase()} - AES (Mock): ${btoa(text)}`;
     };
 
+    function getTooltip(name) {
+      const tips = {
+        "Caesar Cipher": "Shifts each letter by a fixed number (e.g., +3)",
+        "XOR Cipher": "Applies XOR logic with a key to each character",
+        "Vigenère Cipher": "Uses a keyword to shift each letter differently",
+        "Playfair Cipher (Mock)": "Substitutes pairs of letters using a grid (simulated)",
+        "RSA (Mock)": "Public-key encryption that reverses the text here",
+        "AES (Mock)": "Advanced encryption (simulated using base64)"
+      };
+      return tips[name] || "No description available";
+    }
+
     let lastResults = '';
 
     const processText = (mode) => {
@@ -125,15 +165,6 @@
         { name: 'AES (Mock)', result: aesMock(text, mode) }
       ];
 
-      const tooltips = {
-        'Caesar Cipher': 'Shifts letters by a fixed number (e.g., +3)',
-        'XOR Cipher': 'Applies XOR bitwise operation with a fixed key',
-        'Vigenère Cipher': 'Uses keyword-based letter shifting',
-        'Playfair Cipher (Mock)': 'Simulated: Encrypts letter pairs using a key square',
-        'RSA (Mock)': 'Mock: Reverse text to mimic RSA behavior',
-        'AES (Mock)': 'Mock: Encodes using Base64 to simulate AES'
-      };
-
       lastResults = '';
 
       algorithms.forEach(algo => {
@@ -142,7 +173,7 @@
 
         const title = document.createElement('h3');
         title.textContent = `${algo.name} (${mode})`;
-        title.title = tooltips[algo.name] || '';
+        title.title = getTooltip(algo.name); // Tooltip added here
 
         const result = document.createElement('div');
         result.className = 'results';
