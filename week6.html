@@ -5,29 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cryptography Demo Site (Live + AutoCap)</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
+    body { font-family: Arial, sans-serif; padding: 20px; background: #222; color: #eee; }
     h1, h2 { text-align: center; }
     .section { margin-bottom: 30px; }
-    textarea { width: 100%; height: 100px; }
-    .results { white-space: pre-wrap; background: #f4f4f4; padding: 10px; margin-top: 10px; border-radius: 5px; }
-    .algorithm { margin-top: 20px; position: relative; }
-    button, label { padding: 10px 20px; margin-right: 10px; display: inline-block; }
-    input, textarea, select { font-size: 16px; }
-    .copy-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 5px 10px;
-      font-size: 14px;
+    textarea { width: 100%; height: 100px; background: #333; color: #eee; border: 1px solid #555; border-radius: 5px; }
+    .results { white-space: pre-wrap; background: #444; padding: 10px; margin-top: 10px; border-radius: 5px; color: #eee; }
+    .algorithm { margin-top: 20px; }
+    button, label {
+      padding: 10px 20px; 
+      margin-right: 10px; 
+      display: inline-block; 
       cursor: pointer;
-      background-color: #007BFF;
+      background: #555;
       border: none;
-      color: white;
-      border-radius: 3px;
-      transition: background-color 0.3s ease;
+      border-radius: 5px;
+      color: #eee;
+      font-size: 16px;
+      transition: background 0.3s;
     }
-    .copy-btn:hover {
-      background-color: #0056b3;
+    button:hover, label:hover {
+      background: #777;
+    }
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      margin-right: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -36,13 +38,17 @@
 
   <div class="section">
     <h2>Input</h2>
-    <textarea id="userInput" placeholder="Example: hello world"></textarea><br />
-    <input type="file" id="fileInput" accept=".txt" /><br /><br />
-    <label><input type="checkbox" id="liveToggle" checked> Live Preview</label>
-    <label><input type="checkbox" id="autoCapToggle"> Auto Capitalize</label><br /><br />
-    <button onclick="processText('encrypt')">Encrypt</button>
-    <button onclick="processText('decrypt')">Decrypt</button>
-    <button onclick="downloadResults()">Download .txt</button>
+    <textarea id="userInput" placeholder="Example: hello world" title="Type your text here"></textarea><br />
+    <input type="file" id="fileInput" accept=".txt" title="Upload a .txt file to load text" /><br /><br />
+    <label title="Automatically update results as you type">
+      <input type="checkbox" id="liveToggle" checked /> Live Preview
+    </label>
+    <label title="Automatically capitalize input text">
+      <input type="checkbox" id="autoCapToggle" /> Auto Capitalize
+    </label><br /><br />
+    <button onclick="processText('encrypt')" title="Encrypt the input text using all algorithms">Encrypt</button>
+    <button onclick="processText('decrypt')" title="Decrypt the input text using all algorithms">Decrypt</button>
+    <button onclick="downloadResults()" title="Download the results as a text file">Download .txt</button>
   </div>
 
   <div class="section">
@@ -150,18 +156,6 @@
         const title = document.createElement('h3');
         title.textContent = `${algo.name} (${mode})`;
 
-        const copyBtn = document.createElement('button');
-        copyBtn.textContent = 'Copy';
-        copyBtn.className = 'copy-btn';
-        copyBtn.onclick = () => {
-          navigator.clipboard.writeText(algo.result).then(() => {
-            copyBtn.textContent = 'Copied!';
-            setTimeout(() => (copyBtn.textContent = 'Copy'), 1500);
-          }).catch(() => {
-            alert('Failed to copy!');
-          });
-        };
-
         const result = document.createElement('div');
         result.className = 'results';
         result.textContent = algo.result;
@@ -169,7 +163,6 @@
         lastResults += `---\n${algo.name} (${mode}):\n${algo.result}\n\n`;
 
         container.appendChild(title);
-        container.appendChild(copyBtn);
         container.appendChild(result);
         resultsDiv.appendChild(container);
       });
@@ -191,3 +184,4 @@
   </script>
 </body>
 </html>
+
