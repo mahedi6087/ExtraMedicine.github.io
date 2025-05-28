@@ -2,53 +2,93 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cryptography Demo Site (Live + AutoCap)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cryptography Demo Site</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #222; color: #eee; }
-    h1, h2 { text-align: center; }
-    .section { margin-bottom: 30px; }
-    textarea { width: 100%; height: 100px; background: #333; color: #eee; border: 1px solid #555; border-radius: 5px; }
-    .results { white-space: pre-wrap; background: #444; padding: 10px; margin-top: 10px; border-radius: 5px; color: #eee; }
-    .algorithm { margin-top: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f0f2f5;
+      color: #222;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark {
+      background-color: #121212;
+      color: #eee;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+    }
+    .results {
+      white-space: pre-wrap;
+      background: #f4f4f4;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+    body.dark .results {
+      background: #1e1e1e;
+    }
+    .algorithm {
+      margin-top: 20px;
+    }
     button, label {
-      padding: 10px 20px; 
-      margin-right: 10px; 
-      display: inline-block; 
+      padding: 10px 15px;
+      margin: 5px;
       cursor: pointer;
-      background: #555;
+    }
+    input, textarea, select {
+      font-size: 16px;
+    }
+    .copy-btn {
+      float: right;
+      font-size: 14px;
+      padding: 5px 10px;
+      background: #ddd;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .copy-btn:hover {
+      background: #bbb;
+    }
+    body.dark .copy-btn {
+      background: #444;
+      color: #fff;
+    }
+    .toggle-dark {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: #222;
+      color: white;
+      padding: 8px 12px;
       border: none;
       border-radius: 5px;
-      color: #eee;
-      font-size: 16px;
-      transition: background 0.3s;
-    }
-    button:hover, label:hover {
-      background: #777;
-    }
-    input[type="checkbox"] {
-      transform: scale(1.2);
-      margin-right: 5px;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <h1>Cryptography Demo (Live + AutoCap)</h1>
+  <button class="toggle-dark" onclick="toggleDark()">🌙</button>
+  <h1>Cryptography Demo</h1>
 
   <div class="section">
     <h2>Input</h2>
-    <textarea id="userInput" placeholder="Example: hello world" title="Type your text here"></textarea><br />
-    <input type="file" id="fileInput" accept=".txt" title="Upload a .txt file to load text" /><br /><br />
-    <label title="Automatically update results as you type">
-      <input type="checkbox" id="liveToggle" checked /> Live Preview
-    </label>
-    <label title="Automatically capitalize input text">
-      <input type="checkbox" id="autoCapToggle" /> Auto Capitalize
-    </label><br /><br />
-    <button onclick="processText('encrypt')" title="Encrypt the input text using all algorithms">Encrypt</button>
-    <button onclick="processText('decrypt')" title="Decrypt the input text using all algorithms">Decrypt</button>
-    <button onclick="downloadResults()" title="Download the results as a text file">Download .txt</button>
+    <textarea id="userInput" placeholder="Example: hello world"></textarea><br />
+    <input type="file" id="fileInput" accept=".txt" /><br /><br />
+    <label title="Encrypt automatically while typing"><input type="checkbox" id="liveToggle" checked> Live Preview</label>
+    <label title="Convert input to uppercase"><input type="checkbox" id="autoCapToggle"> Auto Capitalize</label><br /><br />
+    <button onclick="processText('encrypt')" title="Encrypt using all algorithms">Encrypt</button>
+    <button onclick="processText('decrypt')" title="Decrypt using all algorithms">Decrypt</button>
+    <button onclick="downloadResults()" title="Download all results as .txt">Download .txt</button>
   </div>
 
   <div class="section">
@@ -95,17 +135,9 @@
       return result.join('');
     };
 
-    const playfair = (text, key, mode) => {
-      return `${mode.toUpperCase()} - Playfair Cipher (Mock): ${text}`;
-    };
-
-    const rsaMock = (text, mode) => {
-      return `${mode.toUpperCase()} - RSA (Mock): ${text.split('').reverse().join('')}`;
-    };
-
-    const aesMock = (text, mode) => {
-      return `${mode.toUpperCase()} - AES (Mock): ${btoa(text)}`;
-    };
+    const playfair = (text, key, mode) => `${mode.toUpperCase()} - Playfair Cipher (Mock): ${text}`;
+    const rsaMock = (text, mode) => `${mode.toUpperCase()} - RSA (Mock): ${text.split('').reverse().join('')}`;
+    const aesMock = (text, mode) => `${mode.toUpperCase()} - AES (Mock): ${btoa(text)}`;
 
     let lastResults = '';
 
@@ -119,7 +151,6 @@
       }
 
       if (!text && fileInput.files.length > 0) {
-        const file = fileInput.files[0];
         const reader = new FileReader();
         reader.onload = () => {
           text = reader.result;
@@ -137,6 +168,7 @@
     const showResults = (text, mode) => {
       const resultsDiv = document.getElementById('results');
       resultsDiv.innerHTML = '';
+      lastResults = '';
 
       const algorithms = [
         { name: 'Caesar Cipher', result: caesarShift(text, 3, mode) },
@@ -147,14 +179,21 @@
         { name: 'AES (Mock)', result: aesMock(text, mode) }
       ];
 
-      lastResults = '';
-
       algorithms.forEach(algo => {
         const container = document.createElement('div');
         container.className = 'algorithm';
 
         const title = document.createElement('h3');
         title.textContent = `${algo.name} (${mode})`;
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = 'Copy';
+        copyBtn.onclick = () => {
+          navigator.clipboard.writeText(algo.result);
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => copyBtn.textContent = 'Copy', 1500);
+        };
 
         const result = document.createElement('div');
         result.className = 'results';
@@ -163,6 +202,7 @@
         lastResults += `---\n${algo.name} (${mode}):\n${algo.result}\n\n`;
 
         container.appendChild(title);
+        container.appendChild(copyBtn);
         container.appendChild(result);
         resultsDiv.appendChild(container);
       });
@@ -176,6 +216,10 @@
       link.click();
     };
 
+    const toggleDark = () => {
+      document.body.classList.toggle('dark');
+    };
+
     document.getElementById('userInput').addEventListener('input', () => {
       if (document.getElementById('liveToggle').checked) {
         processText('encrypt');
@@ -184,4 +228,3 @@
   </script>
 </body>
 </html>
-
