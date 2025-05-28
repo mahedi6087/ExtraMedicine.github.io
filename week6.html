@@ -93,7 +93,6 @@
   </div>
 
   <script>
-    // Caesar Cipher (Simple)
     const caesarShift = (text, shift, mode) => {
       if (mode === 'decrypt') shift = -shift;
       return text.split('').map(char => {
@@ -133,15 +132,15 @@
     };
 
     const playfair = (text, key, mode) => {
-      return [${mode}] Playfair processing of: "${text}" with key: "${key}";
+      return `${mode.toUpperCase()} - Playfair Cipher (Mock): ${text}`;
     };
 
     const rsaMock = (text, mode) => {
-      return [${mode}] RSA processed text: ${text.split('').reverse().join('')};
+      return `${mode.toUpperCase()} - RSA (Mock): ${text.split('').reverse().join('')}`;
     };
 
     const aesMock = (text, mode) => {
-      return [${mode}] AES processed text (mock): ${btoa(text)};
+      return `${mode.toUpperCase()} - AES (Mock): ${btoa(text)}`;
     };
 
     let lastResults = '';
@@ -191,7 +190,7 @@
         result.className = 'results';
         result.textContent = algo.result;
 
-        lastResults += ---\n${algo.name} (${mode}):\n${algo.result}\n\n;
+        lastResults += `---\n${algo.name} (${mode}):\n${algo.result}\n\n`;
 
         container.appendChild(title);
         container.appendChild(result);
