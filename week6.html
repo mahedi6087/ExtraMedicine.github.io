@@ -2,226 +2,192 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cryptography Demonstration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cryptography Demo Site (Final Enhanced)</title>
   <style>
-    /* Reset & base */
-    * {
-      box-sizing: border-box;
-    }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 30px 40px;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: #e0e6f0;
-      transition: background 0.4s, color 0.4s;
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #fafafa;
+      color: #222;
+      max-width: 900px;
+      margin: auto;
     }
-    body.dark {
-      background: linear-gradient(135deg, #121212, #1e1e1e, #272727);
-      color: #cfd8dc;
-    }
-
     h1, h2 {
       text-align: center;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      margin-bottom: 15px;
-      text-shadow: 0 0 10px rgba(0, 150, 255, 0.6);
+      margin-bottom: 10px;
     }
-
     .section {
-      margin-bottom: 40px;
-      background: rgba(255,255,255,0.05);
-      padding: 25px 30px;
-      border-radius: 14px;
-      box-shadow: 0 8px 24px rgba(0, 150, 255, 0.15);
-      backdrop-filter: blur(10px);
+      margin-bottom: 30px;
     }
-
     textarea {
       width: 100%;
-      height: 110px;
-      border-radius: 10px;
-      border: none;
-      padding: 15px;
-      font-size: 1.1rem;
-      font-family: 'Consolas', monospace;
+      height: 100px;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
       resize: vertical;
-      background-color: rgba(255,255,255,0.15);
-      color: #e0e6f0;
-      box-shadow: inset 0 0 8px rgba(0, 150, 255, 0.3);
-      transition: background-color 0.3s;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
     }
     textarea:focus {
+      border-color: #0078d7;
       outline: none;
-      background-color: rgba(0, 150, 255, 0.2);
-      box-shadow: inset 0 0 12px #0096ff;
-      color: #fff;
     }
-
-    input[type="file"] {
-      margin-top: 15px;
-      color: #ddd;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-
-    label {
-      font-size: 1rem;
-      user-select: none;
-      cursor: pointer;
-      margin-right: 25px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: #a0b9d6;
-      transition: color 0.3s;
-    }
-    label:hover {
-      color: #00aaff;
-    }
-
-    input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-    }
-
-    button {
-      background: linear-gradient(90deg, #00bfff, #1e90ff);
-      border: none;
-      border-radius: 12px;
-      color: white;
-      font-weight: 600;
-      font-size: 1.05rem;
-      padding: 12px 26px;
-      margin: 10px 10px 0 0;
-      cursor: pointer;
-      box-shadow: 0 6px 15px rgba(0, 191, 255, 0.5);
-      transition: background 0.25s ease, box-shadow 0.25s ease;
-      user-select: none;
-    }
-    button:hover {
-      background: linear-gradient(90deg, #1e90ff, #00bfff);
-      box-shadow: 0 8px 24px rgba(0, 191, 255, 0.75);
-    }
-    button:active {
-      box-shadow: 0 3px 8px rgba(0, 191, 255, 0.8);
-      transform: scale(0.98);
-    }
-
-    .copy-btn {
-      float: right;
-      font-size: 0.85rem;
-      padding: 6px 12px;
-      background: #0096ff;
-      border-radius: 8px;
-      border: none;
-      color: #e0e6f0;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0, 150, 255, 0.7);
-      transition: background 0.3s;
-    }
-    .copy-btn:hover {
-      background: #00c0ff;
-    }
-    body.dark .copy-btn {
-      background: #005f99;
-      color: #d0e6ff;
-    }
-
     .results {
       white-space: pre-wrap;
-      background: rgba(255,255,255,0.1);
-      padding: 15px 20px;
-      margin-top: 12px;
-      border-radius: 12px;
-      font-family: 'Consolas', monospace;
-      font-size: 1rem;
-      box-shadow: inset 0 0 10px rgba(0, 150, 255, 0.3);
-      color: #cce7ff;
-      user-select: text;
-      min-height: 40px;
+      background: #f4f4f4;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 5px;
+      box-shadow: inset 0 0 6px #ddd;
+      min-height: 60px;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.4;
     }
-    body.dark .results {
-      background: rgba(0,0,0,0.3);
-      box-shadow: inset 0 0 12px #0096ff;
-      color: #a3cfff;
-    }
-
     .algorithm {
-      margin-top: 30px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 20px;
-      position: relative;
+      margin-top: 25px;
+      border-left: 4px solid #0078d7;
+      padding-left: 12px;
     }
-
-    /* Dark toggle button */
-    .toggle-dark {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #00aaff;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 12px;
-      border: none;
-      font-size: 1.3rem;
+    button, label {
+      padding: 10px 20px;
+      margin: 8px 8px 8px 0;
       cursor: pointer;
-      box-shadow: 0 6px 15px rgba(0, 170, 255, 0.7);
-      transition: background 0.3s ease;
+      border-radius: 5px;
+      border: none;
+      background-color: #0078d7;
+      color: white;
+      font-size: 15px;
+      transition: background-color 0.3s;
       user-select: none;
-      z-index: 999;
     }
-    .toggle-dark:hover {
-      background: #0088cc;
+    button:hover, label:hover {
+      background-color: #005ea1;
     }
-    .toggle-dark:active {
-      background: #006699;
-      transform: scale(0.95);
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      margin-right: 6px;
+      vertical-align: middle;
+      cursor: pointer;
     }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      body {
-        padding: 20px 15px;
-      }
-      button, label {
-        font-size: 0.9rem;
-        padding: 10px 14px;
-      }
-      textarea {
-        font-size: 1rem;
-      }
+    input[type="file"] {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    label {
+      display: inline-flex;
+      align-items: center;
+      user-select: none;
+    }
+    select, input {
+      font-size: 16px;
+    }
+    /* Tooltip styling */
+    .tooltip {
+      position: relative;
+      cursor: help;
+      border-bottom: 1px dotted #666;
+    }
+    .tooltip:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 0;
+      top: 110%;
+      background: #333;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 5px;
+      white-space: nowrap;
+      font-size: 13px;
+      z-index: 10;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .tooltip::after {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    /* Mock label styling */
+    .mock-label {
+      font-size: 0.9em;
+      font-weight: 600;
+      color: #d9534f;
+      margin-left: 6px;
+      font-style: italic;
+    }
+    /* How it works box */
+    #howItWorksBox {
+      background: #e3f2fd;
+      border: 1px solid #90caf9;
+      border-radius: 6px;
+      padding: 15px;
+      margin-top: 15px;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+      display: none;
+      user-select: text;
     }
   </style>
 </head>
 <body>
-  <button class="toggle-dark" onclick="toggleDark()" title="Toggle Dark Mode">🌙</button>
-  <h1>Cryptography Demonstration</h1>
 
-  <div class="section">
+  <h1>Cryptography Demonstration (Enhanced)</h1>
+
+  <div class="section" id="inputSection">
     <h2>Input</h2>
     <textarea id="userInput" placeholder="Example: hello world"></textarea><br />
     <input type="file" id="fileInput" accept=".txt" /><br /><br />
-    <label title="Encrypt automatically while typing">
-      <input type="checkbox" id="liveToggle" checked> Live Preview
-    </label>
-    <label title="Convert input to uppercase">
-      <input type="checkbox" id="autoCapToggle"> Auto Capitalize
-    </label><br /><br />
-    <button onclick="processText('encrypt')" title="Encrypt using all algorithms">Encrypt</button>
-    <button onclick="processText('decrypt')" title="Decrypt using all algorithms">Decrypt</button>
-    <button onclick="downloadResults()" title="Download all results as .txt">Download .txt</button>
+    <label><input type="checkbox" id="liveToggle" checked /> Live Preview</label>
+    <label><input type="checkbox" id="autoCapToggle" /> Auto Capitalize</label><br /><br />
+    <button onclick="processText('encrypt')">Encrypt</button>
+    <button onclick="processText('decrypt')">Decrypt</button>
+    <button onclick="downloadResults()">Download .txt</button>
+    <button onclick="clearAll()">Clear All</button>
+    <button id="showHowBtn" onclick="toggleHowItWorks()">Show How This Cipher Works</button>
+    <div id="howItWorksBox" aria-live="polite" aria-atomic="true"></div>
   </div>
 
-  <div class="section">
+  <div class="section" id="resultsSection">
     <h2>Results</h2>
-    <div id="results"></div>
+    <div id="results" aria-live="polite" aria-atomic="true"></div>
   </div>
 
   <script>
+    // Caesar Cipher with detailed step explanation
+    const caesarShiftDetailed = (text, shift, mode) => {
+      if (mode === 'decrypt') shift = -shift;
+      const steps = [];
+      let result = '';
+      for (const char of text) {
+        const code = char.charCodeAt(0);
+        if (code >= 65 && code <= 90) {
+          // uppercase
+          const shiftedCode = ((code - 65 + shift + 26) % 26) + 65;
+          const shiftedChar = String.fromCharCode(shiftedCode);
+          steps.push(`${char} → ${shiftedChar} (${shift >= 0 ? '+' : ''}${shift} shift)`);
+          result += shiftedChar;
+        } else if (code >= 97 && code <= 122) {
+          // lowercase
+          const shiftedCode = ((code - 97 + shift + 26) % 26) + 97;
+          const shiftedChar = String.fromCharCode(shiftedCode);
+          steps.push(`${char} → ${shiftedChar} (${shift >= 0 ? '+' : ''}${shift} shift)`);
+          result += shiftedChar;
+        } else {
+          // non-alpha
+          steps.push(`${char} (unchanged)`);
+          result += char;
+        }
+      }
+      return { result, steps };
+    };
+
     const caesarShift = (text, shift, mode) => {
       if (mode === 'decrypt') shift = -shift;
       return text.split('').map(char => {
@@ -260,97 +226,218 @@
       return result.join('');
     };
 
-    const playfair = (text, key, mode) => `${mode.toUpperCase()} - Playfair Cipher (Mock): ${text}`;
-    const rsaMock = (text, mode) => `${mode.toUpperCase()} - RSA (Mock): ${text.split('').reverse().join('')}`;
-    const aesMock = (text, mode) => `${mode.toUpperCase()} - AES (Mock): ${btoa(text)}`;
+    const playfair = (text, key, mode) => {
+      return `${mode.toUpperCase()} - Playfair Cipher (Mock): ${text}`;
+    };
+
+    const rsaMock = (text, mode) => {
+      return `${mode.toUpperCase()} - RSA (Mock): ${text.split('').reverse().join('')}`;
+    };
+
+    const aesMock = (text, mode) => {
+      return `${mode.toUpperCase()} - AES (Mock): ${btoa(text)}`;
+    };
 
     let lastResults = '';
+    let lastMode = 'encrypt';
+    let lastInput = '';
+
+    const showHowItWorks = (steps) => {
+      const box = document.getElementById('howItWorksBox');
+      box.style.display = 'block';
+      box.textContent = steps.join('\n');
+    };
+
+    const hideHowItWorks = () => {
+      const box = document.getElementById('howItWorksBox');
+      box.style.display = 'none';
+      box.textContent = '';
+    };
+
+    let howShown = false;
+    function toggleHowItWorks() {
+      if (!howShown && lastInput.trim()) {
+        const { steps } = caesarShiftDetailed(lastInput, 3, lastMode);
+        showHowItWorks(steps);
+        howShown = true;
+        document.getElementById('showHowBtn').textContent = 'Hide How This Cipher Works';
+      } else {
+        hideHowItWorks();
+        howShown = false;
+        document.getElementById('showHowBtn').textContent = 'Show How This Cipher Works';
+      }
+    }
 
     const processText = (mode) => {
+      lastMode = mode;
       const inputField = document.getElementById('userInput');
       const fileInput = document.getElementById('fileInput');
-      let text = inputField.value;
+      let text = inputField.value.trim();
+
+      if (!text && fileInput.files.length > 0) {
+        // Read file content asynchronously, then process
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = () => {
+          let fileText = reader.result.trim();
+          if (document.getElementById('autoCapToggle').checked) {
+            fileText = fileText.toUpperCase();
+          }
+          lastInput = fileText;
+          showResults(fileText, mode);
+          if (document.getElementById('liveToggle').checked) {
+            toggleHowItWorksIfShown();
+          }
+        };
+        reader.readAsText(file);
+        return; // Wait for async file reading
+      }
 
       if (document.getElementById('autoCapToggle').checked) {
         text = text.toUpperCase();
       }
 
-      if (!text && fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        reader.onload = () => {
-          text = reader.result;
-          if (document.getElementById('autoCapToggle').checked) {
-            text = text.toUpperCase();
-          }
-          showResults(text, mode);
-        };
-        reader.readAsText(file);
-      } else {
-        showResults(text, mode);
+      lastInput = text;
+      showResults(text, mode);
+      if (document.getElementById('liveToggle').checked) {
+        toggleHowItWorksIfShown();
+      }
+    };
+
+    const toggleHowItWorksIfShown = () => {
+      // If "How It Works" is currently visible, update it with current input
+      if (howShown) {
+        const { steps } = caesarShiftDetailed(lastInput, 3, lastMode);
+        showHowItWorks(steps);
       }
     };
 
     const showResults = (text, mode) => {
       const resultsDiv = document.getElementById('results');
       resultsDiv.innerHTML = '';
-      lastResults = '';
+
+      if (!text) {
+        resultsDiv.textContent = '(No input text provided)';
+        lastResults = '';
+        return;
+      }
 
       const algorithms = [
-        { name: 'Caesar Cipher', result: caesarShift(text, 3, mode) },
-        { name: 'XOR Cipher', result: xorCipher(text) },
-        { name: 'Vigenère Cipher', result: vigenere(text, 'KEYWORD', mode) },
-        { name: 'Playfair Cipher (Mock)', result: playfair(text, 'KEYWORD', mode) },
-        { name: 'RSA (Mock)', result: rsaMock(text, mode) },
-        { name: 'AES (Mock)', result: aesMock(text, mode) }
+        {
+          name: 'Caesar Cipher',
+          resultObj: caesarShiftDetailed(text, 3, mode),
+          tip: "Shifts each letter by a fixed number (e.g. +3)"
+        },
+        {
+          name: 'XOR Cipher',
+          result: xorCipher(text),
+          tip: "Performs bitwise XOR with a key (default: 5)"
+        },
+        {
+          name: 'Vigenère Cipher',
+          result: vigenere(text, 'KEYWORD', mode),
+          tip: "Encrypts using a keyword for multiple Caesar shifts"
+        },
+        {
+          name: 'Playfair Cipher',
+          result: playfair(text, 'KEYWORD', mode),
+          tip: "Simulated block cipher using letter pairs",
+          mock: true
+        },
+        {
+          name: 'RSA',
+          result: rsaMock(text, mode),
+          tip: "Mock public-key encryption (reverses text)",
+          mock: true
+        },
+        {
+          name: 'AES',
+          result: aesMock(text, mode),
+          tip: "Mock symmetric cipher using Base64 encoding",
+          mock: true
+        }
       ];
+
+      lastResults = `Cryptography Demonstration Results (${mode.toUpperCase()})\n\nInput:\n${text}\n\n`;
 
       algorithms.forEach(algo => {
         const container = document.createElement('div');
         container.className = 'algorithm';
 
         const title = document.createElement('h3');
-        title.textContent = `${algo.name} (${mode})`;
+        title.className = 'tooltip';
+        title.textContent = `${algo.name}${algo.mock ? ' (Mock)' : ''} (${mode})`;
+        title.setAttribute('data-tip', algo.tip);
 
-        const copyBtn = document.createElement('button');
-        copyBtn.className = 'copy-btn';
-        copyBtn.textContent = 'Copy';
-        copyBtn.onclick = () => {
-          navigator.clipboard.writeText(algo.result);
-          copyBtn.textContent = 'Copied!';
-          setTimeout(() => copyBtn.textContent = 'Copy', 1500);
-        };
+        if (algo.mock) {
+          const mockLabel = document.createElement('span');
+          mockLabel.className = 'mock-label';
+          mockLabel.textContent = '(Mock)';
+          title.appendChild(mockLabel);
+        }
 
         const result = document.createElement('div');
         result.className = 'results';
-        result.textContent = algo.result;
 
-        lastResults += `---\n${algo.name} (${mode}):\n${algo.result}\n\n`;
+        if (algo.name === 'Caesar Cipher') {
+          result.textContent = algo.resultObj.result;
+          // Save detailed steps for How It Works if needed
+          container.caesarSteps = algo.resultObj.steps;
+        } else {
+          result.textContent = algo.result;
+        }
+
+        lastResults += `---\n${algo.name} (${mode}):\n${result.textContent}\n\n`;
 
         container.appendChild(title);
-        container.appendChild(copyBtn);
         container.appendChild(result);
         resultsDiv.appendChild(container);
       });
     };
 
     const downloadResults = () => {
+      if (!lastResults) {
+        alert('No results to download!');
+        return;
+      }
       const blob = new Blob([lastResults], { type: 'text/plain' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = 'encryption_results.txt';
+      document.body.appendChild(link);
       link.click();
+      link.remove();
     };
 
-    const toggleDark = () => {
-      document.body.classList.toggle('dark');
+    const clearAll = () => {
+      document.getElementById('userInput').value = '';
+      document.getElementById('results').innerHTML = '';
+      document.getElementById('fileInput').value = '';
+      lastResults = '';
+      lastInput = '';
+      howShown = false;
+      hideHowItWorks();
+      document.getElementById('showHowBtn').textContent = 'Show How This Cipher Works';
     };
 
+    // Live preview handler with debounce for performance
+    let liveTimeout = null;
     document.getElementById('userInput').addEventListener('input', () => {
       if (document.getElementById('liveToggle').checked) {
-        processText('encrypt');
+        if (liveTimeout) clearTimeout(liveTimeout);
+        liveTimeout = setTimeout(() => processText('encrypt'), 300);
       }
     });
-  </script>
-</body>
-</html>
+
+    // Auto Capitalize live toggle
+    document.getElementById('autoCapToggle').addEventListener('change', () => {
+      const input = document.getElementById('userInput');
+      if (document.getElementById('autoCapToggle').checked) {
+        input.value = input.value.toUpperCase();
+      }
+    });
+
+    // Optional: Clear "How It Works" box when clicking outside
+    document.addEventListener('click', (e) => {
+      const howBox = document.getElementById
+
