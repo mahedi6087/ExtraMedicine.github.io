@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Grade Dashboard</title>
   <style>
     body {
@@ -57,10 +57,27 @@
       color: white;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:disabled {
+      background: #95c0e8;
+      cursor: default;
+    }
+    button:hover:not(:disabled) {
+      background-color: #2a80b9;
     }
     .error {
       color: red;
       margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      .grade-card {
+        padding: 1rem;
+        max-width: 100%;
+      }
+      table, th, td {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -69,7 +86,13 @@
   <div class="grade-card">
     <h2>📊 My Grade</h2>
     <p>Total Grade: <span class="grade-percent" id="gradePercentage">Calculating...</span></p>
-    <button onclick="toggleBreakdown()">Show Breakdown</button>
+    <button
+      id="toggleBtn"
+      onclick="toggleBreakdown()"
+      aria-expanded="false"
+      aria-controls="gradeBreakdown"
+      disabled
+    >Loading...</button>
     <div id="gradeBreakdown" class="breakdown"></div>
     <p class="error" id="errorMsg"></p>
   </div>
@@ -78,6 +101,11 @@
     const url = "https://script.google.com/macros/s/AKfycbzsdr6nfuIOzTayQy_jgyN1BlGgKHileX5keGJC01_z0my7k6wSjTkWN-ZEXD1sE0dKdw/exec";
 
     async function loadGradeData() {
+      const btn = document.getElementById("toggleBtn");
+      btn.disabled = true;
+      btn.textContent = "Loading...";
+      btn.setAttribute("aria-expanded", "false");
+
       try {
         const res = await fetch(url);
         if (!res.ok) throw new Error("Network response not ok");
@@ -118,18 +146,23 @@
         `;
 
         document.getElementById("gradeBreakdown").innerHTML = tableHTML;
+        btn.textContent = "Show Breakdown";
+        btn.disabled = false;
       } catch (error) {
         document.getElementById("errorMsg").textContent = "❌ Error loading grade data.";
         console.error(error);
+        btn.textContent = "Show Breakdown";
+        btn.disabled = false;
       }
     }
 
     function toggleBreakdown() {
       const breakdown = document.getElementById("gradeBreakdown");
-      const btn = document.querySelector('button');
+      const btn = document.getElementById("toggleBtn");
       const isHidden = window.getComputedStyle(breakdown).display === "none";
       breakdown.style.display = isHidden ? "block" : "none";
       btn.textContent = isHidden ? "Hide Breakdown" : "Show Breakdown";
+      btn.setAttribute("aria-expanded", isHidden);
     }
 
     // Load data on page load
