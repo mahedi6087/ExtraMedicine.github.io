@@ -3,117 +3,145 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Academic Dashboard</title>
+  <title>My Grade</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
-      margin: 0;
+      background: #f4f4f4;
+      color: #333;
       padding: 20px;
     }
 
-    .section {
-      background: #222;
+    .grade-section {
+      background: white;
+      border-radius: 12px;
       padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    .grade-bar {
-      background: #555;
-      height: 30px;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .grade-fill {
-      height: 100%;
-      background: linear-gradient(to right, #4caf50, #81c784);
-      width: 0%;
-      text-align: center;
-      color: #fff;
+    .grade-title {
+      font-size: 24px;
       font-weight: bold;
-      transition: width 1s ease-in-out;
+      margin-bottom: 10px;
     }
 
-    .breakdown {
-      margin-top: 15px;
+    .grade-total {
+      font-size: 18px;
+      margin: 10px 0;
     }
 
-    .breakdown div {
-      background: #333;
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 8px;
+    .progress-bar {
+      width: 100%;
+      background: #eee;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 20px;
+      margin-bottom: 15px;
     }
 
-    button {
-      padding: 10px 20px;
-      margin-top: 10px;
-      border: none;
-      background: #4caf50;
+    .progress-fill {
+      height: 100%;
+      background: #4CAF50;
+      width: 0%;
       color: white;
-      border-radius: 5px;
-      cursor: pointer;
+      text-align: center;
+      line-height: 20px;
+      transition: width 0.5s ease-in-out;
     }
 
-    .error {
-      color: #f44336;
+    .breakdown-button {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .breakdown-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .breakdown-table th, .breakdown-table td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .error-message {
+      color: red;
       margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="section" id="my-grade">
-    <h2>📊 My Grade</h2>
-    <div>Total Grade: <span id="gradeValue">Calculating...</span></div>
-    <div class="grade-bar">
-      <div class="grade-fill" id="gradeFill">0%</div>
+
+  <div class="grade-section">
+    <div class="grade-title">📊 My Grade</div>
+    <div class="grade-total" id="grade-total">Total Grade: Calculating...</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill">0%</div>
     </div>
-    <button onclick="toggleBreakdown()">Show Breakdown</button>
-    <div class="breakdown" id="breakdown" style="display:none;"></div>
-    <div class="error" id="gradeError"></div>
+    <button class="breakdown-button" onclick="toggleBreakdown()">Show Breakdown</button>
+    <table class="breakdown-table" id="breakdown-table">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Received</th>
+          <th>Max</th>
+        </tr>
+      </thead>
+      <tbody id="breakdown-body"></tbody>
+    </table>
+    <div class="error-message" id="grade-error"></div>
   </div>
 
   <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbxXys3Fgl_RIsnrQ6EYkAJKdZCrEddqrAhqmMBstEyvWUsiVyEUz0k5QSZdp0Y5ErFkYg/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyOgica-LOO2cZ1rCJEAH2sHI05yDd6eqB8d7bxhQGprM1DXMpmZedzL0lGcrfhH0JfjQ/exec";
 
-    async function fetchGradeData() {
-      try {
-        const res = await fetch(scriptUrl);
-        const data = await res.json();
+    fetch(scriptURL)
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok.");
+        return response.json();
+      })
+      .then(data => {
+        const total = data.totalReceived;
+        const possible = data.totalPossible;
+        const percent = data.percentage;
 
-        if (data && data.percentage !== undefined) {
-          const gradeValue = `${data.percentage}% (${data.totalReceived}/${data.totalPossible})`;
-          document.getElementById("gradeValue").innerText = gradeValue;
-          document.getElementById("gradeFill").style.width = `${data.percentage}%`;
-          document.getElementById("gradeFill").innerText = `${data.percentage}%`;
+        document.getElementById("grade-total").textContent = `Total Grade: ${total}/${possible}`;
+        const fill = document.getElementById("progress-fill");
+        fill.style.width = `${percent}%`;
+        fill.textContent = `${percent}%`;
 
-          // Breakdown
-          const breakdownContainer = document.getElementById("breakdown");
-          data.breakdown.forEach(entry => {
-            const div = document.createElement("div");
-            div.textContent = `${entry.week}: ${entry.score}/${entry.total}`;
-            breakdownContainer.appendChild(div);
-          });
-
-        } else {
-          throw new Error("Incomplete data received.");
-        }
-      } catch (error) {
-        document.getElementById("gradeError").innerText = "❌ Error loading grade data.";
-        console.error(error);
-      }
-    }
+        // Breakdown table
+        const tbody = document.getElementById("breakdown-body");
+        data.breakdown.forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${item.task}</td>
+            <td>${item.grade_received}</td>
+            <td>${item.max_grade}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(error => {
+        console.error("Fetch error:", error);
+        document.getElementById("grade-error").textContent = "❌ Error loading grade data.";
+      });
 
     function toggleBreakdown() {
-      const section = document.getElementById("breakdown");
-      section.style.display = section.style.display === "none" ? "block" : "none";
+      const table = document.getElementById("breakdown-table");
+      table.style.display = table.style.display === "table" ? "none" : "table";
     }
-
-    fetchGradeData();
   </script>
+
 </body>
 </html>
