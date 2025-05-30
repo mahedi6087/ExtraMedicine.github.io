@@ -256,7 +256,6 @@
 
   <script>
     let gradeData = null;
-
     const assignmentData = {
       "Week 2": ["https://docs.google.com/document/d/1wmlghH1QDpuMMgtebZTU9TfC3wZvVvzFFARGAgt7Srs/edit?usp=drive_link"],
       "Week 4": ["https://drive.google.com/drive/folders/1Uqd4Oh2t5G1sOMFaXTDb1JveJHw7F8Em?usp=drive_link"],
@@ -284,14 +283,14 @@
     }
 
     function loadGrades() {
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbxXys3Fgl_RIsnrQ6EYkAJKdZCrEddqrAhqmMBstEyvWUsiVyEUz0k5QSZdp0Y5ErFkYg/exec";
+      const scriptUrl = "https://script.google.com/macros/s/YOUR_SCRIPT_URL/exec";
       const gradeContainer = document.getElementById("gradeContainer");
 
       fetch(scriptUrl)
         .then(response => response.json())
         .then(data => {
           gradeData = data;
-          const { totalReceived, totalPossible, percentage } = data;
+          const { totalReceived, totalPossible, percentage, breakdown } = data;
 
           gradeContainer.innerHTML = `
             <p><strong>✅ Total Grade Received:</strong> ${totalReceived}</p>
@@ -311,66 +310,42 @@
               ? "linear-gradient(90deg, #ffcc00, #ffaa00)"
               : "linear-gradient(90deg, #ff5555, #ff0000)";
           }, 100);
+
+          const breakdownEl = document.getElementById("gradeBreakdown");
+          breakdownEl.innerHTML = breakdown.map(item => `
+            <div class="grade-card">
+              <strong>${item.title}</strong><br>
+              🟢 Received: ${item.received} / ${item.possible}
+            </div>
+          `).join('');
         })
         .catch(error => {
-          console.error("Error loading grade data:", error);
-          gradeContainer.innerHTML = "<p style='color:red;'>⚠️ Failed to load grade data.</p>";
+          gradeContainer.innerHTML = `<p style="color:red;">❌ Error loading grade data.</p>`;
+          console.error("Grade Fetch Error:", error);
         });
     }
 
     function toggleBreakdown() {
-      const section = document.getElementById("gradeBreakdown");
-      if (!gradeData || !gradeData.breakdown) {
-        section.innerHTML = "<p style='color:red;'>No breakdown data found.</p>";
-        section.style.display = "block";
-        return;
-      }
-
-      if (section.style.display === "block") {
-        section.style.display = "none";
-        return;
-      }
-
-      section.innerHTML = "<h3 style='color:deeppink; text-align:center;'>Grade Breakdown</h3>";
-      gradeData.breakdown.forEach(item => {
-        const percent = ((item.grade_received / item.max_grade) * 100).toFixed(1);
-        const card = document.createElement("div");
-        card.className = "grade-card";
-        card.innerHTML = `
-          <strong>${item.task}</strong><br>
-          Grade: ${item.grade_received} / ${item.max_grade} (${percent}%)
-        `;
-        section.appendChild(card);
-      });
-
-      section.style.display = "block";
+      const bd = document.getElementById("gradeBreakdown");
+      bd.style.display = bd.style.display === "none" || bd.style.display === "" ? "block" : "none";
     }
 
     function renderAssignmentList() {
-      const assignmentList = document.getElementById("assignmentList");
-      assignmentList.innerHTML = "";
-      Object.entries(assignmentData).forEach(([week, links]) => {
-        const container = document.createElement("div");
-        container.innerHTML = `<strong>${week}</strong>:<br>` + links.map(link => `<a href="${link}" target="_blank">${link}</a>`).join("<br>");
-        assignmentList.appendChild(container);
-      });
+      const container = document.getElementById("assignmentList");
+      container.innerHTML = Object.entries(assignmentData).map(([week, links]) => `
+        <div><strong>${week}:</strong> ${links.map(link => `<a href="${link}" target="_blank">View</a>`).join(", ")}</div>
+      `).join("");
     }
 
     function submitAssignment() {
       const week = document.getElementById("weekSelect").value;
       const link = document.getElementById("driveLink").value.trim();
-      if (link && assignmentData[week]) {
+      if (week && link) {
+        if (!assignmentData[week]) assignmentData[week] = [];
         assignmentData[week].push(link);
-        renderAssignmentList();
         document.getElementById("driveLink").value = "";
-        alert("✅ Assignment submitted!");
-      } else {
-        alert("⚠️ Please enter a valid link and select a week.");
+        renderAssignmentList();
       }
-    }
-
-    function showWeek6Site() {
-      // Reserved for future use
     }
   </script>
 </body>
