@@ -3,144 +3,133 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Grade</title>
+  <title>My Grade Dashboard</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background: #f4f4f4;
       color: #333;
-      padding: 20px;
+      margin: 0;
+      padding: 2rem;
     }
-
-    .grade-section {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      max-width: 600px;
+    .grade-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 2rem;
+      max-width: 700px;
       margin: auto;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
-    .grade-title {
-      font-size: 24px;
+    .grade-card h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+    .grade-percent {
+      font-size: 2.5rem;
+      color: #3498db;
       font-weight: bold;
-      margin-bottom: 10px;
     }
-
-    .grade-total {
-      font-size: 18px;
-      margin: 10px 0;
-    }
-
-    .progress-bar {
-      width: 100%;
-      background: #eee;
-      border-radius: 20px;
-      overflow: hidden;
-      height: 20px;
-      margin-bottom: 15px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: #4CAF50;
-      width: 0%;
-      color: white;
-      text-align: center;
-      line-height: 20px;
-      transition: width 0.5s ease-in-out;
-    }
-
-    .breakdown-button {
-      background: #2196F3;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-
-    .breakdown-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
+    .breakdown {
+      margin-top: 1rem;
       display: none;
     }
-
-    .breakdown-table th, .breakdown-table td {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    table, th, td {
       border: 1px solid #ccc;
-      padding: 8px;
+    }
+    th, td {
+      padding: 0.75rem;
       text-align: center;
     }
-
-    .error-message {
+    th {
+      background: #3498db;
+      color: white;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+      border: none;
+      background: #3498db;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .error {
       color: red;
-      margin-top: 10px;
+      margin-top: 1rem;
     }
   </style>
 </head>
 <body>
 
-  <div class="grade-section">
-    <div class="grade-title">📊 My Grade</div>
-    <div class="grade-total" id="grade-total">Total Grade: Calculating...</div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progress-fill">0%</div>
-    </div>
-    <button class="breakdown-button" onclick="toggleBreakdown()">Show Breakdown</button>
-    <table class="breakdown-table" id="breakdown-table">
-      <thead>
-        <tr>
-          <th>Task</th>
-          <th>Received</th>
-          <th>Max</th>
-        </tr>
-      </thead>
-      <tbody id="breakdown-body"></tbody>
-    </table>
-    <div class="error-message" id="grade-error"></div>
+  <div class="grade-card">
+    <h2>📊 My Grade</h2>
+    <p>Total Grade: <span class="grade-percent" id="gradePercentage">Calculating...</span></p>
+    <button onclick="toggleBreakdown()">Show Breakdown</button>
+    <div id="gradeBreakdown" class="breakdown"></div>
+    <p class="error" id="errorMsg"></p>
   </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbyOgica-LOO2cZ1rCJEAH2sHI05yDd6eqB8d7bxhQGprM1DXMpmZedzL0lGcrfhH0JfjQ/exec";
+    const url = "https://script.google.com/macros/s/AKfycbx6ePki03H9vSDm0rufk5Qz8ojOwAaCVhb42ryRuCIAMWG39EehOxb8BGaTLSVV9TCoZg/exec";
 
-    fetch(scriptURL)
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not ok.");
-        return response.json();
-      })
-      .then(data => {
-        const total = data.totalReceived;
-        const possible = data.totalPossible;
-        const percent = data.percentage;
+    async function loadGradeData() {
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
 
-        document.getElementById("grade-total").textContent = `Total Grade: ${total}/${possible}`;
-        const fill = document.getElementById("progress-fill");
-        fill.style.width = `${percent}%`;
-        fill.textContent = `${percent}%`;
+        document.getElementById("gradePercentage").textContent = `${data.percentage}%`;
 
-        // Breakdown table
-        const tbody = document.getElementById("breakdown-body");
+        let tableHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>📘 Grade Name</th>
+                <th>✅ Grade Received</th>
+                <th>📏 Max Grade</th>
+                <th>📊 Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
         data.breakdown.forEach(item => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${item.task}</td>
-            <td>${item.grade_received}</td>
-            <td>${item.max_grade}</td>
+          const percentage = item.max_grade > 0
+            ? `${((item.grade_received / item.max_grade) * 100).toFixed(2)}%`
+            : '-';
+          tableHTML += `
+            <tr>
+              <td>${item.task}</td>
+              <td>${item.grade_received}</td>
+              <td>${item.max_grade}</td>
+              <td>${percentage}</td>
+            </tr>
           `;
-          tbody.appendChild(row);
         });
-      })
-      .catch(error => {
-        console.error("Fetch error:", error);
-        document.getElementById("grade-error").textContent = "❌ Error loading grade data.";
-      });
+
+        tableHTML += `
+            </tbody>
+          </table>
+        `;
+
+        document.getElementById("gradeBreakdown").innerHTML = tableHTML;
+      } catch (error) {
+        document.getElementById("errorMsg").textContent = "❌ Error loading grade data.";
+        console.error(error);
+      }
+    }
 
     function toggleBreakdown() {
-      const table = document.getElementById("breakdown-table");
-      table.style.display = table.style.display === "table" ? "none" : "table";
+      const breakdown = document.getElementById("gradeBreakdown");
+      breakdown.style.display = breakdown.style.display === "none" ? "block" : "none";
     }
+
+    // Load data on page load
+    window.onload = loadGradeData;
   </script>
 
 </body>
