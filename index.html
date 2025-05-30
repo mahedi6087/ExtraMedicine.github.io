@@ -75,11 +75,12 @@
   </div>
 
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbx6ePki03H9vSDm0rufk5Qz8ojOwAaCVhb42ryRuCIAMWG39EehOxb8BGaTLSVV9TCoZg/exec";
+    const url = "https://script.google.com/macros/s/AKfycbzsdr6nfuIOzTayQy_jgyN1BlGgKHileX5keGJC01_z0my7k6wSjTkWN-ZEXD1sE0dKdw/exec";
 
     async function loadGradeData() {
       try {
         const res = await fetch(url);
+        if (!res.ok) throw new Error("Network response not ok");
         const data = await res.json();
 
         document.getElementById("gradePercentage").textContent = `${data.percentage}%`;
@@ -125,7 +126,10 @@
 
     function toggleBreakdown() {
       const breakdown = document.getElementById("gradeBreakdown");
-      breakdown.style.display = breakdown.style.display === "none" ? "block" : "none";
+      const btn = document.querySelector('button');
+      const isHidden = window.getComputedStyle(breakdown).display === "none";
+      breakdown.style.display = isHidden ? "block" : "none";
+      btn.textContent = isHidden ? "Hide Breakdown" : "Show Breakdown";
     }
 
     // Load data on page load
