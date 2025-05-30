@@ -2,172 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My Grade Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎓 My Student Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4f4;
-      color: #333;
-      margin: 0;
-      padding: 2rem;
-    }
-    .grade-card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      padding: 2rem;
-      max-width: 700px;
-      margin: auto;
-    }
-    .grade-card h2 {
-      margin-top: 0;
-      font-size: 1.5rem;
-    }
-    .grade-percent {
-      font-size: 2.5rem;
-      color: #3498db;
-      font-weight: bold;
-    }
-    .breakdown {
-      margin-top: 1rem;
-      display: none;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 0.75rem;
-      text-align: center;
-    }
-    th {
-      background: #3498db;
-      color: white;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      margin-top: 1rem;
-      border: none;
-      background: #3498db;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:disabled {
-      background: #95c0e8;
-      cursor: default;
-    }
-    button:hover:not(:disabled) {
-      background-color: #2a80b9;
-    }
-    .error {
-      color: red;
-      margin-top: 1rem;
-    }
-    @media (max-width: 600px) {
-      .grade-card {
-        padding: 1rem;
-        max-width: 100%;
-      }
-      table, th, td {
-        font-size: 0.9rem;
-      }
+    html {
+      scroll-behavior: smooth;
     }
   </style>
 </head>
-<body>
+<body class="bg-gray-100 text-gray-800">
 
-  <div class="grade-card">
-    <h2>📊 My Grade</h2>
-    <p>Total Grade: <span class="grade-percent" id="gradePercentage">Calculating...</span></p>
-    <button
-      id="toggleBtn"
-      onclick="toggleBreakdown()"
-      aria-expanded="false"
-      aria-controls="gradeBreakdown"
-      disabled
-    >Loading...</button>
-    <div id="gradeBreakdown" class="breakdown"></div>
-    <p class="error" id="errorMsg"></p>
-  </div>
+  <!-- Header -->
+  <header class="bg-blue-700 text-white p-6 shadow-lg">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold text-center">🎓 Welcome to My Student Portal</h1>
+    </div>
+  </header>
 
-  <script>
-    const url = "https://script.google.com/macros/s/AKfycbzsdr6nfuIOzTayQy_jgyN1BlGgKHileX5keGJC01_z0my7k6wSjTkWN-ZEXD1sE0dKdw/exec";
+  <!-- Navigation -->
+  <nav class="bg-white shadow p-4">
+    <div class="container mx-auto flex justify-center space-x-6 font-semibold text-blue-700">
+      <a href="#grades" class="hover:underline">📘 Grades</a>
+      <a href="#about" class="hover:underline">👤 About</a>
+    </div>
+  </nav>
 
-    async function loadGradeData() {
-      const btn = document.getElementById("toggleBtn");
-      btn.disabled = true;
-      btn.textContent = "Loading...";
-      btn.setAttribute("aria-expanded", "false");
+  <!-- Grade Dashboard Section -->
+  <section id="grades" class="p-6 bg-white rounded shadow-lg max-w-6xl mx-auto my-10">
+    <h2 class="text-2xl font-bold text-center mb-4">📘 Course Grades Overview</h2>
+    <div class="flex justify-center">
+      <iframe
+        src="https://script.google.com/macros/s/AKfycbw7X3NPCjDVDVB48Hf1lt7DlHuvfB5PS5xMoTE4tZi6E3lX8NIlgy-bMoB-klHyeE7qAw/exec"
+        width="1000"
+        height="800"
+        style="border: none; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.2);"
+        loading="lazy"
+        title="Grade Dashboard"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </section>
 
-      try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Network response not ok");
-        const data = await res.json();
+  <!-- About Section -->
+  <section id="about" class="bg-gray-200 p-6 rounded shadow max-w-3xl mx-auto my-10">
+    <h2 class="text-xl font-bold text-center mb-2">👤 About Me</h2>
+    <p class="text-center">Hello! I'm a student learning web development and tracking my course progress in real time. This dashboard helps me visualize my academic journey!</p>
+  </section>
 
-        document.getElementById("gradePercentage").textContent = `${data.percentage}%`;
-
-        let tableHTML = `
-          <table>
-            <thead>
-              <tr>
-                <th>📘 Grade Name</th>
-                <th>✅ Grade Received</th>
-                <th>📏 Max Grade</th>
-                <th>📊 Percentage</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
-
-        data.breakdown.forEach(item => {
-          const percentage = item.max_grade > 0
-            ? `${((item.grade_received / item.max_grade) * 100).toFixed(2)}%`
-            : '-';
-          tableHTML += `
-            <tr>
-              <td>${item.task}</td>
-              <td>${item.grade_received}</td>
-              <td>${item.max_grade}</td>
-              <td>${percentage}</td>
-            </tr>
-          `;
-        });
-
-        tableHTML += `
-            </tbody>
-          </table>
-        `;
-
-        document.getElementById("gradeBreakdown").innerHTML = tableHTML;
-        btn.textContent = "Show Breakdown";
-        btn.disabled = false;
-      } catch (error) {
-        document.getElementById("errorMsg").textContent = "❌ Error loading grade data.";
-        console.error(error);
-        btn.textContent = "Show Breakdown";
-        btn.disabled = false;
-      }
-    }
-
-    function toggleBreakdown() {
-      const breakdown = document.getElementById("gradeBreakdown");
-      const btn = document.getElementById("toggleBtn");
-      const isHidden = window.getComputedStyle(breakdown).display === "none";
-      breakdown.style.display = isHidden ? "block" : "none";
-      btn.textContent = isHidden ? "Hide Breakdown" : "Show Breakdown";
-      btn.setAttribute("aria-expanded", isHidden);
-    }
-
-    // Load data on page load
-    window.onload = loadGradeData;
-  </script>
+  <!-- Footer -->
+  <footer class="bg-blue-700 text-white text-center p-4 mt-10">
+    © 2025 My Student Dashboard
+  </footer>
 
 </body>
 </html>
