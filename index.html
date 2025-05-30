@@ -3,33 +3,153 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Portfolio</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Academic Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: #1f1f2e;
+      height: 100vh;
+      color: white;
+      padding-top: 30px;
+      position: fixed;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background-color: #343454;
+    }
+
+    .main {
+      margin-left: 220px;
+      padding: 30px;
+      width: calc(100% - 220px);
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .grade-box {
+      background-color: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin-top: 20px;
+    }
+
+    .grade-box h3 {
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    .grade-breakdown {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .toggle-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .toggle-btn:hover {
+      background-color: #34495e;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans">
+<body>
 
-  <!-- Header -->
-  <header class="bg-blue-700 text-white p-6 shadow-md text-center">
-    <h1 class="text-3xl font-bold">🎓 My Academic Dashboard</h1>
-    <p class="text-sm mt-2">All your course data in one place</p>
-  </header>
+  <div class="sidebar">
+    <h2>Dashboard</h2>
+    <a onclick="showSection('home')">🏠 Home</a>
+    <a onclick="showSection('assignments')">📝 Assignments</a>
+    <a onclick="showSection('gradeSection')">📊 My Academic Dashboard</a>
+  </div>
 
-  <!-- Grade Section -->
-  <section id="grades" class="p-6 bg-white rounded shadow-lg max-w-4xl mx-auto my-10 text-center">
-    <h2 class="text-2xl font-bold mb-4">📘 Course Grades Overview</h2>
-    <p class="mb-4 text-gray-700">Click below to view your live grade dashboard:</p>
-    <a 
-      href="https://script.google.com/macros/s/AKfycbw7X3NPCjDVDVB48Hf1lt7DlHuvfB5PS5xMoTE4tZi6E3lX8NIlgy-bMoB-klHyeE7qAw/exec" 
-      target="_blank" 
-      class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition duration-200">
-      🔍 View My Grades
-    </a>
-  </section>
+  <div class="main">
+    <div class="section active" id="home">
+      <h2>🏠 Home</h2>
+      <p>Welcome to your academic dashboard. Select an option from the sidebar.</p>
+    </div>
 
-  <!-- Footer -->
-  <footer class="bg-gray-800 text-white text-center p-4 mt-10">
-    &copy; 2025 My Portfolio. All rights reserved.
-  </footer>
+    <div class="section" id="assignments">
+      <h2>📝 Assignments</h2>
+      <ul>
+        <li>Week 1 – Completed ✅</li>
+        <li>Week 2 – Completed ✅</li>
+        <li>Week 3 – Completed ✅</li>
+        <li>Week 4 – Completed ✅</li>
+        <li>Week 5 – Completed ✅</li>
+        <li>Week 6 – Completed ✅</li>
+      </ul>
+    </div>
+
+    <div class="section" id="gradeSection">
+      <h2>📊 My Academic Dashboard</h2>
+      <div class="grade-box">
+        <h3>Your Current Grade: 95%</h3>
+        <button class="toggle-btn" onclick="toggleBreakdown()">View Breakdown</button>
+        <div class="grade-breakdown" id="breakdown">
+          <ul>
+            <li>Week 1: 10/10</li>
+            <li>Week 2: 10/10</li>
+            <li>Week 3: 9/10</li>
+            <li>Week 4: 10/10</li>
+            <li>Week 5: 9/10</li>
+            <li>Week 6: 10/10</li>
+            <li>Participation: 37/40</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => {
+        sec.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+    }
+
+    function toggleBreakdown() {
+      const breakdown = document.getElementById('breakdown');
+      breakdown.style.display = breakdown.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
 
 </body>
 </html>
