@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Halal Food Finder - South Korea</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(120, 200, 120, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(150, 220, 150, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    h2 {
+      color: #2c5530;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(45deg, #2c5530, #4a7c59);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    input {
+      padding: 15px 20px;
+      font-size: 1.1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 25px;
+      outline: none;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      min-width: 250px;
+    }
+
+    input:focus {
+      border-color: #4a7c59;
+      box-shadow: 0 4px 20px rgba(74, 124, 89, 0.3);
+      transform: translateY(-2px);
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      background: linear-gradient(45deg, #4a7c59, #2c5530);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(74, 124, 89, 0.3);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      background: linear-gradient(45deg, #2c5530, #1a3320);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(74, 124, 89, 0.4);
+    }
+
+    button:active {
+      transform: translateY(-1px);
+    }
+
+    #map {
+      height: 500px;
+      width: 100%;
+      margin-bottom: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    #placesList {
+      max-height: 300px;
+      overflow-y: auto;
+      border: none;
+      padding: 20px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
+      box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(5px);
+    }
+
+    #placesList::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #placesList::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    #placesList::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, #4a7c59, #2c5530);
+      border-radius: 10px;
+    }
+
+    .place-item {
+      cursor: pointer;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-bottom: 2px solid rgba(74, 124, 89, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.7);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 50px;
+      font-weight: 500;
+      color: #2c5530;
+    }
+
+    .place-item::before {
+      content: '🍽️';
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2em;
+      opacity: 0.7;
+    }
+
+    .place-item:hover {
+      background: linear-gradient(45deg, rgba(74, 124, 89, 0.1), rgba(44, 85, 48, 0.1));
+      transform: translateX(10px);
+      box-shadow: 0 5px 20px rgba(74, 124, 89, 0.2);
+      border-left: 4px solid #4a7c59;
+    }
+
+    .place-item:last-child {
+      border-bottom: none;
+    }
+
+    .place-distance {
+      font-size: 0.85rem;
+      color: #4a7c59;
+      font-weight: bold;
+      margin-left: 10px;
+      opacity: 0.8;
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(74, 124, 89, 0.3);
+      border-radius: 25px;
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      color: #2c5530;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(74, 124, 89, 0.2);
+      transform: scale(1.05);
+    }
+
+    /* Status indicator */
+    .search-status {
+      text-align: center;
+      margin-bottom: 20px;
+      font-style: italic;
+      color: #4a7c59;
+      font-weight: 500;
+    }
+
+    /* Dark mode styles */
+    body.dark-theme {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+
+    body.dark-theme .container {
+      background: rgba(30, 30, 50, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark-theme h2 {
+      background: linear-gradient(45deg, #4a7c59, #6ba16f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    body.dark-theme input {
+      background: rgba(40, 40, 60, 0.9);
+      border-color: #4a7c59;
+      color: white;
+    }
+
+    body.dark-theme input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    body.dark-theme #placesList {
+      background: linear-gradient(135deg, rgba(40, 40, 60, 0.9), rgba(30, 30, 50, 0.9));
+      color: white;
+    }
+
+    body.dark-theme .place-item {
+      background: rgba(50, 50, 70, 0.7);
+      color: #e0e0e0;
+      border-bottom-color: rgba(74, 124, 89, 0.3);
+    }
+
+    body.dark-theme .place-item:hover {
+      background: linear-gradient(45deg, rgba(74, 124, 89, 0.2), rgba(44, 85, 48, 0.2));
+    }
+
+    body.dark-theme .theme-toggle {
+      background: rgba(40, 40, 60, 0.7);
+      color: #6ba16f;
+      border-color: rgba(107, 161, 111, 0.5);
+    }
+
+    body.dark-theme .search-status {
+      color: #6ba16f;
+    }
+
+    body.dark-theme .place-distance {
+      color: #6ba16f;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .theme-toggle {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+        padding: 12px 16px;
+        font-size: 0.8rem;
+      }
+
+      .container {
+        margin: 10px;
+        padding: 20px;
+        border-radius: 15px;
+        position: relative;
+        padding-top: 60px;
+      }
+      
+      h2 {
+        font-size: 2rem;
+        margin-top: 0;
+      }
+      
+      .search-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+      
+      input, button {
+        width: 100%;
+        max-width: 300px;
+        min-height: 48px;
+      }
+      
+      #map {
+        height: 400px;
+      }
+
+      .place-item {
+        min-height: 60px;
+        padding: 20px 15px 20px 60px;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+      }
+
+      .place-item::before {
+        font-size: 1.4em;
+        left: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+    <h2>Halal Food Finder in South Korea</h2>
+    <div class="search-container">
+      <input type="text" id="locationInput" placeholder="Enter area (e.g. Busan, Seoul, Incheon)" />
+      <button onclick="findHalalFood()">Search</button>
+      <button onclick="useMyLocation()" style="background: linear-gradient(45deg, #7c4dff, #3f51b5);">📍 Use My Location</button>
+    </div>
+    <div id="searchStatus" class="search-status">Enter a city name to search for halal restaurants</div>
+    <div id="map"></div>
+    <div id="placesList"></div>
+  </div>
+
+  <script>
+    let map;
+    let markers = [];
+    let infoWindows = [];
+    let userLocation = null;
+    let searchCenter = null;
+    let currentSearchLocation = "";
+
+    const API_KEY = "AIzaSyARdgXHAysivXEla3MwYvcwLfuxzFRVJpA";
+
+    // Initialize the map
+    function initMap() {
+      console.log("Initializing map...");
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 36.5, lng: 127.8 }, // Center of South Korea
+        zoom: 7,
+        mapTypeId: 'roadmap'
+      });
+      
+      console.log("Map initialized successfully");
+      
+      // Try to get user location on load
+      getUserLocation().then(location => {
+        userLocation = location;
+        console.log("User location obtained:", location);
+        
+        // Add a blue dot for user location
+        new google.maps.Marker({
+          position: location,
+          map: map,
+          title: "Your Location",
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: '#4285f4',
+            fillOpacity: 1,
+            strokeColor: '#ffffff',
+            strokeWeight: 2
+          }
+        });
+        
+        map.setCenter(location);
+        map.setZoom(11);
+      }).catch(error => {
+        console.log("Could not get user location:", error);
+      });
+    }
+
+    // Get user's GPS location
+    function getUserLocation() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error('Geolocation not supported'));
+          return;
+        }
+        
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            });
+          },
+          (error) => {
+            reject(error);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000
+          }
+        );
+      });
+    }
+
+    // Use current GPS location for search
+    async function useMyLocation() {
+      try {
+        document.getElementById("searchStatus").innerHTML = "Getting your location...";
+        const location = await getUserLocation();
+        userLocation = location;
+        
+        // Reverse geocode to get location name
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ location: location }, (results, status) => {
+          if (status === 'OK' && results[0]) {
+            const locationName = results[0].formatted_address;
+            document.getElementById("locationInput").value = locationName;
+            currentSearchLocation = locationName;
+            searchHalalFoodNearby(location, locationName);
+          } else {
+            document.getElementById("locationInput").value = "Current Location";
+            currentSearchLocation = "Current Location";
+            searchHalalFoodNearby(location, "Current Location");
+          }
+        });
+        
+      } catch (error) {
+        document.getElementById("searchStatus").innerHTML = "Could not get your location. Please enter a city name manually.";
+        console.error('Location error:', error);
+      }
+    }
+
+    // Dark mode toggle
+    function toggleTheme() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      
+      if (body.classList.contains('dark-theme')) {
+        body.classList.remove('dark-theme');
+        themeToggle.innerHTML = '🌙 Dark Mode';
+      } else {
+        body.classList.add('dark-theme');
+        themeToggle.innerHTML = '☀️ Light Mode';
+      }
+    }
+
+    // Calculate distance between two coordinates
+    function calculateDistance(lat1, lng1, lat2, lng2) {
+      const R = 6371; // Earth's radius in kilometers
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLng / 2) * Math.sin(dLng / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c;
+      
+      if (distance < 1) {
+        return Math.round(distance * 1000) + 'm';
+      } else {
+        return distance.toFixed(1) + 'km';
+      }
+    }
+
+    // Clear existing markers
+    function clearMarkers() {
+      markers.forEach(marker => marker.setMap(null));
+      markers = [];
+      infoWindows.forEach(iw => iw.close());
+      infoWindows = [];
+    }
+
+    // Search for halal food using Places API
+    async function searchHalalFoodNearby(coords, locationName) {
+      searchCenter = coords;
+      currentSearchLocation = locationName || currentSearchLocation;
+      
+      clearMarkers();
+      document.getElementById("placesList").innerHTML = "Loading...";
+      document.getElementById("searchStatus").innerHTML = `Searching for halal restaurants in ${currentSearchLocation}...`;
+
+      // Center map on search location
+      map.setCenter(coords);
+      map.setZoom(13);
+
+      try {
+        // Use Places API with multiple search terms
+        const service = new google.maps.places.PlacesService(map);
+        let allPlaces = [];
+        const searchTerms = ['halal restaurant', 'halal food', 'muslim restaurant', 'islamic food'];
+        
+        let completedSearches = 0;
+        const totalSearches = searchTerms.length;
+
+        for (let term of searchTerms) {
+          const request = {
+            location: coords,
+            radius: 25000, // 25km radius
+            query: `${term} ${locationName}`,
+            type: 'restaurant'
+          };
+
+          service.textSearch(request, (results, status) => {
+            completedSearches++;
+            
+            if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+              // Filter out duplicates
+              const newPlaces = results.filter(newPlace => {
+                return !allPlaces.some(existingPlace => 
+                  existingPlace.place_id === newPlace.place_id
+                );
+              });
+              allPlaces = allPlaces.concat(newPlaces);
+            }
+
+            // When all searches are complete, display results
+            if (completedSearches === totalSearches) {
+              if (allPlaces.length > 0) {
+                displayResults(allPlaces);
+              } else {
+                // Fallback search with broader terms
+                const fallbackRequest = {
+                  location: coords,
+                  radius: 50000, // Expand to 50km
+                  query: `restaurant ${locationName}`, // Very broad search
+                  type: 'restaurant'
+                };
+                
+                service.textSearch(fallbackRequest, (fallbackResults, fallbackStatus) => {
+                  if (fallbackStatus === google.maps.places.PlacesServiceStatus.OK && fallbackResults && fallbackResults.length > 0) {
+                    // Filter for potentially halal restaurants
+                    const filteredResults = fallbackResults.filter(place => {
+                      const name = place.name.toLowerCase();
+                      const types = place.types || [];
+                      return name.includes('halal') || 
+                             name.includes('muslim') || 
+                             name.includes('islamic') ||
+                             name.includes('middle east') ||
+                             name.includes('turkish') ||
+                             name.includes('arab') ||
+                             name.includes('pakistan') ||
+                             name.includes('indian') ||
+                             types.includes('meal_takeaway');
+                    });
+                    
+                    if (filteredResults.length > 0) {
+                      displayResults(filteredResults);
+                    } else {
+                      document.getElementById("placesList").innerHTML = `No halal restaurants found in ${currentSearchLocation}. Try searching in Seoul, Busan, or other major cities.`;
+                      document.getElementById("searchStatus").innerHTML = `No halal restaurants found in ${currentSearchLocation}`;
+                    }
+                  } else {
+                    document.getElementById("placesList").innerHTML = `No halal restaurants found in ${currentSearchLocation}. Try searching in Seoul, Busan, or other major cities.`;
+                    document.getElementById("searchStatus").innerHTML = `Search failed for ${currentSearchLocation}`;
+                  }
+                });
+              }
+            }
+          });
+        }
+
+      } catch (error) {
+        console.error('Search error:', error);
+        document.getElementById("placesList").innerHTML = "Error searching for halal restaurants. Please try again.";
+        document.getElementById("searchStatus").innerHTML = "Search failed. Please try again.";
+      }
+    }
+
+    // Display search results
+    function displayResults(places) {
+      const placesList = document.getElementById("placesList");
+      const searchStatus = document.getElementById("searchStatus");
+      
+      placesList.innerHTML = "";
+
+      if (!places || places.length === 0) {
+        placesList.innerHTML = `No halal restaurants found in ${currentSearchLocation}.`;
+        searchStatus.innerHTML = `No results found for ${currentSearchLocation}`;
+        return;
+      }
+
+      // Calculate distances and sort
+      const referencePoint = userLocation || searchCenter;
+      
+      const placesWithDistance = places.map(place => ({
+        ...place,
+        distance: calculateDistance(
+          referencePoint.lat,
+          referencePoint.lng,
+          place.geometry.location.lat(),
+          place.geometry.location.lng()
+        ),
+        distanceValue: getDistanceValue(
+          referencePoint.lat,
+          referencePoint.lng,
+          place.geometry.location.lat(),
+          place.geometry.location.lng()
+        )
+      })).sort((a, b) => a.distanceValue - b.distanceValue);
+
+      searchStatus.innerHTML = `Found ${placesWithDistance.length} restaurant${placesWithDistance.length !== 1 ? 's' : ''} in ${currentSearchLocation}`;
+
+      // Create markers and list items
+      placesWithDistance.forEach((place, index) => {
+        const position = place.geometry.location;
+
+        // Create marker
+        const marker = new google.maps.Marker({
+          position: position,
+          map: map,
+          title: place.name,
+          label: {
+            text: (index + 1).toString(),
+            color: 'white',
+            fontWeight: 'bold'
+          }
+        });
+
+        // Create info window
+        const distanceText = userLocation ? 
+          `Distance from you: ${place.distance}` : 
+          `Distance from search area: ${place.distance}`;
+
+        const ratingText = place.rating ? `Rating: ${place.rating}/5` : 'No rating available';
+        const statusText = place.business_status ? `Status: ${place.business_status}` : '';
+
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+            <div style="padding: 10px; max-width: 200px;">
+              <strong>${place.name}</strong><br>
+              <small>${place.formatted_address || place.vicinity || ''}</small><br>
+              <small>${distanceText}</small><br>
+              <small>${ratingText}</small><br>
+              <small>${statusText}</small>
+            </div>
+          `,
+        });
+
+        marker.addListener("click", () => {
+          infoWindows.forEach(iw => iw.close());
+          infoWindow.open(map, marker);
+        });
+
+        markers.push(marker);
+        infoWindows.push(infoWindow);
+
+        // Create list item
+        const placeItem = document.createElement("div");
+        placeItem.className = "place-item";
+        
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = `${index + 1}. ${place.name}`;
+        
+        const distanceSpan = document.createElement("span");
+        distanceSpan.className = "place-distance";
+        distanceSpan.textContent = place.distance;
+        distanceSpan.title = userLocation ? "Distance from your location" : "Distance from search area";
+        
+        placeItem.appendChild(nameSpan);
+        placeItem.appendChild(distanceSpan);
+        
+        placeItem.onclick = () => {
+          map.panTo(position);
+          map.setZoom(16);
+          infoWindows.forEach(iw => iw.close());
+          infoWindow.open(map, marker);
+        };
+
+        placesList.appendChild(placeItem);
+      });
+
+      // Adjust map bounds to show all markers
+      if (markers.length > 0) {
+        const bounds = new google.maps.LatLngBounds();
+        markers.forEach(marker => bounds.extend(marker.getPosition()));
+        map.fitBounds(bounds);
+        
+        // Ensure minimum zoom level
+        google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+          if (map.getZoom() > 15) {
+            map.setZoom(15);
+          }
+        });
+      }
+    }
+
+    // Helper function for distance calculation
+    function getDistanceValue(lat1, lng1, lat2, lng2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLng / 2) * Math.sin(dLng / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    // Main search function
+    async function findHalalFood() {
+      const location = document.getElementById("locationInput").value.trim();
+      if (!location) {
+        alert("Please enter a location");
+        return;
+      }
+
+      document.getElementById("searchStatus").innerHTML = `Searching for ${location}...`;
+
+      try {
+        // Use Google Geocoding API to get coordinates
+        const geocoder = new google.maps.Geocoder();
+        
+        geocoder.geocode({ 
+          address: location + ", South Korea",
+          region: 'KR'
+        }, (results, status) => {
+          if (status === 'OK' && results[0]) {
+            const coords = {
+              lat: results[0].geometry.location.lat(),
+              lng: results[0].geometry.location.lng()
+            };
+            
+            const locationName = results[0].formatted_address;
+            currentSearchLocation = locationName;
+            searchHalalFoodNearby(coords, location);
+          } else {
+            document.getElementById("searchStatus").innerHTML = `Could not find location: ${location}. Please try a different city name.`;
+            document.getElementById("placesList").innerHTML = "Location not found. Please try entering a major city like Seoul, Busan, or Incheon.";
+          }
+        });
+
+      } catch (error) {
+        console.error('Geocoding error:', error);
+        document.getElementById("searchStatus").innerHTML = "Error finding location. Please try again.";
+      }
+    }
+
+    // Allow Enter key to trigger search
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('locationInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          findHalalFood();
+        }
+      });
+    });
+
+    // Global error handler
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+      console.error('Error: ', msg, '\nURL: ', url, '\nLine: ', lineNo, '\nColumn: ', columnNo, '\nError object: ', error);
+      return false;
+    };
+  </script>
+
+  <!-- Load Google Maps API -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARdgXHAysivXEla3MwYvcwLfuxzFRVJpA&libraries=places&callback=initMap">
+  </script>
+</body>
+</html>
