@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halal Food Finder - Project Requirements Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            margin-bottom: 1.5rem;
+        }
+
+        .author-info {
+            background: #e8f4f8;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+            margin-right: 0.8rem;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .section p {
+            margin-bottom: 1rem;
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .section li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.3rem;
+        }
+
+        .section li::before {
+            content: "•";
+            position: absolute;
+            left: 0.5rem;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #3498db;
+        }
+
+        .tech-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-item {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            font-size: 0.9rem;
+        }
+
+        .author-section {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .author-section h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .tech-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Project Requirements Document (PRD)</h1>
+            <div class="subtitle">Halal Food Finder – South Korea</div>
+            <div class="author-info">
+                <strong>Author:</strong> HASAN KAZI MAHEDI<br>
+                <strong>Course:</strong> Digital Literacy – Project 2
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">📌</div>
+                <h2>Project Title</h2>
+            </div>
+            <p><strong>Halal Food Finder – South Korea</strong></p>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">🧠</div>
+                <h2>Problem Statement</h2>
+            </div>
+            <p>For the beginners in south Korea usually they don't know enough language so it is tough to know where people can find the halal food although google is good option. But Halal Food Finder-south Korea is also better option as this site based on finding halal food.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">🛠️</div>
+                <h2>Core Features</h2>
+            </div>
+            <ul>
+                <li>Search by area (city or district, e.g., "Seoul")</li>
+                <li>Use My Location button (GPS-based search)</li>
+                <li>Display results on an interactive Google Map</li>
+                <li>Show names + distances in a sidebar</li>
+                <li>Click marker to open place details</li>
+                <li>Responsive layout for mobile and desktop</li>
+                <li>After searching the location, it will show also total halal restaurant in that area.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">🚀</div>
+                <h2>Stretch Goals / Extensions</h2>
+            </div>
+            <div class="highlight-box">
+                <p>My stretch goal is to use my location which will show me where exactly I am. Then from my exact location, a map will show nearby halal food with distance.</p>
+            </div>
+            <div class="highlight-box">
+                <p>When I will search the location like jeju. Then under map there will be list of halal food under map. When I will click one from list then it will show also in the map with restaurant details like address, rating, operational.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">⚖️</div>
+                <h2>Goldilocks Principle (Not too simple, not too complex)</h2>
+            </div>
+            <p>This project was just right:</p>
+            <ul>
+                <li>Real-world use case</li>
+                <li>There are some challenges like finding halal food accurate information although I got API key. For example, when I search jeju then the map shows some restaurant in Busan.</li>
+                <li>There is too many sites where API key generate is easy but information is not fully correction (using API selection is challenging)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">🔧</div>
+                <h2>Tech Stack</h2>
+            </div>
+            <div class="tech-list">
+                <div class="tech-item">HTML / CSS / JavaScript</div>
+                <div class="tech-item">Google Maps API</div>
+                <div class="tech-item">Google Places API</div>
+                <div class="tech-item">Geolocation API</div>
+                <div class="tech-item">Nominatim (Optional)</div>
+                <div class="tech-item">VS Code</div>
+            </div>
+            <p style="margin-top: 1rem;">Using VS Code for testing code to see the site</p>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">📌</div>
+                <h2>Roles & Responsibility</h2>
+            </div>
+            <p>Solo project — designed, built, tested, and styled by me.</p>
+        </div>
+
+        <div class="author-section">
+            <div class="section-header" style="justify-content: center; border: none;">
+                <div class="section-icon" style="color: white;">👤</div>
+                <h2>Author</h2>
+            </div>
+            <p style="font-size: 1.1rem; font-weight: 500;">HASAN KAZI MAHEDI<br>Digital Literacy – Project 2</p>
+        </div>
+    </div>
+</body>
+</html>
