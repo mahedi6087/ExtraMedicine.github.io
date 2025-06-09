@@ -159,6 +159,50 @@
       background: rgba(255, 255, 255, 0.1);
     }
 
+    .project-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .project-button {
+      display: inline-block;
+      background: #ff6b35;
+      color: white;
+      font-weight: bold;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .project-button:hover {
+      background: #e55a2b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .project-button.prd {
+      background: #28a745;
+    }
+
+    .project-button.prd:hover {
+      background: #218838;
+    }
+
+    .project-button.documentation {
+      background: #6f42c1;
+    }
+
+    .project-button.documentation:hover {
+      background: #5a32a3;
+    }
+
     footer {
       text-align: center;
       padding: 20px;
@@ -185,6 +229,16 @@
 
       .main {
         margin-left: 0;
+      }
+
+      .project-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .project-button {
+        width: 200px;
+        text-align: center;
       }
     }
   </style>
@@ -244,11 +298,10 @@
       <h2>📂 Project 2</h2>
       <h3 style="color: #ff6b35;">🚀 Project 2 Demo</h3>
       <iframe src="project2.html"></iframe>
-      <p style="margin-top: 10px;">
-        🔗 <a href="https://drive.google.com/drive/folders/1L0E5kuN55wGw0OpAKAy1cB4Zho4BMO5z?usp=sharing" target="_blank">
-          View PRD and Documentation Folder
-        </a>
-      </p>
+      <div class="project-buttons">
+        <button class="project-button prd" onclick="openPRD()">📋 PRD</button>
+        <button class="project-button documentation" onclick="openDocumentation()">📚 Documentation</button>
+      </div>
     </div>
 
     <div class="section" id="gradeOverviewSection">
@@ -320,6 +373,14 @@
 
     function showWeek6Site() {
       // Reserved for future use
+    }
+
+    function openPRD() {
+      window.open('prd.html', '_blank');
+    }
+
+    function openDocumentation() {
+      window.open('documentation.html', '_blank');
     }
   </script>
 </body>
