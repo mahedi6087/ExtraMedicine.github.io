@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .game-screen {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .game-screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .scenario {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #FF6B6B;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .choice-btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .choice-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .threat-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .outcome {
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .outcome.safe {
+            background: rgba(76, 175, 80, 0.3);
+            border: 2px solid #4CAF50;
+        }
+
+        .outcome.danger {
+            background: rgba(244, 67, 54, 0.3);
+            border: 2px solid #F44336;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .threat-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+
+        .threat-card.phishing { border-left-color: #FF6B6B; }
+        .threat-card.password { border-left-color: #4ECDC4; }
+        .threat-card.social { border-left-color: #FFD93D; }
+
+        .start-btn, .restart-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover, .restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="threat-counter" id="threatCounter">
+        Threats Encountered: <span id="threatCount">0</span>/3
+    </div>
+
+    <div class="container">
+        <!-- Start Screen -->
+        <div class="game-screen active" id="start">
+            <h1>🛡️ CyberGuard Adventure</h1>
+            <div class="scenario">
+                <p>Welcome to CyberGuard Adventure! You're about to navigate through a day filled with cybersecurity challenges. Your choices will determine whether you stay safe or fall victim to cyber threats.</p>
+                <br>
+                <p><strong>Your mission:</strong> Make smart security decisions as you encounter phishing attempts, password challenges, and social engineering tactics.</p>
+            </div>
+            <button class="start-btn" onclick="startGame()">Begin Your Adventure 🚀</button>
+        </div>
+
+        <!-- Scenario 1: Phishing Email -->
+        <div class="game-screen" id="phishing">
+            <div class="progress-bar"><div class="progress-fill" style="width: 33%"></div></div>
+            <h2>📧 The Suspicious Email</h2>
+            <div class="scenario">
+                <p>You arrive at work and check your email. You find an urgent message from what appears to be your bank:</p>
+                <br>
+                <p><em>"URGENT: Suspicious activity detected on your account! Click here immediately to verify your identity and prevent account closure. You have 24 hours to respond."</em></p>
+                <br>
+                <p>The email looks official but something feels off. What do you do?</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="makeChoice('phishing', 'click')">
+                    Click the link immediately - I don't want my account closed!
+                </button>
+                <button class="choice-btn" onclick="makeChoice('phishing', 'verify')">
+                    Don't click the link. Instead, log into my bank account directly through their official website
+                </button>
+                <button class="choice-btn" onclick="makeChoice('phishing', 'ignore')">
+                    Delete the email - it's probably spam
+                </button>
+            </div>
+        </div>
+
+        <!-- Scenario 2: Password Challenge -->
+        <div class="game-screen" id="password">
+            <div class="progress-bar"><div class="progress-fill" style="width: 66%"></div></div>
+            <h2>🔐 The Password Dilemma</h2>
+            <div class="scenario">
+                <p>Your company is implementing a new system that requires you to create a password. The system has basic requirements: minimum 8 characters.</p>
+                <br>
+                <p>You need to choose a password that you'll remember but that's also secure. Your colleague suggests using "Password123" since it meets the requirements and is easy to remember.</p>
+                <br>
+                <p>What password strategy do you choose?</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="makeChoice('password', 'simple')">
+                    Use "Password123" - it's simple and meets the requirements
+                </button>
+                <button class="choice-btn" onclick="makeChoice('password', 'personal')">
+                    Use your birthday and pet's name: "Max12031995"
+                </button>
+                <button class="choice-btn" onclick="makeChoice('password', 'strong')">
+                    Create a strong, unique password using a password manager
+                </button>
+            </div>
+        </div>
+
+        <!-- Scenario 3: Social Engineering -->
+        <div class="game-screen" id="social">
+            <div class="progress-bar"><div class="progress-fill" style="width: 99%"></div></div>
+            <h2>📞 The Helpful Caller</h2>
+            <div class="scenario">
+                <p>Your phone rings and the caller ID shows your company's name. The person introduces themselves as "Mike from IT Support."</p>
+                <br>
+                <p><em>"Hi! We're updating our security systems today and need to verify your login credentials. Can you confirm your username and password so we can ensure your account isn't affected by the upgrade?"</em></p>
+                <br>
+                <p>The caller sounds professional and knows some details about your company. How do you respond?</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="makeChoice('social', 'provide')">
+                    Provide the information - they're from IT and this sounds important
+                </button>
+                <button class="choice-btn" onclick="makeChoice('social', 'verify')">
+                    Ask for their employee ID and call the IT department to verify before sharing anything
+                </button>
+                <button class="choice-btn" onclick="makeChoice('social', 'refuse')">
+                    Politely decline and hang up - legitimate IT would never ask for passwords over the phone
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Screen -->
+        <div class="game-screen" id="summary">
+            <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+            <h1>🎯 Adventure Complete!</h1>
+            <div id="summaryContent"></div>
+            <div class="summary-grid">
+                <div class="threat-card phishing">
+                    <h3>🎣 Phishing Attacks</h3>
+                    <p>Fraudulent emails or messages designed to steal sensitive information. Always verify through official channels before clicking links or providing information.</p>
+                </div>
+                <div class="threat-card password">
+                    <h3>🔑 Weak Passwords</h3>
+                    <p>Easy-to-guess passwords are a major security risk. Use strong, unique passwords for each account and consider a password manager.</p>
+                </div>
+                <div class="threat-card social">
+                    <h3>🎭 Social Engineering</h3>
+                    <p>Psychological manipulation to trick people into revealing information. Be skeptical of unsolicited requests, even from apparent authorities.</p>
+                </div>
+            </div>
+            <button class="restart-btn" onclick="restartGame()">Play Again 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        let gameState = {
+            threatsEncountered: 0,
+            choices: {},
+            outcomes: []
+        };
+
+        function startGame() {
+            showScreen('phishing');
+            updateThreatCounter();
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.game-screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function makeChoice(scenario, choice) {
+            gameState.choices[scenario] = choice;
+            
+            let outcome = evaluateChoice(scenario, choice);
+            gameState.outcomes.push({
+                scenario: scenario,
+                choice: choice,
+                outcome: outcome,
+                safe: outcome.safe
+            });
+
+            if (!outcome.safe) {
+                gameState.threatsEncountered++;
+                updateThreatCounter();
+            }
+
+            showOutcome(outcome);
+            
+            setTimeout(() => {
+                if (scenario === 'phishing') {
+                    showScreen('password');
+                } else if (scenario === 'password') {
+                    showScreen('social');
+                } else if (scenario === 'social') {
+                    showSummary();
+                }
+            }, 3000);
+        }
+
+        function evaluateChoice(scenario, choice) {
+            const outcomes = {
+                phishing: {
+                    click: {
+                        safe: false,
+                        message: "❌ DANGER! You clicked a phishing link and potentially compromised your account. Attackers could now access your banking information.",
+                        type: "danger"
+                    },
+                    verify: {
+                        safe: true,
+                        message: "✅ SAFE! You made the smart choice by verifying through official channels. This was indeed a phishing attempt.",
+                        type: "safe"
+                    },
+                    ignore: {
+                        safe: true,
+                        message: "✅ MOSTLY SAFE! Deleting suspicious emails is good, but verifying through official channels is even better.",
+                        type: "safe"
+                    }
+                },
+                password: {
+                    simple: {
+                        safe: false,
+                        message: "❌ WEAK SECURITY! 'Password123' is easily guessable and commonly used. Hackers could crack this in seconds.",
+                        type: "danger"
+                    },
+                    personal: {
+                        safe: false,
+                        message: "❌ VULNERABLE! Personal information like birthdays and pet names are easily discoverable through social media.",
+                        type: "danger"
+                    },
+                    strong: {
+                        safe: true,
+                        message: "✅ EXCELLENT! Using a password manager with strong, unique passwords is the gold standard for security.",
+                        type: "safe"
+                    }
+                },
+                social: {
+                    provide: {
+                        safe: false,
+                        message: "❌ COMPROMISED! You fell for a social engineering attack. Legitimate IT never asks for passwords over the phone.",
+                        type: "danger"
+                    },
+                    verify: {
+                        safe: true,
+                        message: "✅ SMART APPROACH! Verification is good, but remember that legitimate IT would never ask for your password.",
+                        type: "safe"
+                    },
+                    refuse: {
+                        safe: true,
+                        message: "✅ PERFECT! You correctly identified this as a social engineering attempt. Well done!",
+                        type: "safe"
+                    }
+                }
+            };
+
+            return outcomes[scenario][choice];
+        }
+
+        function showOutcome(outcome) {
+            const currentScreen = document.querySelector('.game-screen.active');
+            const outcomeDiv = document.createElement('div');
+            outcomeDiv.className = `outcome ${outcome.type}`;
+            outcomeDiv.innerHTML = outcome.message;
+            currentScreen.appendChild(outcomeDiv);
+        }
+
+        function updateThreatCounter() {
+            document.getElementById('threatCount').textContent = gameState.threatsEncountered;
+        }
+
+        function showSummary() {
+            showScreen('summary');
+            
+            const safeChoices = gameState.outcomes.filter(o => o.safe).length;
+            const totalChoices = gameState.outcomes.length;
+            
+            let summaryHTML = `
+                <div class="outcome ${gameState.threatsEncountered === 0 ? 'safe' : 'danger'}">
+                    <h2>Your Cybersecurity Score: ${safeChoices}/${totalChoices}</h2>
+                    <p>You avoided ${3 - gameState.threatsEncountered} out of 3 potential cyber threats!</p>
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3>📊 Your Journey:</h3>
+            `;
+
+            gameState.outcomes.forEach((outcome, index) => {
+                const scenarioNames = { phishing: "Phishing Email", password: "Password Security", social: "Social Engineering" };
+                summaryHTML += `
+                    <p><strong>${scenarioNames[outcome.scenario]}:</strong> 
+                    ${outcome.safe ? '✅ Safe Choice' : '❌ Fell for Threat'}</p>
+                `;
+            });
+
+            summaryHTML += `</div>`;
+
+            if (gameState.threatsEncountered === 0) {
+                summaryHTML += `<p><strong>🏆 Congratulations! You're a cybersecurity champion!</strong></p>`;
+            } else if (gameState.threatsEncountered === 1) {
+                summaryHTML += `<p><strong>⚠️ Good job! You avoided most threats, but stay vigilant.</strong></p>`;
+            } else {
+                summaryHTML += `<p><strong>🚨 You need more cybersecurity awareness training!</strong></p>`;
+            }
+
+            document.getElementById('summaryContent').innerHTML = summaryHTML;
+        }
+
+        function restartGame() {
+            gameState = {
+                threatsEncountered: 0,
+                choices: {},
+                outcomes: []
+            };
+            updateThreatCounter();
+            
+            // Remove any outcome divs
+            document.querySelectorAll('.outcome').forEach(outcome => outcome.remove());
+            
+            showScreen('start');
+        }
+    </script>
+</body>
+</html>
