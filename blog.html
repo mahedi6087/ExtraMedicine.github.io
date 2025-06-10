@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Essentials: Spotting Digital Threats</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 3rem 2rem;
+        }
+
+        .ai-artwork {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            margin: 2rem auto;
+            background: linear-gradient(45deg, #ff9a9e, #fecfef, #fecfef, #fad0c4);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .ai-artwork::before {
+            content: '🛡️';
+            font-size: 4rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ai-artwork::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .quiz-container {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 3rem 2rem;
+            margin: 3rem 0;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            z-index: -1;
+            border-radius: 22px;
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .quiz-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .email-example {
+            background: white;
+            color: #333;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .email-example:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .email-example.selected {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+        }
+
+        .email-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .email-subject {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-buttons {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .result.incorrect {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .tip {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .tip::before {
+            content: '💡';
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 2rem 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Cybersecurity Essentials</h1>
+            <p>Your Digital Shield Against Modern Threats</p>
+        </div>
+
+        <div class="content">
+            <div class="ai-artwork" role="img" aria-label="AI-generated cybersecurity shield illustration showing a protective barrier against digital threats with flowing data streams and security icons">
+            </div>
+
+            <div class="section">
+                <h2>The Digital Battlefield</h2>
+                <p>In today's interconnected world, cybersecurity threats evolve faster than ever. From sophisticated phishing attempts to advanced malware, understanding these threats is your first line of defense. This guide will equip you with the knowledge to identify and combat the most common digital dangers.</p>
+            </div>
+
+            <div class="section">
+                <h2>🎯 Phishing: The Art of Digital Deception</h2>
+                <p>Phishing attacks are among the most prevalent cybersecurity threats, accounting for over 80% of security incidents. These attacks rely on social engineering to trick users into revealing sensitive information or installing malicious software.</p>
+                
+                <div class="tip">
+                    <strong>Pro Tip:</strong> Always verify the sender's identity through a separate communication channel before clicking any links or downloading attachments.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🔍 Red Flags to Watch For</h2>
+                <p>Legitimate organizations rarely ask for sensitive information via email. Be suspicious of urgent language, generic greetings, suspicious URLs, and requests for immediate action. When in doubt, contact the organization directly through their official website or phone number.</p>
+            </div>
+
+            <div class="quiz-container">
+                <h2 class="quiz-title">🕵️ Interactive Quiz: Spot the Phishing Email</h2>
+                <p style="text-align: center; margin-bottom: 2rem;">Can you identify which of these emails is a phishing attempt? Click on the email you think is suspicious:</p>
+
+                <div class="email-example" data-email="1">
+                    <div class="email-header">
+                        <div><strong>From:</strong> noreply@amazon-security.com</div>
+                        <div><strong>To:</strong> you@email.com</div>
+                    </div>
+                    <div class="email-subject">🚨 URGENT: Verify Your Account Now!</div>
+                    <div class="email-body">
+                        <p>Dear Valued Customer,</p>
+                        <p>Your Amazon account has been temporarily suspended due to suspicious activity. You must verify your account within 24 hours or it will be permanently closed.</p>
+                        <p>Click here to verify: <a href="#">http://amazon-verify-account.net/login</a></p>
+                        <p>Amazon Security Team</p>
+                    </div>
+                </div>
+
+                <div class="email-example" data-email="2">
+                    <div class="email-header">
+                        <div><strong>From:</strong> newsletter@techcompany.com</div>
+                        <div><strong>To:</strong> you@email.com</div>
+                    </div>
+                    <div class="email-subject">Weekly Tech Newsletter - January 2025</div>
+                    <div class="email-body">
+                        <p>Hi John,</p>
+                        <p>Here's your weekly roundup of tech news:</p>
+                        <p>• New AI developments in healthcare<br>
+                        • Cybersecurity trends for 2025<br>
+                        • Latest smartphone releases</p>
+                        <p>Best regards,<br>Tech Company Team</p>
+                    </div>
+                </div>
+
+                <div class="email-example" data-email="3">
+                    <div class="email-header">
+                        <div><strong>From:</strong> support@yourbank.com</div>
+                        <div><strong>To:</strong> you@email.com</div>
+                    </div>
+                    <div class="email-subject">Monthly Account Statement Available</div>
+                    <div class="email-body">
+                        <p>Dear Account Holder,</p>
+                        <p>Your monthly statement is now available in your online banking portal. Please log in to view your statement.</p>
+                        <p>If you have any questions, please contact us at 1-800-BANK-HELP.</p>
+                        <p>Your Bank Customer Service</p>
+                    </div>
+                </div>
+
+                <div class="quiz-buttons">
+                    <button class="btn" onclick="submitQuiz()">Submit Answer</button>
+                    <button class="btn" onclick="resetQuiz()">Reset Quiz</button>
+                </div>
+
+                <div id="quizResult" class="result"></div>
+            </div>
+
+            <div class="section">
+                <h2>🛡️ Best Practices for Digital Security</h2>
+                <p>Implementing strong cybersecurity practices doesn't have to be complicated. Use unique passwords for each account, enable two-factor authentication whenever possible, keep your software updated, and maintain regular backups of important data. Remember, cybersecurity is not a destination but a continuous journey of vigilance and improvement.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedEmail = null;
+        const correctAnswer = "1"; // The first email is the phishing attempt
+
+        function selectEmail(emailNumber) {
+            // Remove previous selections
+            document.querySelectorAll('.email-example').forEach(email => {
+                email.classList.remove('selected');
+            });
+            
+            // Add selection to clicked email
+            const selectedEmailElement = document.querySelector(`[data-email="${emailNumber}"]`);
+            selectedEmailElement.classList.add('selected');
+            selectedEmail = emailNumber;
+        }
+
+        function submitQuiz() {
+            if (!selectedEmail) {
+                alert('Please select an email first!');
+                return;
+            }
+
+            const resultDiv = document.getElementById('quizResult');
+            
+            if (selectedEmail === correctAnswer) {
+                resultDiv.className = 'result correct show';
+                resultDiv.innerHTML = `
+                    <h3>🎉 Correct!</h3>
+                    <p>You correctly identified the phishing email! Here's why it's suspicious:</p>
+                    <ul style="text-align: left; margin-top: 1rem;">
+                        <li><strong>Suspicious domain:</strong> "amazon-security.com" instead of "amazon.com"</li>
+                        <li><strong>Urgent language:</strong> Creates false sense of urgency</li>
+                        <li><strong>Generic greeting:</strong> "Dear Valued Customer" instead of your name</li>
+                        <li><strong>Suspicious URL:</strong> Links to "amazon-verify-account.net"</li>
+                        <li><strong>Threats:</strong> Claims account will be "permanently closed"</li>
+                    </ul>
+                `;
+            } else {
+                resultDiv.className = 'result incorrect show';
+                resultDiv.innerHTML = `
+                    <h3>❌ Not quite right</h3>
+                    <p>The first email is actually the phishing attempt. Here are the red flags:</p>
+                    <ul style="text-align: left; margin-top: 1rem;">
+                        <li>Suspicious sender domain</li>
+                        <li>Urgent, threatening language</li>
+                        <li>Generic greeting</li>
+                        <li>Suspicious links</li>
+                        <li>Requests immediate action</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Remember:</strong> Always verify through official channels!</p>
+                `;
+            }
+
+            // Disable submit button
+            document.querySelector('button[onclick="submitQuiz()"]').disabled = true;
+        }
+
+        function resetQuiz() {
+            selectedEmail = null;
+            document.querySelectorAll('.email-example').forEach(email => {
+                email.classList.remove('selected');
+            });
+            
+            const resultDiv = document.getElementById('quizResult');
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = '';
+            
+            // Re-enable submit button
+            document.querySelector('button[onclick="submitQuiz()"]').disabled = false;
+        }
+
+        // Add click event listeners to email examples
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.email-example').forEach(email => {
+                email.addEventListener('click', function() {
+                    selectEmail(this.dataset.email);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
