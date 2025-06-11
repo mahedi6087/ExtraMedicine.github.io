@@ -203,6 +203,80 @@
       background: #5a32a3;
     }
 
+    .creativity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .creativity-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .creativity-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .creativity-card:hover::before {
+      left: 100%;
+    }
+
+    .creativity-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+
+    .creativity-card.game {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    }
+
+    .creativity-card.diary {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    }
+
+    .creativity-card.cyber {
+      background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+    }
+
+    .creativity-card.calendar {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    }
+
+    .creativity-card h3 {
+      margin: 0 0 15px 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .creativity-card p {
+      margin: 0;
+      font-size: 16px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+
+    .creativity-card .icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      display: block;
+    }
+
     footer {
       text-align: center;
       padding: 20px;
@@ -240,6 +314,10 @@
         width: 200px;
         text-align: center;
       }
+
+      .creativity-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -250,6 +328,7 @@
     <a onclick="showSection('assignmentSection')">📝 Assignments</a>
     <a onclick="showSection('projectSection')">📁 Project 1</a>
     <a onclick="showSection('project2Section')">📂 Project 2</a>
+    <a onclick="showSection('creativitySection')">🎨 My Creativity</a>
     <a onclick="showSection('gradeOverviewSection')">📘 Course Grades</a>
     <a href="https://open.kakao.com/me/joshteacher" target="_blank">🟡 Communicate with Professor</a>
     <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
@@ -301,6 +380,35 @@
       <div class="project-buttons">
         <button class="project-button prd" onclick="openPRD()">📋 PRD</button>
         <button class="project-button documentation" onclick="openDocumentation()">📚 Documentation</button>
+      </div>
+    </div>
+
+    <div class="section" id="creativitySection">
+      <h2>🎨 My Creativity</h2>
+      <p style="text-align: center; margin-bottom: 30px; font-size: 18px; color: #666;">
+        Explore my creative projects and innovative solutions
+      </p>
+      <div class="creativity-grid">
+        <div class="creativity-card game" onclick="openCreativity('semester.html')">
+          <span class="icon">🎮</span>
+          <h3>Semester-Long Learning Game Pitch</h3>
+          <p>An innovative educational game concept designed to make learning engaging and fun throughout the semester</p>
+        </div>
+        <div class="creativity-card diary" onclick="openCreativity('blog.html')">
+          <span class="icon">📖</span>
+          <h3>Dear Diary</h3>
+          <p>A personal digital diary showcasing thoughts, experiences, and reflections on the learning journey</p>
+        </div>
+        <div class="creativity-card cyber" onclick="openCreativity('cyber.html')">
+          <span class="icon">🛡️</span>
+          <h3>Cyber Defense Quest</h3>
+          <p>An interactive cybersecurity challenge that tests and enhances digital defense knowledge and skills</p>
+        </div>
+        <div class="creativity-card calendar" onclick="openCreativity('calender.html')">
+          <span class="icon">📅</span>
+          <h3>Family Free-Time Finder</h3>
+          <p>A smart calendar solution to help families coordinate schedules and find quality time together</p>
+        </div>
       </div>
     </div>
 
@@ -381,6 +489,10 @@
 
     function openDocumentation() {
       window.open('documentation.html', '_blank');
+    }
+
+    function openCreativity(filename) {
+      window.open(filename, '_blank');
     }
   </script>
 </body>
